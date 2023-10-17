@@ -9,7 +9,6 @@
   flex-direction: column;
   overflow: hidden;
 
-  width: 15%;
   max-height: calc(100vh - 6rem);
   height: 100vh;
   margin: 1rem;
@@ -17,6 +16,19 @@
   border-radius: 0.3rem;
   padding: 1rem 1.5rem;
   background-color: #343434;
+}
+
+.filter_container {
+  width: 15%;
+}
+
+.shop_container {
+  width: 85%;
+  max-height: calc(100vh - 5rem);
+  height: 100vh;
+  margin-left: 3rem;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .header_text {
@@ -42,7 +54,8 @@
   margin-right: 0.6rem;
 }
 
-.categories_container, .shops_container {
+.categories_container,
+.shopfilters_container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -50,20 +63,51 @@
   padding: 0.5rem;
 }
 
-.shops_container {
+.shopfilters_container {
   height: 100%;
   overflow-y: auto;
   margin-bottom: 0;
 }
 
-
 .filter_item_name {
   font-weight: lighter;
 }
 
-.shop_container {
-  width: 85%;
-  height: 100%;
-  margin: 1rem;
-  background-color: red;
+.shop_header {
+  font-weight: normal;
+  font-size: 6rem;
+}
+
+.shop_num {
+  font-weight: 300;
+  font-style: italic;
+  color: #dfdfdf;
+}
+
+.shop_info_container {
+  display: flex;
+  align-items: baseline;
+}
+
+.shop_header_container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sort_container {
+  display: flex;
+  align-items: baseline;
+}
+
+.shops_container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 2.45em;
+
+  @media (min-width: 52em) {
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+    grid-template-rows: auto;
+  }
 }
