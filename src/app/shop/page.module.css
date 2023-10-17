@@ -1,0 +1,69 @@
+.main_container {
+  display: flex;
+  padding: 2rem;
+  max-height: 100vh;
+}
+
+.filter_container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  width: 15%;
+  max-height: calc(100vh - 6rem);
+  height: 100vh;
+  margin: 1rem;
+  border: 1px solid #dfdfdf;
+  border-radius: 0.3rem;
+  padding: 1rem 1.5rem;
+  background-color: #343434;
+}
+
+.header_text {
+  font-weight: 520;
+  background-color: #252525;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  margin: 0.7rem 0;
+}
+
+.filter_item_container {
+  display: flex;
+}
+
+.checkbox_label {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  outline: 1px solid #dfdfdf;
+  accent-color: #343434;
+  margin-right: 0.6rem;
+}
+
+.categories_container, .shops_container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.shops_container {
+  height: 100%;
+  overflow-y: auto;
+  margin-bottom: 0;
+}
+
+
+.filter_item_name {
+  font-weight: lighter;
+}
+
+.shop_container {
+  width: 85%;
+  height: 100%;
+  margin: 1rem;
+  background-color: red;
+}
