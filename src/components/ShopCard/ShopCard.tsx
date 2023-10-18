@@ -1,17 +1,28 @@
 import React from "react";
 import styles from "./ShopCard.module.css";
+import Link from "next/link";
 
-export interface ShopCardProps {
+export enum Category {
+  BF = "Beauty & Fashion",
+  DS = "Department Stores",
+  EL = "Electronics",
+  FD = "Food & Drinks",
+  GM = "Gaming",
+  HB = "Hobbies",
+  LS = "Lifestyle",
+  TR = "Travel",
+  OS = "Online Shopping",
+}
+
+export interface Shop {
+  id: number;
   src: string;
   shopName: string;
   availableVouchers?: number[];
+  category: Category;
 }
 
-const ShopCard: React.FC<ShopCardProps> = ({
-  src,
-  shopName,
-  availableVouchers,
-}) => {
+const ShopCard: React.FC<Shop> = ({ id, src, shopName, availableVouchers }) => {
   const cardStyle = {
     height: "15rem",
     width: "15rem",
@@ -24,19 +35,23 @@ const ShopCard: React.FC<ShopCardProps> = ({
   };
 
   return (
-    <div className={styles.card_container} style={cardStyle}>
+    <Link
+      href={`shops/${id}`}
+      className={styles.card_container}
+      style={cardStyle}
+    >
       <div className={styles.shop_info}>
         <h4 className={styles.shop_name}>{shopName}</h4>
         <div className={styles.vouchers_container}>
           {availableVouchers?.map((amount, index) => (
-            <div key={index}>
+            <div key={index} style={{ display: "inline-block" }}>
               {index > 0 && <span className={styles.divider}>|</span>}
-              <a href="" className={styles.amount}>{`₱${amount}`}</a>
+              <p style={{ display: "inline" }}>{`₱${amount}`}</p>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

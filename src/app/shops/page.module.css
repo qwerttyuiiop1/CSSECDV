@@ -1,33 +1,37 @@
 .main_container {
+  margin: 1.5rem 2rem 0rem 2rem;
+}
+
+.horizontal_container{
   display: flex;
-  padding: 2rem;
-  max-height: 100vh;
+  
+  max-height: calc(100vh - 7rem);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bottom_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
 }
 
 .filter_container {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-
-  max-height: calc(100vh - 6rem);
-  height: 100vh;
-  margin: 1rem;
+  width: 15%;
+  margin: 0 1rem;
   border: 1px solid #dfdfdf;
   border-radius: 0.3rem;
   padding: 1rem 1.5rem;
   background-color: #343434;
 }
 
-.filter_container {
-  width: 15%;
-}
-
 .shop_container {
   width: 85%;
-  max-height: calc(100vh - 5rem);
-  height: 100vh;
   margin-left: 3rem;
-  overflow: hidden;
+  margin-right: 1rem;
   overflow-y: auto;
 }
 
@@ -92,22 +96,31 @@
 .shop_header_container {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .sort_container {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  padding-bottom: 1rem;
+  margin-right: 2rem;
 }
 
 .shops_container {
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto;
-  grid-gap: 2.45em;
-
-  @media (min-width: 52em) {
-    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-    grid-template-rows: auto;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-gap: 0.9em;
+  align-items: stretch;
 }
+
+.page_num{
+  padding: 0.5rem;
+  background-color: #343434;
+  margin: 0 0.5rem;
+}
+
+.page_button{
+  padding: 0.5rem;
+}
+
+

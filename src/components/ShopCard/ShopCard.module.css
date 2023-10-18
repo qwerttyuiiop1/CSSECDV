@@ -2,15 +2,19 @@
   position: relative;
   height: 15rem;
   width: 15rem;
-  border: 4px solid #FFFFFF;
+  border: 4px solid #ffffff;
   border-radius: 0.6rem;
   overflow: hidden;
+
+  -webkit-box-shadow: inset 0 0 10px 0 #00000050;
+  -moz-box-shadow: inset 0 0 10px 0 #00000050;
+  box-shadow: inset 0 0 10px 0 #00000050;
 }
 
 .shop_info {
   position: absolute;
-  bottom: 0; 
-  width: 100%; 
+  bottom: 0;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   padding: 0.5rem;
@@ -28,24 +32,15 @@
   opacity: 1;
 }
 
-.vouchers_container{
+.vouchers_container {
   display: flex;
   margin-top: 0.4rem;
 }
 
-.shop_name{
+.shop_name {
   font-weight: 520;
 }
 
-.divider{
+.divider {
   margin: 0 0.3rem;
-}
-
-.amount{
-  text-decoration: none;
-  transition: text-decoration 0.3s;
-}
-
-.amount:hover{
-  text-decoration: underline;
 }
