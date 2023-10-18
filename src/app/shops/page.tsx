@@ -156,7 +156,7 @@ export default function Shops() {
     } else {
       setFilteredShops(newFilteredShops);
     }
-  }, [categoryCheckedItems, shopCheckedItems, shops]);
+  }, [categoryCheckedItems, selectedSortFilter, shopCheckedItems]);
 
   return (
     <div className={styles.main_container}>
@@ -166,7 +166,7 @@ export default function Shops() {
           <h4 className={styles.header_text}>Categories</h4>
           <div className={styles.categories_container}>
             {Object.values(Category).map((item, index) => (
-              <label className={styles.checkbox_label}>
+              <label className={styles.checkbox_label} key={index}>
                 <input
                   type="checkbox"
                   className={styles.checkbox}
@@ -181,7 +181,7 @@ export default function Shops() {
           <h4 className={styles.header_text}>Shop</h4>
           <div className={styles.shopfilters_container}>
             {shops.map((shop, index) => (
-              <label className={styles.checkbox_label}>
+              <label className={styles.checkbox_label} key={index}>
                 <input
                   type="checkbox"
                   className={styles.checkbox}
@@ -220,6 +220,7 @@ export default function Shops() {
           <div className={styles.shops_container}>
             {filteredShops.map((shop, index) => (
               <ShopCard
+				key={index}
                 id={shop.id}
                 src={shop.src}
                 shopName={shop.shopName}

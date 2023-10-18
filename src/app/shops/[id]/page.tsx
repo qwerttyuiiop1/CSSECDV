@@ -153,7 +153,7 @@ export default function Page({
           <h1>Voucher amount</h1>
           <ul className={styles.amount_options}>
             {shop?.availableVouchers?.map((amount, index) => (
-              <li className={styles.option_li}>
+              <li className={styles.option_li} key={index}>
                 <input
                   className={styles.option_label}
                   type="radio"
