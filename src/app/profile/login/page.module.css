@@ -2,6 +2,13 @@
 	width: 1.6rem;
 	height: 1.6rem;
 }
+.login_button_text {
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
 .google_text {
 	color: #FFF;
 	font-family: Inter;
@@ -28,7 +35,7 @@
 	line-height: normal;
 
 	text-align: center;
-	width: 100%;
+	width: 23.75rem; /* set width */
 
 	margin-top: -1rem;
 	margin-bottom: 1rem;

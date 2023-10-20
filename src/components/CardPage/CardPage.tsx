@@ -2,12 +2,12 @@ import React, { ReactNode } from "react";
 import styles from "./card.module.css";
 import { BsFillEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
-interface Children {
+interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
 	children: ReactNode;
 }
-function wrapDiv(className: string): React.FC<Children> {
-	const div: React.FC<Children> = ({ children }) => (
-	  <div className={className}>
+function wrapDiv(className: string): React.FC<DivProps> {
+	const div: React.FC<DivProps> = ({ children, ...props }) => (
+	  <div {...props} className={className + (props.className ? " " + props.className : '')}>
 		{children}
 	  </div>
 	);
@@ -18,21 +18,23 @@ const CardPage = wrapDiv(`${styles.main_container} ${styles.background}`);
 const Card = wrapDiv(styles.card);
 const Title = wrapDiv(styles.title);
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>{
 	placeholder: string;
 	id: string;
 }
-const Input: React.FC<InputProps & { type?: string }> = ({ placeholder, id, type }) => (
-  <input type={type || "text"} placeholder={placeholder} id={id} className={styles.input}/>
+const Input: React.FC<InputProps> = (props) => (
+  <input 
+	{...props}
+  	type={props.type || "text"} 
+	className={styles.input}/>
 );
-const Password: React.FC<InputProps> = ({ placeholder, id }) => {
+const Password: React.FC<InputProps> = (props) => {
 	const [showPassword, setShowPassword] = React.useState(false);
 	return (
 	  <div className={styles.relative}>
 		<input 
+		  {...props}
 		  type={showPassword ? "text" : "password"}
-		  placeholder={placeholder} 
-		  id={id} 
 		  className={`${styles.input} ${styles.password}`}
 		  />
 		{showPassword ? (
@@ -54,12 +56,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: ReactNode;
 }
 const BigButton: React.FC<ButtonProps> = ({ children, ...props }) => (
-  <button className={styles.big_button} {...props}>
+  <button {...props} className={styles.big_button}>
 	{children}
   </button>
 );
 const SmallButton: React.FC<ButtonProps> = ({ children, ...props }) => (
-  <button className={styles.small_button} {...props}>
+  <button {...props} className={styles.small_button}>
 	{children}
   </button>
 );

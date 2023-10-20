@@ -39,10 +39,10 @@
 	border-radius: 0.3125rem;
 	border: 3px solid #F4F4F4;
 	background: #252525;
-	width: 23.75rem;
 	height: 3.23969rem;
 	flex-shrink: 0;
 
+	width: 100%;
 	padding: 0 2rem;
 
 	color: #F4F4F4;
@@ -51,9 +51,6 @@
 	font-style: normal;
 	font-weight: 700;
 	line-height: normal;
-}
-.input::placeholder {
-	height: 1.40388rem;
 }
 
 .relative {
@@ -75,18 +72,13 @@
 .big_button {
 	height: 2.69975rem;
 	fill: #4F4F4F;
+	background-color: #4F4F4F;
 	stroke-width: 3px;
 	stroke: #0E0E0E;
 	color: #F4F4F4;
 
 	border-radius: 0.3125rem;
 	border: 3px solid #000;
-
-	font-family: Inter;
-	font-size: 1.5rem;
-	font-style: normal;
-	font-weight: 700;
-	line-height: normal;
 }
 
 .separator_line {
@@ -115,10 +107,12 @@
 	flex-direction: row;
 	gap: 0.6rem;
 	justify-content: center;
+	align-items: center;
 }
 
 .small_button {
 	fill: #4F4F4F;
+	background-color: #4F4F4F;
 	stroke-width: 3px;
 	stroke: #0E0E0E;
 

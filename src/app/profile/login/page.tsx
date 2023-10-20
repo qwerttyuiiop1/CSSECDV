@@ -13,17 +13,24 @@ import {
 	CardRow,
 	SmallButton
 } from "@/components/CardPage/CardPage";
+import CardStyles from "@/components/CardPage/card.module.css";
 import { FcGoogle } from "react-icons/fc"
+import Link from "next/link";
 
 
 export default function Page() {
   return (
 	<CardPage>
 	  <Card>
+		<div className={styles.width}> </div>
 		<Title> Login </Title>
 		<Input placeholder="Username" id="username"/>
 		<Password placeholder="Password" id="password"/>
-		<BigButton> Login </BigButton>
+		<BigButton> 
+		  <div className={styles.login_button_text}>
+			Login 
+		  </div>
+		</BigButton>
 		<Separator text="OR"/>
 		<BigButton>
 		  <CardRow>
@@ -33,9 +40,13 @@ export default function Page() {
 		</BigButton>
 		<CardRow>
 		  <div className={styles.no_account}> Don&apos;t have an account? </div>
-		  <SmallButton> Sign-up </SmallButton>
+		  <Link href="/profile/signup" className={CardStyles.small_button}> Sign-up </Link> 
 		</CardRow>
-		<div className={styles.forgot_password}> Forgot your password? </div>
+		<Link
+		  className={styles.forgot_password}
+		  href="/profile/forgot-password"> 
+			Forgot your password? 
+		</Link>
 	  </Card>
 	</CardPage>
   );
