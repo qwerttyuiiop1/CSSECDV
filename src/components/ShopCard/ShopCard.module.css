@@ -1,0 +1,46 @@
+.card_container {
+  position: relative;
+  height: 15rem;
+  width: 15rem;
+  border: 4px solid #ffffff;
+  border-radius: 0.6rem;
+  overflow: hidden;
+
+  -webkit-box-shadow: inset 0 0 10px 0 #00000050;
+  -moz-box-shadow: inset 0 0 10px 0 #00000050;
+  box-shadow: inset 0 0 10px 0 #00000050;
+}
+
+.shop_info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 0.5rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card_container:hover .shop_info {
+  visibility: visible;
+  opacity: 1;
+}
+
+.vouchers_container {
+  display: flex;
+  margin-top: 0.4rem;
+}
+
+.shop_name {
+  font-weight: 520;
+}
+
+.divider {
+  margin: 0 0.3rem;
+}
