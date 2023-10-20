@@ -1,0 +1,43 @@
+.google_icon {
+	width: 1.6rem;
+	height: 1.6rem;
+}
+.google_text {
+	color: #FFF;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.no_account {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.forgot_password {
+	color: #AFAFAF;
+
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	text-align: center;
+	width: 100%;
+
+	margin-top: -1rem;
+	margin-bottom: 1rem;
+}
+.sign_up {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
