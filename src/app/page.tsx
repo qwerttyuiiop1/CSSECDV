@@ -1,10 +1,14 @@
+"use client";
+
 import styles from "./page.module.css";
 import { AiOutlineArrowRight, AiOutlineShop } from "react-icons/ai";
 import { BsGift } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
 import { TfiWallet } from "react-icons/tfi";
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
-
+import { shops } from "./shops/page";
+import ShopCard from "@/components/ShopCard/ShopCard";
+import ViewMoreCard from "@/components/ShopCard/ViewMoreCard";
 
 export default function Home() {
   const smIconStyle = {
@@ -94,12 +98,36 @@ export default function Home() {
           </div>
 
           <div className={styles.section4_grid}>
-                {}
+            {shops.slice(0, 7).map((shop, index) => (
+              <ShopCard
+                key={index}
+                id={shop.id}
+                src={shop.src}
+                shopName={shop.shopName}
+                availableVouchers={shop.availableVouchers}
+                category={shop.category}
+              />
+            ))}
+            <ViewMoreCard />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.section5}>
+        <div className={styles.section5_about_us}>ABOUT US</div>
+        <div className={styles.section5_inner}>
+          <img className={styles.section5_img} src="" alt="company image" />
+          <div className={styles.company_info}>
+            <h1 className={styles.company_name}>COMPANY NAME</h1>
+            <h3 className={styles.company_subtext}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </h3>
           </div>
         </div>
       </div>
     </div>
   );
-      
-  
 }
