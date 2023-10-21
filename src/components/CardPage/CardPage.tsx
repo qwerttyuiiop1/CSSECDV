@@ -13,6 +13,17 @@ function wrapDiv(className: string): React.FC<DivProps> {
 	);
 	return div;
 }
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	children: ReactNode;
+}
+function wrapButton(className: string): React.FC<ButtonProps> {
+	const button: React.FC<ButtonProps> = ({ children, ...props }) => (
+	  <button {...props} className={className + (props.className ? " " + props.className : '')}>
+		{children}
+	  </button>
+	);
+	return button;
+}
   
 const CardPage = wrapDiv(`${styles.main_container} ${styles.background}`);
 const Card = wrapDiv(styles.card);
@@ -26,7 +37,7 @@ const Input: React.FC<InputProps> = (props) => (
   <input 
 	{...props}
   	type={props.type || "text"} 
-	className={styles.input}/>
+	className={`${styles.input} ${props.className||''}`}/>
 );
 const Password: React.FC<InputProps> = (props) => {
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -35,7 +46,7 @@ const Password: React.FC<InputProps> = (props) => {
 		<input 
 		  {...props}
 		  type={showPassword ? "text" : "password"}
-		  className={`${styles.input} ${styles.password}`}
+		  className={`${styles.input} ${styles.password} ${props.className||''}`}
 		  />
 		{showPassword ? (
 		  <BsEyeSlashFill
@@ -52,19 +63,8 @@ const Password: React.FC<InputProps> = (props) => {
 	);
 };
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children: ReactNode;
-}
-const BigButton: React.FC<ButtonProps> = ({ children, ...props }) => (
-  <button {...props} className={styles.big_button}>
-	{children}
-  </button>
-);
-const SmallButton: React.FC<ButtonProps> = ({ children, ...props }) => (
-  <button {...props} className={styles.small_button}>
-	{children}
-  </button>
-);
+const BigButton = wrapButton(styles.big_button);
+const SmallButton = wrapButton(styles.small_button);
 
 const Separator: React.FC<{ text: string }> = ({ text }) => {
 	return (

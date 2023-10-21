@@ -1,5 +1,5 @@
 "use client"
-import styles from "./page.module.css";
+import styles from "../login.module.css";
 import React from "react";
 import { useSession } from "next-auth/react";
 import { 
@@ -10,8 +10,7 @@ import {
 	Password,
 	BigButton,
 	Separator,
-	CardRow,
-	SmallButton
+	CardRow
 } from "@/components/CardPage/CardPage";
 import CardStyles from "@/components/CardPage/card.module.css";
 import { FcGoogle } from "react-icons/fc"
@@ -22,8 +21,7 @@ export default function Page() {
   return (
 	<CardPage>
 	  <Card>
-		<div className={styles.width}> </div>
-		<Title> Login </Title>
+		<Title className={styles.width}> Login </Title>
 		<Input placeholder="Username" id="username"/>
 		<Password placeholder="Password" id="password"/>
 		<BigButton> 
