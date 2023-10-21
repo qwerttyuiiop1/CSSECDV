@@ -71,8 +71,8 @@
 }
 .phone_width {
 	width: 4rem;
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
+	padding-left: 0.25rem;
+	padding-right: 0rem;
 }
 .input_row {
 	width: 1px; /* override the existing style */

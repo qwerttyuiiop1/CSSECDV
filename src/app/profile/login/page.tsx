@@ -15,16 +15,31 @@ import {
 import CardStyles from "@/components/CardPage/card.module.css";
 import { FcGoogle } from "react-icons/fc"
 import Link from "next/link";
-
+import { FormProvider, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { username, password } from '../validations'
 
 export default function Page() {
+  const form = useForm();
+  const router = useRouter();
+  const onSubmit = form.handleSubmit(data => {
+	if (data.password === "12345678") {
+	  router.push("/");
+	}
+  });
   return (
 	<CardPage>
+	  <FormProvider {...form}>
+	  <form 
+	    onSubmit={e => e.preventDefault()}
+		noValidate>
 	  <Card>
 		<Title className={styles.width}> Login </Title>
-		<Input placeholder="Username" id="username"/>
-		<Password placeholder="Password" id="password"/>
-		<BigButton> 
+		<Input placeholder="Username" id="username"
+			options={username}/>
+		<Password placeholder="Password" id="password"
+			options={password}/>
+		<BigButton onClick={onSubmit}> 
 		  <div className={styles.login_button_text}>
 			Login 
 		  </div>
@@ -46,6 +61,8 @@ export default function Page() {
 			Forgot your password? 
 		</Link>
 	  </Card>
+	  </form>
+	  </FormProvider>
 	</CardPage>
   );
 }

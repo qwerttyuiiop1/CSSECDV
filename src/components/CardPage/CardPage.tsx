@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styles from "./card.module.css";
 import { BsFillEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import { FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
 	children: ReactNode;
@@ -32,21 +33,29 @@ const Title = wrapDiv(styles.title);
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>{
 	placeholder: string;
 	id: string;
+	options?: RegisterOptions<FieldValues, string>;
 }
-const Input: React.FC<InputProps> = (props) => (
-  <input 
-	{...props}
-  	type={props.type || "text"} 
-	className={`${styles.input} ${props.className||''}`}/>
-);
-const Password: React.FC<InputProps> = (props) => {
+const Input: React.FC<InputProps> = ({ options, type, className, ...props }) => {
+	const { register } = useFormContext();
+	return (
+	  <input 
+		{...props}
+		type={type || "text"} 
+		className={`${styles.input} ${className||''}`}
+		{...register(props.id, options)}
+		/>
+	);
+}
+const Password: React.FC<InputProps> = ({ options, className, ...props }) => {
 	const [showPassword, setShowPassword] = React.useState(false);
+	const { register } = useFormContext();
 	return (
 	  <div className={styles.relative}>
 		<input 
 		  {...props}
 		  type={showPassword ? "text" : "password"}
-		  className={`${styles.input} ${styles.password} ${props.className||''}`}
+		  className={`${styles.input} ${styles.password} ${className||''}`}
+		  {...register(props.id, options)}
 		  />
 		{showPassword ? (
 		  <BsEyeSlashFill
