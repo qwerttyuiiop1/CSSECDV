@@ -1,7 +1,7 @@
 "use client"
 import styles from "../login.module.css";
 import React from "react";
-import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { 
 	CardPage, 
 	Card, 
@@ -18,6 +18,10 @@ import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { username, password } from '../validations'
+import FormError from "@/components/Providers/FormError";
+
+
+// TODO: lottie animation for loading
 
 export default function Page() {
   const form = useForm();
@@ -30,6 +34,7 @@ export default function Page() {
   return (
 	<CardPage>
 	  <FormProvider {...form}>
+	  <FormError form={form} />
 	  <form 
 	    onSubmit={e => e.preventDefault()}
 		noValidate>
@@ -45,7 +50,9 @@ export default function Page() {
 		  </div>
 		</BigButton>
 		<Separator text="OR"/>
-		<BigButton>
+		<BigButton onClick={() => {
+			signIn("google", { callbackUrl: "/" });
+		}}>
 		  <CardRow>
 		  	<FcGoogle className={styles.google_icon}/>
 		  	<div className={styles.google_text}> Sign-in with Google </div>

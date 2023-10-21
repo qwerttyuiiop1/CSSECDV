@@ -16,6 +16,8 @@ import { LuArrowRight } from "react-icons/lu"
 import Link from "next/link";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { username, password, email } from '../validations'
+import FormError from "@/components/Providers/FormError";
+import { signIn } from "next-auth/react";
 
 export interface UserCardOutput extends FieldValues {
 	username: string;
@@ -36,6 +38,7 @@ export default function UserCard({ onSubmit, data }: UserCardProps) {
 	})
 	return (
 		<FormProvider {...form}>
+		<FormError form={form} />
 		<form 
 		  onSubmit={e => e.preventDefault()}
 		  noValidate>
@@ -63,11 +66,13 @@ export default function UserCard({ onSubmit, data }: UserCardProps) {
 			</button>
 
 			<Separator text="OR"/>
-			<BigButton>
-			<CardRow>
-				<FcGoogle className={styles.google_icon}/>
-				<div className={styles.google_text}> Sign-in with Google </div>
-			</CardRow>
+			<BigButton onClick={()=>{
+				signIn("google", { callbackUrl: "/" });
+			}}>
+				<CardRow>
+					<FcGoogle className={styles.google_icon}/>
+					<div className={styles.google_text}> Sign-in with Google </div>
+				</CardRow>
 			</BigButton>
 
 			<CardRow>

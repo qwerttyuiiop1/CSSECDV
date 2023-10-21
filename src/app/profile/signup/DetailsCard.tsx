@@ -13,6 +13,7 @@ import { LuArrowLeft } from "react-icons/lu"
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { address1, phone_code, phone, city, country } from '../validations'
+import FormError from "@/components/Providers/FormError";
 
 export interface DetailsCardOutput {
 	address1: string;
@@ -37,6 +38,7 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 	const handleBack = () => onBack(form.getValues());
 	return (
 		<FormProvider {...form}>
+		<FormError form={form} />
 		<form 
 		  onSubmit={e => e.preventDefault()}
 		  noValidate>

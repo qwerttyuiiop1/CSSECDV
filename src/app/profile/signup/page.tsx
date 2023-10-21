@@ -10,7 +10,7 @@ export default function SignupPage() {
 	const { data: session, status } = useSession();
 	const [ data1, setData1 ] = React.useState<UserCardOutput | null>(null);
 	const [ data2, setData2 ] = React.useState<DetailsCardOutput | null>(null);
-	const [ step, setStep ] = React.useState(1);
+	const [ step, setStep ] = React.useState(0);
 	const router = useRouter();
 	return (
 		<CardPage>
