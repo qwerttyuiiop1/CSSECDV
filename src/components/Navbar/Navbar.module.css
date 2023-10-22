@@ -1,0 +1,75 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #252525;
+    border: 1px solid black;
+}
+
+.navlink {
+    height: 3.5rem;
+    display: inline-block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    background-color: inherit;
+    float: right;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    float: left;
+}
+
+.logo_icon {
+    display: inline-block;
+    padding-right: 1rem;
+}
+
+.active {
+    background-color: #2E2E2E;
+    border-bottom: white 6px solid;
+}
+
+.connect {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    height: 100%;
+    padding-left: 2rem;
+    display: inline-block;
+    border: 4px solid black;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.connect_icon {
+    padding-left: 1rem;
+    padding-right: 0;
+}
+
+.connect.not_connected {
+    border-color: #949494;
+    color: #949494;
+}
+
+.connect.connected {
+    border-color: #3396FF;
+    color: #3396FF;
+}
+
+.connect_container {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
