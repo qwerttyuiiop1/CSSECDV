@@ -2,6 +2,8 @@ import React, { ReactNode } from "react";
 import styles from "./components.module.css";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
+import { BsFillPencilFill } from "react-icons/bs";
+import { IconBaseProps } from "react-icons";
 
 type Div = React.HTMLAttributes<HTMLDivElement>
 interface DivProps extends Div { children: ReactNode }
@@ -39,21 +41,23 @@ const Card: React.FC<{
 };
 const HeaderButton = wrapButton(`${styles.header_button} ${styles.header_text}`);
 const HeaderRow = wrapDiv(styles.row);
-const AddButton: React.FC<Button> = (props) => (
-	<button {...props} className={styles.header_button}>
-		<FaPlus className={styles.header_icon}/>
-	</button>
+
+const AddButton: React.FC<IconBaseProps> = (props) => (
+	<FaPlus {...props} className={`${styles.header_button} ${styles.header_icon}`}/>
 );
-const RefreshButton: React.FC<Button> = (props) => (
-	<button {...props} className={styles.header_button}>
-		<MdRefresh className={styles.header_icon}/>
-	</button>
+const RefreshButton: React.FC<IconBaseProps> = (props) => (
+	<MdRefresh {...props} className={`${styles.header_button} ${styles.header_icon}`}/>
 )
-const MinusButton: React.FC<Button> = (props) => (
-	<button {...props} className={styles.header_button}>
-		<FaMinus className={styles.header_icon}/>
-	</button>
+const MinusButton: React.FC<IconBaseProps> = (props) => (
+	<FaMinus {...props} className={`${styles.header_button} ${styles.header_icon}`}/>
 )
+const EditButton: React.FC<IconBaseProps> = (props) => (
+	<BsFillPencilFill {...props} className={styles.edit_icon}/>
+);
+const DeleteButton: React.FC<IconBaseProps> = (props) => (
+	<FaMinus {...props} className={styles.delete_icon}/>
+);
+
 
 export {
 	Card,
@@ -61,5 +65,7 @@ export {
 	HeaderRow,
 	AddButton,
 	RefreshButton,
-	MinusButton
+	MinusButton,
+	EditButton,
+	DeleteButton
 };

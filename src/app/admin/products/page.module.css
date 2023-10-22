@@ -1,0 +1,17 @@
+
+.main_container {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+.left {
+	flex: 60;
+}
+.right {
+	flex: 40;
+}
+.separator {
+	width: 0.3rem;
+	background-color: #454545;;
+	margin: 0 2.5rem;
+}

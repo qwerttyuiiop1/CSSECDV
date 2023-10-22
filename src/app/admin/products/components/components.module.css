@@ -18,6 +18,8 @@
 	justify-content: center;
 	align-items: center;
 	gap: 1.5rem;
+	padding-right: 1rem;
+	padding-right: 1rem;
 }
 .header_button {
 	min-height: 2.125rem;
@@ -39,7 +41,25 @@
 	padding: 0.3rem 0.9rem;
 }
 .header_icon {
-	width: 2.125rem;
-	height: 2.125rem;
+	width: 2.5rem;
+	height: 2.5rem;
 	padding: 0.2rem;
+}
+.edit_icon {
+	border: 5px solid green;
+	width: 2rem;
+	height: 2rem;
+	color: green;
+	padding-right: 5px;
+	border-radius: 20%;
+}
+.delete_icon {
+	border: 5px solid red;
+	width: 2rem;
+	height: 2rem;
+	color: red;
+	padding-right: 5px;
+	border-radius: 20%;
+
+	margin-right: auto;
 }

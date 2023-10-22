@@ -52,21 +52,18 @@
 	font-weight: 700;
 	line-height: normal;
 }
-
-.relative {
-	position: relative;
+.password_container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 .password {
-	padding-right: 3.1rem; /* 0.95 * 2 + 1.2 */
+	margin-right: -3.1rem; /* 0.95 * 2 + 1.2 + 2 */
+	padding-right: 3.1rem;
 }
 .password_icon {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	right: 0.95rem;
-	width: 1.2rem;
+	width: 2.4rem;
 	height: 1.2rem;
-	flex-shrink: 0;
 }
 
 .big_button {

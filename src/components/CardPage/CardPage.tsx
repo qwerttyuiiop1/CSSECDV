@@ -50,7 +50,7 @@ const Password: React.FC<InputProps> = ({ options, className, ...props }) => {
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { register } = useFormContext();
 	return (
-	  <div className={styles.relative}>
+	  <div className={styles.password_container}>
 		<input 
 		  {...props}
 		  type={showPassword ? "text" : "password"}
