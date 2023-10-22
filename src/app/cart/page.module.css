@@ -1,0 +1,200 @@
+.cartPage {
+  display: flex;
+  align-items: flex-start;
+  color: white;
+}
+
+.cart_header {
+  padding: 1rem; /* Add padding around the header */
+  font-size: 2rem;
+}
+
+
+.cart_container {
+  flex: 2; /* Increase the flex value for the cart container to make it larger */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  margin-right: 2rem;
+  margin: 1rem;
+  color: white;
+}
+.checkout_box {
+  flex: 1; 
+  display: flex;
+  border: solid black;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 1rem;
+  background-color:  #343434;
+  padding-top: 2rem;
+  margin: 1rem;
+  color: rgb(255, 255, 255);
+}
+.checkout_inside
+{
+  color:black;
+  background-color: white;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+}
+
+.cart_summary {
+  font-size: 1.8rem;
+  display: flex;
+  justify-content: space-between; /* Align total and price horizontally */
+}
+
+.redeem_code {
+  margin-top: 1rem; /* Add some top margin to the redeem code input */
+  display: flex;
+  flex-direction: column;
+}
+
+.redeem_code input {
+  width: 100%; /* Expand the input to fill the width of its container */
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.5rem; /* Add some spacing between the input and buttons */
+}
+
+.cart_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 2px solid #242323;
+  border-radius: 0.5rem;
+  justify-content: space-between;
+  color: white;
+}
+
+.cart_item input[type="checkbox"] {
+  order: 3;
+  margin-right: 1rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.item_name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.item_price {
+  margin-left: 1rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  order: 3; 
+  color: white;
+}
+
+.item_total_price {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  order: 2;
+  color: white;
+  display: flex;
+  
+}
+
+.item_total_price_container {
+  display: flex;
+  align-items: center;
+}
+
+.coin_animation_container {
+  margin-right: 1rem; 
+}
+
+.coin_animation {
+  width: 3rem;
+  height: 3rem;
+
+}
+.item_details {
+  display: flex;
+  align-items: center;
+}
+
+.cointotalprice {
+  display: flex;
+  align-items: center;
+}
+
+
+.selected_item_description {
+  margin-top: 1rem;
+  font-weight: heavy;
+  padding: 1rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: white;
+}
+
+.checkout_button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 0.8rem;
+  background-color: green;
+  border: 0;
+  box-shadow: inset 0 0 10px 0 #00000050;
+  color: white;
+}
+
+.remove_button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 0.8rem;
+  background-color: red;
+  color: white;
+  border: 0;
+  box-shadow: inset 0 0 10px 0 #00000050;
+}
+
+.cancel_button {
+  display: flex;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 0.8rem;
+  background-color: #808080;
+  color: white;
+  border: 0;
+  box-shadow: inset 0 0 10px 0 #00000050;
+}
+
+.quantity_buttons {
+  order: 2;
+}
+
+.quantity_button,
+.quantity_input {
+  height: 2.5rem;
+  width: 2.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  color: black; /* Leave this as it is or change it to white as needed */
+  border: 0;
+  border-radius: 0.4rem;
+  background-color: white;
+  box-shadow: inset 0 0 10px 0 #00000050;
+}
+
+.shop-name {
+  font-size: 2.5rem; 
+  border-bottom: 2px solid white; 
+  padding-bottom: 0.25rem; 
+  margin-top: 1rem;
+}
+
+
