@@ -4,6 +4,7 @@
     width: 100%;
     background-color: #252525;
     border: 1px solid black;
+    z-index: 2;
 }
 
 .navlink {
