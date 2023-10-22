@@ -6,7 +6,7 @@ const Toast: React.FC<ToastContainerProps & React.RefAttributes<HTMLDivElement> 
 
 	const formState = form.formState;
 	useEffect(() => {
-		if (!formState.isSubmitting) return;
+		if (formState.isSubmitting) return;
 		const errors = formState.errors;
 		if (errors == null) return;
 		for (const error in errors) {

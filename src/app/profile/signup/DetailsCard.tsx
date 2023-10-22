@@ -6,7 +6,8 @@ import {
 	Title,
 	Input,
 	CardRow,
-	SmallButton
+	SmallButton,
+	Dropdown
 } from "@/components/CardPage/CardPage";
 import CardStyles from "@/components/CardPage/card.module.css";
 import { LuArrowLeft } from "react-icons/lu"

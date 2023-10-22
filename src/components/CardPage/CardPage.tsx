@@ -71,6 +71,23 @@ const Password: React.FC<InputProps> = ({ options, className, ...props }) => {
 	  </div>
 	);
 };
+const Dropdown: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { 
+	values: string[] 
+	id: string
+	options?: RegisterOptions<FieldValues, string>;
+}> = ({values, options, ...props}) => {
+	const { register } = useFormContext();
+	return (
+	  <select 
+	  	{...props} 
+		{...register(props.id, options) } 
+		className={`${styles.dropdown} ${props.className||''}`}>
+		{values.map((value, index) => (
+		  <option key={index} value={value}>{value}</option>
+		))}
+	  </select>
+	);
+}
 
 const BigButton = wrapButton(styles.big_button);
 const SmallButton = wrapButton(styles.small_button);
@@ -97,5 +114,6 @@ export {
 	BigButton,
 	Separator,
 	CardRow,
-	SmallButton
+	SmallButton,
+	Dropdown
 };

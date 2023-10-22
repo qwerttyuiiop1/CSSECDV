@@ -121,3 +121,19 @@
 	padding: 0.15rem 0.75rem;
 	cursor: pointer;
 }
+.dropdown {
+	border-radius: 0.3125rem;
+	border: 3px solid #F4F4F4;
+	background: #252525;
+	color: #F4F4F4;
+	min-height: 3.23969rem;
+
+	padding: 0 2rem;
+
+	color: #F4F4F4;
+	font-family: 'Inter';
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
