@@ -50,7 +50,6 @@
 	width: 2rem;
 	height: 2rem;
 	color: green;
-	padding-right: 5px;
 	border-radius: 20%;
 }
 .delete_icon {
@@ -58,7 +57,6 @@
 	width: 2rem;
 	height: 2rem;
 	color: red;
-	padding-right: 5px;
 	border-radius: 20%;
 
 	margin-right: auto;

@@ -104,6 +104,14 @@ const Separator: React.FC<{ text: string }> = ({ text }) => {
 }
 const CardRow = wrapDiv(styles.card_row);
 
+const Label: React.FC<
+	React.LabelHTMLAttributes<HTMLLabelElement> & { children: ReactNode }
+> = ({children, className, ...props}) => {
+	return (
+	  <label {...props} className={styles.label + (className ? ' ' + className : '')}> {children} </label>
+	);
+}
+
 
 export { 
 	CardPage,
@@ -115,5 +123,6 @@ export {
 	Separator,
 	CardRow,
 	SmallButton,
-	Dropdown
+	Dropdown,
+	Label
 };

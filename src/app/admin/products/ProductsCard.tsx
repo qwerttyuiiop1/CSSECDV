@@ -13,6 +13,8 @@ import BrandProducts from "./components/BrandProducts";
 import { Brand } from "./Brand";
 import { AnimatePresence } from "framer-motion";
 import { SlideDown } from "@/components/Animations/Animations";
+import { Options, OptionsDivider } from "@/components/Dropdown/Options";
+import CreateBrandModal from "./modals/CreateBrandModal";
 interface ProductsCardProps {
 	brands: Brand[];
 	selectedProduct: [number, number];
@@ -25,14 +27,20 @@ const ProductsCard = ({ brands, selectedProduct, onSelectProduct }: ProductsCard
 	arr[index] = !arr[index]
 	setIsExpanded(arr)
   };
-  const openAll = () => {
-	setIsExpanded(brands.map(() => true))
+  const openAll = () => setIsExpanded(brands.map(() => true))
+  const collapseAll = () => setIsExpanded(brands.map(() => false))
+  const handleCreateBrand = () => {
+	setBrandModal(true)
+	console.log("create brand")
   }
-  const collapseAll = () => {
-	setIsExpanded(brands.map(() => false))
+  const handleCreateProduct = () => {
+	console.log("create product")
   }
+  const [brandModal, setBrandModal] = React.useState(false);
+
   return (
   	<div className={styles.products_container}>
+		<CreateBrandModal isOpen={brandModal} onClose={() => setBrandModal(false)} onSubmit={(name) => console.log(name)} />
 		<div className={styles.title_container}>
 			<span className={styles.title}> Product Management </span>
 		</div>
@@ -41,7 +49,13 @@ const ProductsCard = ({ brands, selectedProduct, onSelectProduct }: ProductsCard
 				<HeaderButton onClick={openAll}>Open All</HeaderButton>
 				<HeaderButton onClick={collapseAll}>Collapse All</HeaderButton>
 				<div className={styles.spacer} />
-				<AddButton />
+				<Options 
+					button={<AddButton/>}
+					content={<>
+						<span onClick={handleCreateBrand}> Create Brand </span>
+						<OptionsDivider />
+						<span onClick={handleCreateProduct}> Create Product </span>
+					</>}/>
 				<RefreshButton />
 			</HeaderRow>
 		} body= {

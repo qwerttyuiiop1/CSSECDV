@@ -4,6 +4,8 @@ import ProductsCard from "./ProductsCard";
 import ProductDetailsCard from "./ProductDetailsCard";
 import { Brand } from "./Brand";
 import styles from "./page.module.css";
+import BaseModal from "@/components/Modal/BaseModal";
+import { Separator, Title } from "@/components/CardPage/CardPage";
 
 
 const brands: Brand[] = [
