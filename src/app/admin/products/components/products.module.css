@@ -1,0 +1,180 @@
+.font_body {
+	color: #F4F4F4;
+	font-family: Urbanist;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+
+.table {
+	margin-left: 1rem;
+	margin-right: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	height: 100%;
+}
+.header_row {
+	color: #F4F4F4;
+	font-family: Urbanist;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	padding: 0 1rem;
+}
+.flex_col {
+	display: flex;
+	flex-direction: column;
+}
+.flex_row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+
+	border-radius: 0.3125rem;
+	border: 3px solid #353535;
+	background: #2C2C2C;
+	box-shadow: 0px 4px 4px 0px rgba(31, 31, 31, 0.25);
+
+	padding: 0.5rem 0;
+	width: 100%;
+	margin-top: 0.5rem;
+	padding: 0 1rem;
+}
+.selected {
+	border-color: #C9C9C9;
+}
+.delete {
+	border-color: #FF4A4A;
+}
+.row > * {
+	padding-left: 0.5rem;
+}
+
+.brand {
+	min-width: 10rem;
+}
+.product {
+	flex: 1;
+	min-width: 15rem;
+}
+.price {
+	min-width: 5rem;
+}
+.stock {
+	min-width: 5rem;
+}
+.actions {
+	min-width: 8rem;
+}
+.arrow {
+	width: 3.5rem;
+	height: 1.5rem;
+	margin: 0 0.5rem;
+}
+.code {
+	flex: 1;
+	min-width: 10rem;
+	margin-left: 1rem;
+}
+
+.spacer {
+	flex: 1;
+}
+.title {
+	color: #F4F4F4;
+	font-family: Urbanist;
+	font-size: 3rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin-left: 2rem;
+}
+.title_product {
+	color: #F4F4F4;
+	font-family: Urbanist;
+	font-size: 2rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+.title_stock {
+	color: #9F9F9F;
+	font-family: Urbanist;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+.title_container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 5rem;
+}
+.products_container {
+	margin-left: 4rem;
+}
+.details_container {
+	margin-right: 4rem;
+}
+.actions_container {
+
+	width: 8rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+.expand_icon {
+	width: 3rem;
+	width: 3rem;
+}
+
+.search_container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+.search {
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	color: #8A8A8A;
+	font-family: Urbanist;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	height: 2.75rem;
+	border: none;
+	box-sizing: border-box;
+}
+.search_icon {
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0.5rem;
+}
+.search_divider {
+	width: 5px;
+	height: 2.75rem;
+	margin-left: -0.5rem;
+	background: #C9C9C9;
+	margin-left: 5px;
+}

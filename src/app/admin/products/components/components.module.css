@@ -1,0 +1,65 @@
+.card {
+	border-radius: 1.25rem;
+	border: 10px solid #F4F4F4;
+	background: #222;
+	margin: 1rem 0;
+	padding: 1rem;
+	overflow: hidden;
+}
+.divider {
+	height: 10px;
+	background: #F4F4F4;
+	margin: 1rem -1rem;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5rem;
+	padding-right: 1rem;
+	padding-right: 1rem;
+}
+.header_button {
+	min-height: 2.125rem;
+	border-radius: 0.625rem;
+	border: 5px solid #C9C9C9;
+	background: rgba(97, 221, 65, 0.00);
+
+	cursor: pointer;
+}
+.header_text {
+	color: #FFF;
+	text-align: center;
+	font-family: Urbanist;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+
+	padding: 0.3rem 0.9rem;
+}
+.header_icon {
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0.2rem;
+}
+.edit_icon {
+	border: 5px solid green;
+	width: 2rem;
+	height: 2rem;
+	color: green;
+	padding-right: 5px;
+	border-radius: 20%;
+}
+.delete_icon {
+	border: 5px solid red;
+	width: 2rem;
+	height: 2rem;
+	color: red;
+	padding-right: 5px;
+	border-radius: 20%;
+
+	margin-right: auto;
+}
