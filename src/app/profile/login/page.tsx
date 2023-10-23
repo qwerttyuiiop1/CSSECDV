@@ -1,6 +1,6 @@
 "use client"
 import styles from "../login.module.css";
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { 
 	CardPage, 
@@ -15,10 +15,10 @@ import {
 import CardStyles from "@/components/CardPage/card.module.css";
 import { FcGoogle } from "react-icons/fc"
 import Link from "next/link";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { username, password } from '../validations'
-import FormError from "@/components/Providers/FormError";
+import { ErrorContainer, FormContainer } from "@/components/Providers/Forms";
 
 
 // TODO: lottie animation for loading
@@ -33,11 +33,8 @@ export default function Page() {
   });
   return (
 	<CardPage>
-	  <FormProvider {...form}>
-	  <FormError form={form} />
-	  <form 
-	    onSubmit={e => e.preventDefault()}
-		noValidate>
+	  <FormContainer form={form}>
+	  <ErrorContainer form={form} />
 	  <Card>
 		<Title className={styles.width}> Login </Title>
 		<Input placeholder="Username" id="username"
@@ -68,8 +65,7 @@ export default function Page() {
 			Forgot your password? 
 		</Link>
 	  </Card>
-	  </form>
-	  </FormProvider>
+	  </FormContainer>
 	</CardPage>
   );
 }

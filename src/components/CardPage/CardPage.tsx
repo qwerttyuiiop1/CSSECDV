@@ -3,9 +3,8 @@ import styles from "./card.module.css";
 import { BsFillEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
 
-interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
-	children: ReactNode;
-}
+type Div = React.HTMLAttributes<HTMLDivElement>
+interface DivProps extends Div { children: ReactNode }
 function wrapDiv(className: string): React.FC<DivProps> {
 	const div: React.FC<DivProps> = ({ children, ...props }) => (
 	  <div {...props} className={className + (props.className ? " " + props.className : '')}>
@@ -14,9 +13,8 @@ function wrapDiv(className: string): React.FC<DivProps> {
 	);
 	return div;
 }
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children: ReactNode;
-}
+type Button = React.ButtonHTMLAttributes<HTMLButtonElement>
+interface ButtonProps extends Button { children: ReactNode }
 function wrapButton(className: string): React.FC<ButtonProps> {
 	const button: React.FC<ButtonProps> = ({ children, ...props }) => (
 	  <button {...props} className={className + (props.className ? " " + props.className : '')}>
@@ -37,6 +35,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>{
 }
 const Input: React.FC<InputProps> = ({ options, type, className, ...props }) => {
 	const { register } = useFormContext();
+	if (!props.name) props.name = props.id;
 	return (
 	  <input 
 		{...props}
@@ -46,9 +45,24 @@ const Input: React.FC<InputProps> = ({ options, type, className, ...props }) => 
 		/>
 	);
 }
+const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+	id: string;
+	placeholder: string;
+	options?: RegisterOptions<FieldValues, string>;
+}> = ({options, ...props}) => {
+	const { register } = useFormContext();
+	if (!props.name) props.name = props.id;
+	return (
+	  <textarea 
+		{...props} 
+		className={`${styles.input} ${styles.text_area} ${props.className||''}`}
+		{...register(props.id, options)}/>
+	);
+}
 const Password: React.FC<InputProps> = ({ options, className, ...props }) => {
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { register } = useFormContext();
+	if (!props.name) props.name = props.id;
 	return (
 	  <div className={styles.password_container}>
 		<input 
@@ -71,11 +85,27 @@ const Password: React.FC<InputProps> = ({ options, className, ...props }) => {
 	  </div>
 	);
 };
+const Dropdown: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { 
+	values: string[] 
+	id: string
+	options?: RegisterOptions<FieldValues, string>;
+}> = ({values, options, ...props}) => {
+	const { register } = useFormContext();
+	if (!props.name) props.name = props.id;
+	return (
+	  <select 
+	  	{...props} 
+		{...register(props.id, options) } 
+		className={`${styles.dropdown} ${props.className||''}`}>
+		{values.map((value, index) => (
+		  <option key={index} value={value}>{value}</option>
+		))}
+	  </select>
+	);
+}
 
-const BigButton = wrapButton(styles.big_button);
-const SmallButton = wrapButton(styles.small_button);
-
-const Separator: React.FC<{ text: string }> = ({ text }) => {
+const Separator: React.FC<{ text?: string }> = ({ text }) => {
+	if (!text) return <hr className={styles.separator_line_full} />;
 	return (
 	  <div className={styles.separator}>
 		<hr className={styles.separator_line}/>
@@ -87,15 +117,44 @@ const Separator: React.FC<{ text: string }> = ({ text }) => {
 }
 const CardRow = wrapDiv(styles.card_row);
 
+const Label: React.FC<
+	React.LabelHTMLAttributes<HTMLLabelElement> & { children: ReactNode }
+> = ({children, className, ...props}) => (
+	<label {...props} className={`${styles.label} ${className||''}`}> {children} </label>
+);
+const BigButton = wrapButton(styles.big_button);
+const SmallButton = wrapButton(styles.small_button);
+const SideButton: React.FC<ButtonProps & {
+	color?: "main" | "gray" | "green" | "blue" | "red";
+	side?: "left" | "right";
+}> = ({ color, children, ...props }) => {
+	let className = (props.className? props.className + " " : '');;
+	if (!color || color === "main") className = styles.button_main;
+	else if (color === "gray") className = styles.button_gray;
+	else if (color === "green") className = styles.button_green;
+	else if (color === "blue") className = styles.button_blue;
+	else if (color === "red") className = styles.button_red;
+	if (props.side === "left") className += " " + styles.button_left;
+	else if (props.side === "right") className += " " + styles.button_right;
+	return (
+	  <button {...props} className={`${styles.side_button} ${className}`}>
+		{children}
+	  </button>
+	);
+}
 
 export { 
 	CardPage,
 	Card,
 	Title,
 	Input,
+	TextArea,
 	Password,
 	BigButton,
 	Separator,
 	CardRow,
-	SmallButton
+	SmallButton,
+	Dropdown,
+	Label,
+	SideButton
 };

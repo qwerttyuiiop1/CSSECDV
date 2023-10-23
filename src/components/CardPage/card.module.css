@@ -1,10 +1,10 @@
 .main_container {
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 	min-height: 100vh; /* TODO: do calc after navbar is done */
 	padding: 5rem 0;
+}
+.main_container > * {
+	margin: auto;
 }
 .background {
     background-image: url('../../../public/background-dark.png');
@@ -43,7 +43,7 @@
 	flex-shrink: 0;
 
 	width: 100%;
-	padding: 0 2rem;
+	padding: 0.5rem 2rem;
 
 	color: #F4F4F4;
 	font-family: 'Inter';
@@ -51,6 +51,17 @@
 	font-style: normal;
 	font-weight: 700;
 	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.text_area {
+	resize: vertical;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-y: auto;
 }
 .password_container {
 	display: flex;
@@ -77,6 +88,7 @@
 	border-radius: 0.3125rem;
 	border: 3px solid #000;
 	cursor: pointer;
+	padding: 0.2rem 1.3rem;
 }
 
 .separator_line {
@@ -86,6 +98,11 @@
 .separator {
 	display: flex;
 	align-items: center;
+}
+.separator_line_full {
+	border: 1px solid white;
+	flex: 1;
+	margin: 0 -1rem;
 }
 .separator_text {
 	color: #FFF;
@@ -108,8 +125,6 @@
 }
 
 .small_button {
-	/*min-height: 2.69975rem;*/
-	
 	fill: #4F4F4F;
 	background-color: #4F4F4F;
 	stroke-width: 3px;
@@ -120,4 +135,88 @@
 
 	padding: 0.15rem 0.75rem;
 	cursor: pointer;
+}
+.dropdown {
+	border-radius: 0.3125rem;
+	border: 3px solid #F4F4F4;
+	background: #252525;
+	color: #F4F4F4;
+	min-height: 3.23969rem;
+
+	padding: 0 2rem;
+
+	color: #F4F4F4;
+	font-family: 'Inter';
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.label {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+}
+.side_button {
+	border: 5px solid black;
+	text-align: center;
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	min-height: 2.69975rem;
+	stroke-width: 3px;
+	border-radius: 0.75rem;
+	cursor: pointer;
+	padding: 0.2rem 1.3rem;
+}
+.button_right {
+	margin-left: auto;
+	min-width: 50%;
+}
+.button_left {
+	margin-right: auto;
+	min-width: 50%;
+}
+.button_blue {
+	color: #1A4382;
+	fill: #3586FF;
+	background-color: #3586FF;
+	border-color: #2463C1;
+}
+.button_main {
+	color: #F4F4F4;
+	fill: #4F4F4F;
+	background-color: #4F4F4F;
+	border-color: #000;
+	stroke: #0E0E0E;
+}
+.button_green {
+	color: #2F6C20;
+	background: #61DD41;
+	border-color: #408E2C;
+}
+.button_red {
+	color: #7F2929;
+	background: #FF4A4A;
+	border-color:  #922E2E;
+}
+.button_gray {
+	color: #C9C9C9;
+	background: rgba(97, 221, 65, 0.00);
+	border-color: #C9C9C9;
 }

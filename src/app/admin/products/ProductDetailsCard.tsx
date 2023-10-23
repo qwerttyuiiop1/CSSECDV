@@ -12,14 +12,21 @@ import {
 } from "./components/Components";
 import ComponentStyles from "./components/components.module.css";
 import { BiSearch } from "react-icons/bi";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { SlideDown } from "@/components/Animations/Animations";
+import CreateCodeModal from "./modals/CreateCodeModal";
+import { modalHandler } from "@/components/Modal/BaseModal";
+import { toast } from "react-toastify";
+import DeleteCodesModal from "./modals/DeleteCodesModal";
+import EditCodeModal from "./modals/EditCodeModal";
+import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 
 const Row: React.FC<{
 	isSelected: boolean;
 	onSelect: () => void;
 	code: string;
 }> = ({ isSelected, onSelect, code }) => {
+	const editCodeModal = useState(false);
 	return (
 		<div className={`${styles.row} ${isSelected ? styles.delete : ''}`}>
 			{isSelected ? (
@@ -28,7 +35,8 @@ const Row: React.FC<{
 				<div className={ComponentStyles.delete_icon} onClick={onSelect}/>
 			)}
 			<span className={styles.code}>{code}</span>
-			<EditButton />
+			<EditButton onClick={modalHandler(editCodeModal)}/>
+			<EditCodeModal onSubmit={console.log} state={editCodeModal} code={code} />
 		</div>
 	)
 }
@@ -39,12 +47,14 @@ interface ProductDetailsCardProps {
 const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 	const [ filter, setFilter ] = useState<string>("");
 	const [ isSelected, setIsSelected ] = useState<boolean[]>(product?.activeCodes.map(() => false) || []);
-	const hasDelete = isSelected.some((value, i) => value && product?.activeCodes[i].includes(filter));
+	const deleteCodes =  product?.activeCodes.filter((v, i) => isSelected[i] && v.includes(filter));
 	const handleSelect = (index: number) => {
 		const arr = [...isSelected];
 		arr[index] = !arr[index];
 		setIsSelected(arr);
 	}
+	const creteCodeModal = useState(false);
+	const deleteCodesModal = useState(false);
 	return (
 		<div className={styles.details_container}>
 			<div className={styles.title_container}>
@@ -64,16 +74,27 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 							onChange={ (e) => setFilter(e.target.value) }/>
 					</div>
 					<div className={styles.spacer} />
-					<AddButton />
-					<RefreshButton />
-					{hasDelete ? (
-						<MinusButton 
+					<Options 
+						button={<AddButton />}
+						content={<>
+							<span> Create Product </span>
+							<OptionsDivider />
+							<span onClick={modalHandler(creteCodeModal)}> Add Single Code </span>
+							<CreateCodeModal onSubmit={console.log} state={creteCodeModal} />
+						</>}/>
+					<RefreshButton onClick={()=>toast.info("refreshed")}/>
+					{deleteCodes?.length ? (<>
+						<MinusButton onClick={modalHandler(deleteCodesModal)}
 							color="#FF4A4A" style={{borderColor: '#FF4A4A'}}
 							/>
-					) : (
+						<DeleteCodesModal 
+							state={deleteCodesModal}
+							onSubmit={console.log}
+							codes={deleteCodes}
+							product={product!} />
+					</>) : (
 						<MinusButton opacity='50%'/>
-					)}
-					
+					)}				
 				</HeaderRow>
 			} body={
 				<div className={styles.table}>

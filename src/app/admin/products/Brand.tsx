@@ -8,4 +8,5 @@ export interface Product {
 	details: string;
 	tos: string;
 	activeCodes: string[];
+	brand: string;
 }
