@@ -23,6 +23,8 @@
 	font-style: normal;
 	font-weight: 400;
 	line-height: normal;
+
+	z-index: 1;
 }
 .arrow {
 	position: absolute;

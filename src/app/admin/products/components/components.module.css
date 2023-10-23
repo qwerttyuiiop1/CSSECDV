@@ -5,6 +5,7 @@
 	margin: 1rem 0;
 	padding: 1rem;
 	overflow: hidden;
+	min-height: 50vh;
 }
 .divider {
 	height: 10px;

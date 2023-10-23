@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import DeleteCodesModal from "./modals/DeleteCodesModal";
 import EditCodeModal from "./modals/EditCodeModal";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
+import UploadCSVModal from "./modals/UploadCSVModal";
 
 const Row: React.FC<{
 	isSelected: boolean;
@@ -55,6 +56,7 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 	}
 	const creteCodeModal = useState(false);
 	const deleteCodesModal = useState(false);
+	const uploadCSVModal = useState(false);
 	return (
 		<div className={styles.details_container}>
 			<div className={styles.title_container}>
@@ -77,7 +79,8 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 					<Options 
 						button={<AddButton />}
 						content={<>
-							<span> Create Product </span>
+							<span onClick={modalHandler(uploadCSVModal)}> Upload .CSV File </span>
+							<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
 							<OptionsDivider />
 							<span onClick={modalHandler(creteCodeModal)}> Add Single Code </span>
 							<CreateCodeModal onSubmit={console.log} state={creteCodeModal} />

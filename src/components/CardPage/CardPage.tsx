@@ -45,6 +45,27 @@ const Input: React.FC<InputProps> = ({ options, type, className, ...props }) => 
 		/>
 	);
 }
+const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
+	id: string;
+	accept: string;
+	options?: RegisterOptions<FieldValues, string>;
+}> = ({options, ...props}) => {
+	const { register, getValues } = useFormContext();
+	const file = getValues(props.id) as FileList | undefined;
+	if (!props.name) props.name = props.id;
+	return (
+	  <label className={styles.file_input} htmlFor={props.id}>
+		<div className={styles.file_input_button}> Upload </div>
+		<span className={styles.file_input_name}>{file && file.length ? file[0].name : "No file selected"}</span>
+
+		<input 
+			{...props} 
+			type="file" 
+			style={{display: "none"}}
+			{...register(props.id, options)}/>
+	  </label>
+	);
+}
 const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	id: string;
 	placeholder: string;
@@ -148,6 +169,7 @@ export {
 	Card,
 	Title,
 	Input,
+	FileInput,
 	TextArea,
 	Password,
 	BigButton,
