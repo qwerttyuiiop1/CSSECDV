@@ -1,37 +1,40 @@
 import React from "react";
 import { 
-	Card,
 	Title,
 	Input,
 	Label,
 	CardRow,
-	SideButton
+	SideButton,
+	Card
 } from "@/components/CardPage/CardPage";
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
+import { Brand } from "../Brand";
 
-interface CreateBrandProps extends BaseModalProps {
-	onSubmit: (name: string) => Promise<void> | void;
+interface EditBrandProps extends BaseModalProps {
+	onSubmit: (name: string) => Promise<void> | void; 
+	brand: Brand;
 }
 
-const CreateBrandModal: React.FC<CreateBrandProps> = ({
-	state, onSubmit
+const EditBrandModal: React.FC<EditBrandProps> = ({
+	state, onSubmit, brand
 }) => {
-	const form = useForm();
+	const form = useForm({ defaultValues: { name: brand.name } });
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		await onSubmit(data.name);
-		toast.success("Brand created: " + data.name);
+		toast.success("Brand edited: " + data.name);
 		close();
 		form.reset();
 	});
+	if (!state[0]) return null;
 	return (
 		<BaseModal state={state}>
 		<FormContainer form={form}>
 		<Card>
-			<Title>Create Brand</Title>
+			<Title>Edit Brand</Title>
 			<Label>
 				Brand Name
 				<Input placeholder="Brand Name" id="name" 
@@ -41,8 +44,8 @@ const CreateBrandModal: React.FC<CreateBrandProps> = ({
 				<SideButton onClick={close} color="gray">
 					Cancel
 				</SideButton>
-				<SideButton onClick={handleSubmit} color="blue">
-					Create
+				<SideButton onClick={handleSubmit} color="green">
+					Save
 				</SideButton>
 			</CardRow>
 		</Card>
@@ -51,4 +54,4 @@ const CreateBrandModal: React.FC<CreateBrandProps> = ({
 	);
 }
 
-export default CreateBrandModal;
+export default EditBrandModal;

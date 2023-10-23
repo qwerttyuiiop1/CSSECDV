@@ -1,24 +1,31 @@
 import React, { ReactNode } from "react";
-import { Card } from "../CardPage/CardPage";
 import styles from "./modal.module.css";
+import { AnimatePresence, motion } from "framer-motion";
+import { fadeInOptions } from "../Animations/Animations";
 
+
+export const modalHandler = ([_, b]: [boolean, (a:boolean)=>void]) => { 
+	return (e: React.MouseEvent<Element, MouseEvent>) => {
+		e.stopPropagation();
+		b(true);
+	}
+}
 export interface BaseModalProps {
-	isOpen: boolean;
-	onClose: () => void;
+	state: [boolean, (open: boolean) => void];
 }
 const BaseModal: React.FC<BaseModalProps & { children: ReactNode }> = ({ 
-	children, isOpen, onClose
+	children, state
 }) => {
-	if (!isOpen) return null;
-	const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		event.stopPropagation();
-	}
 	return (
-		<div className={styles.modal_overlay} onClick={onClose}>
-			<Card style={{display: 'relative'}} onClick={handleOverlayClick}>
-				{children}
-			</Card>
-		</div>
+		<AnimatePresence>
+			{state[0] && <motion.div {...fadeInOptions}
+				className={styles.modal_overlay}
+				onClick={()=>state[1](false)}>
+				<div style={{display: 'relative'}} onClick={(e)=>e.stopPropagation()}>
+					{children}
+				</div>
+			</motion.div>}
+		</AnimatePresence>
 	);
 }
 

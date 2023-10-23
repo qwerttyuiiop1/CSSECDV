@@ -11,11 +11,11 @@ import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
 
-interface CreateBrandProps extends BaseModalProps {
+interface CreateCodeProps extends BaseModalProps {
 	onSubmit: (name: string) => Promise<void> | void;
 }
 
-const CreateBrandModal: React.FC<CreateBrandProps> = ({
+const CreateCodeModal: React.FC<CreateCodeProps> = ({
 	state, onSubmit
 }) => {
 	const form = useForm();
@@ -23,19 +23,20 @@ const CreateBrandModal: React.FC<CreateBrandProps> = ({
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		await onSubmit(data.name);
-		toast.success("Brand created: " + data.name);
+		toast.success("Code created: " + data.code);
 		close();
 		form.reset();
 	});
+	if (!state[0]) return null;
 	return (
 		<BaseModal state={state}>
 		<FormContainer form={form}>
 		<Card>
-			<Title>Create Brand</Title>
+			<Title>Add Single Code</Title>
 			<Label>
-				Brand Name
-				<Input placeholder="Brand Name" id="name" 
-					options={{required: "name is required"}}/>
+				Code
+				<Input placeholder="Code" id="code" 
+					options={{required: "code is required"}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
@@ -51,4 +52,4 @@ const CreateBrandModal: React.FC<CreateBrandProps> = ({
 	);
 }
 
-export default CreateBrandModal;
+export default CreateCodeModal;
