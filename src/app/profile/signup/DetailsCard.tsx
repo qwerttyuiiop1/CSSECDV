@@ -6,14 +6,18 @@ import {
 	Title,
 	Input,
 	CardRow,
-	SmallButton
+	SmallButton,
+	SideButton,
+	Dropdown
 } from "@/components/CardPage/CardPage";
-import CardStyles from "@/components/CardPage/card.module.css";
 import { LuArrowLeft } from "react-icons/lu"
-import Link from "next/link";
-import { FormProvider, useForm } from "react-hook-form";
-import { address1, phone_code, phone, city, country } from '../validations'
-import FormError from "@/components/Providers/FormError";
+import { useForm } from "react-hook-form";
+import { address1, phone_code, phone, city } from '../validations'
+import {
+	FormContainer,
+	ErrorContainer
+} from "@/components/Providers/Forms";
+import countryList from "@/assets/data/countries";
 
 export interface DetailsCardOutput {
 	address1: string;
@@ -37,11 +41,8 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 	})
 	const handleBack = () => onBack(form.getValues());
 	return (
-		<FormProvider {...form}>
-		<FormError form={form} />
-		<form 
-		  onSubmit={e => e.preventDefault()}
-		  noValidate>
+		<FormContainer form={form}>
+		<ErrorContainer form={form}/>
 		<Card>
 			<Title>Sign-up</Title>
 			<Input placeholder="Address Line 1" id="address1"
@@ -49,9 +50,9 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 			<Input placeholder="Address Line 2" id="address2"/>
 			<CardRow className={styles.width}>
 				<Input placeholder="City" id="city" className={styles.input_row}
-					options={address1}/>
-				<Input placeholder="Country" id="country" className={styles.input_row}
-					options={country}/>
+					options={city}/>
+				<Dropdown id="country"
+					values={countryList} className={styles.input_row}/>
 			</CardRow>
 			<CardRow className={styles.width}>
 				<Input placeholder="+63" type="number" id="phone_code" 
@@ -66,14 +67,11 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 						<span className={styles.back_text}>Back</span>
 					</CardRow>
 				</SmallButton>
-				<button 
-					className={`${CardStyles.small_button} ${styles.left_button}`}
-					onClick={handleSubmit}>
+				<SideButton color="blue" onClick={handleSubmit} side="right">
 					Create Account
-				</button>
+				</SideButton>
 			</CardRow>
 		</Card>
-		</form>
-		</FormProvider>
+		</FormContainer>
 	);
 }
