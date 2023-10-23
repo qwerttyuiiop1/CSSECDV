@@ -20,7 +20,7 @@
     "react": "^18",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18",
-    "react-social-icons": "^6.4.0"
+    "react-social-icons": "^6.4.0",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
     "react-modal": "^3.16.1",
