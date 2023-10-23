@@ -1,0 +1,256 @@
+.main_container {
+	display: flex;
+	min-height: 100vh; /* TODO: do calc after navbar is done */
+	padding: 5rem 0;
+}
+.main_container > * {
+	margin: auto;
+}
+.background {
+    background-image: url('../../../public/background-dark.png');
+	background-color: lightgray;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+.title {
+	color: #F4F4F4;
+	text-align: center;
+	font-family: Urbanist;
+	font-size: 3rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+
+.card {
+	border-radius: 1.25rem;
+	border: 5px solid #111;
+	background: #252525;
+	box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
+	padding: 1.5rem 3.6rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.input {
+	border-radius: 0.3125rem;
+	border: 3px solid #F4F4F4;
+	background: #252525;
+	min-height: 3.23969rem;
+	flex-shrink: 0;
+
+	width: 100%;
+	padding: 0.5rem 2rem;
+
+	color: #F4F4F4;
+	font-family: 'Inter';
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.text_area {
+	resize: vertical;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-y: auto;
+}
+.file_input {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8rem;
+	align-items: center;
+	justify-content: center;
+
+	cursor: pointer;
+}
+.file_input_button {
+	border-radius: 1.25rem;
+	border: 3px solid #C9C9C9;
+	background: rgba(37, 37, 37, 0.00);
+	color: #F4F4F4;
+	text-align: center;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	padding: 0.2rem 0.75rem;
+}
+.file_input_name {
+	color: #C9C9C9;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.password_container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.password {
+	margin-right: -3.1rem; /* 0.95 * 2 + 1.2 + 2 */
+	padding-right: 3.1rem;
+}
+.password_icon {
+	width: 2.4rem;
+	height: 1.2rem;
+}
+
+.big_button {
+	min-height: 2.69975rem;
+	fill: #4F4F4F;
+	background-color: #4F4F4F;
+	stroke-width: 3px;
+	stroke: #0E0E0E;
+	color: #F4F4F4;
+
+	border-radius: 0.3125rem;
+	border: 3px solid #000;
+	cursor: pointer;
+	padding: 0.2rem 1.3rem;
+}
+
+.separator_line {
+	border: 1px solid white;
+	flex: 1;
+}
+.separator {
+	display: flex;
+	align-items: center;
+}
+.separator_line_full {
+	border: 1px solid white;
+	flex: 1;
+	margin: 0 -1rem;
+}
+.separator_text {
+	color: #FFF;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	margin: 0 1rem;
+}
+
+.card_row {
+	display: flex;
+	flex-direction: row;
+	gap: 0.6rem;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.small_button {
+	fill: #4F4F4F;
+	background-color: #4F4F4F;
+	stroke-width: 3px;
+	stroke: #0E0E0E;
+
+	border-radius: 0.3125rem;
+	border: 3px solid #000;
+
+	padding: 0.15rem 0.75rem;
+	cursor: pointer;
+}
+.dropdown {
+	border-radius: 0.3125rem;
+	border: 3px solid #F4F4F4;
+	background: #252525;
+	color: #F4F4F4;
+	min-height: 3.23969rem;
+
+	padding: 0 2rem;
+
+	color: #F4F4F4;
+	font-family: 'Inter';
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.label {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+}
+.side_button {
+	border: 5px solid black;
+	text-align: center;
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	min-height: 2.69975rem;
+	stroke-width: 3px;
+	border-radius: 0.75rem;
+	cursor: pointer;
+	padding: 0.2rem 1.3rem;
+}
+.button_right {
+	margin-left: auto;
+	min-width: 50%;
+}
+.button_left {
+	margin-right: auto;
+	min-width: 50%;
+}
+.button_blue {
+	color: #1A4382;
+	fill: #3586FF;
+	background-color: #3586FF;
+	border-color: #2463C1;
+}
+.button_main {
+	color: #F4F4F4;
+	fill: #4F4F4F;
+	background-color: #4F4F4F;
+	border-color: #000;
+	stroke: #0E0E0E;
+}
+.button_green {
+	color: #2F6C20;
+	background: #61DD41;
+	border-color: #408E2C;
+}
+.button_red {
+	color: #7F2929;
+	background: #FF4A4A;
+	border-color:  #922E2E;
+}
+.button_gray {
+	color: #C9C9C9;
+	background: rgba(97, 221, 65, 0.00);
+	border-color: #C9C9C9;
+}

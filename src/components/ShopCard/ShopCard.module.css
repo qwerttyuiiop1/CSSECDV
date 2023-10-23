@@ -1,5 +1,4 @@
-.card_container {
-  position: relative;
+.card_container, .view_more_container {
   height: 15rem;
   width: 15rem;
   border: 4px solid #ffffff;
@@ -9,6 +8,20 @@
   -webkit-box-shadow: inset 0 0 10px 0 #00000050;
   -moz-box-shadow: inset 0 0 10px 0 #00000050;
   box-shadow: inset 0 0 10px 0 #00000050;
+}
+
+.card_container{
+  position: relative;
+}
+
+.view_more_container{
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+  flex-direction: column;
 }
 
 .shop_info {
@@ -44,3 +57,5 @@
 .divider {
   margin: 0 0.3rem;
 }
+
+

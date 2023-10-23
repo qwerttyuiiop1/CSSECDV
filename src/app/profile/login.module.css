@@ -1,0 +1,75 @@
+.google_icon {
+	width: 1.6rem;
+	height: 1.6rem;
+}
+.login_button_text {
+	font-family: Inter;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.google_text {
+	color: #FFF;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.no_account {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.forgot_password {
+	color: #AFAFAF;
+
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+
+	text-align: center;
+
+	margin-top: -1rem;
+	margin-bottom: 1rem;
+}
+.sign_up {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.arrow {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+.phone_width {
+	width: 4.5rem;
+	padding-left: 0.25rem;
+	padding-right: 0rem;
+	text-overflow: clip;
+}
+.input_row {
+	width: 1px; /* override the existing style */
+	flex: 1; /* and fill up remaining space */
+}
+.width {
+	min-width: 23.75rem;
+	width: 100%;
+}
+.back_text {
+	color: #F4F4F4;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}

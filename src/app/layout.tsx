@@ -1,8 +1,10 @@
+import Providers from '@/components/Providers/providers'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children,
+  children, 
 }: {
   children: React.ReactNode
 }) {
@@ -24,6 +26,10 @@ export default function RootLayout({
         <Footer />
         {/* Footer shouldn't be on all pages, but I put it here for testing purposes */}
       </body>
+		<Providers>
+		  {children}
+		</Providers>
+	  </body>
     </html>
   )
 }
