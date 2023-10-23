@@ -10,19 +10,17 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
+import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
-interface CreateCodeProps extends BaseModalProps {
-	onSubmit: (name: string) => Promise<void> | void;
-}
-
-const CreateCodeModal: React.FC<CreateCodeProps> = ({
-	state, onSubmit
+const CreateCodeModal: React.FC<BaseModalProps> = ({
+	state
 }) => {
+	const { createCode } = useSelectedProduct();
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await onSubmit(data.name);
+		await createCode(data.code);
 		toast.success("Code created: " + data.code);
 		close();
 		form.reset();

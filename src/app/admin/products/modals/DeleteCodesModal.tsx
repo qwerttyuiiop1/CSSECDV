@@ -9,20 +9,21 @@ import {
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { toast } from "react-toastify";
-import { Product } from "../Brand";
+import { Product } from "../../../../components/Providers/Products/Brand";
+import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
 interface DeleteCodesProps extends BaseModalProps {
-	onSubmit: () => Promise<void> | void; 
 	codes: string[];
 	product: Product;
 }
 
 const DeleteCodesModal: React.FC<DeleteCodesProps> = ({
-	state, onSubmit, codes, product
+	state, codes, product
 }) => {
+	const { deleteCodes } = useSelectedProduct();
 	const close = () => state[1](false);
 	const handleSubmit = async () => {
-		await onSubmit();
+		await deleteCodes(codes);
 		toast.success("Codes deleted: " + codes.join(", "));
 		close();
 	};

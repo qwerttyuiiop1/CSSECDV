@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Product } from "./Brand";
+import React, { useEffect, useState } from "react";
+import { Product } from "../../../components/Providers/Products/Brand";
 import styles from "./components/products.module.css";
 import { 
 	AddButton, 
@@ -21,12 +21,14 @@ import DeleteCodesModal from "./modals/DeleteCodesModal";
 import EditCodeModal from "./modals/EditCodeModal";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 import UploadCSVModal from "./modals/UploadCSVModal";
+import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
 const Row: React.FC<{
 	isSelected: boolean;
 	onSelect: () => void;
 	code: string;
-}> = ({ isSelected, onSelect, code }) => {
+	id: number;
+}> = ({ isSelected, onSelect, code, id }) => {
 	const editCodeModal = useState(false);
 	return (
 		<div className={`${styles.row} ${isSelected ? styles.delete : ''}`}>
@@ -37,17 +39,15 @@ const Row: React.FC<{
 			)}
 			<span className={styles.code}>{code}</span>
 			<EditButton onClick={modalHandler(editCodeModal)}/>
-			<EditCodeModal onSubmit={console.log} state={editCodeModal} code={code} />
+			<EditCodeModal state={editCodeModal} code={id} />
 		</div>
 	)
 }
 
-interface ProductDetailsCardProps {
-  product?: Product;
-}
-const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
+const ProductDetailsCard = () => {
+	const { selectedProduct: product } = useSelectedProduct();
 	const [ filter, setFilter ] = useState<string>("");
-	const [ isSelected, setIsSelected ] = useState<boolean[]>(product?.activeCodes.map(() => false) || []);
+	const [ isSelected, setIsSelected ] = useState<boolean[]>([]);
 	const deleteCodes =  product?.activeCodes.filter((v, i) => isSelected[i] && v.includes(filter));
 	const handleSelect = (index: number) => {
 		const arr = [...isSelected];
@@ -57,6 +57,10 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 	const creteCodeModal = useState(false);
 	const deleteCodesModal = useState(false);
 	const uploadCSVModal = useState(false);
+
+	useEffect(() => {
+		setIsSelected(product?.activeCodes.map(() => false) || []);
+	}, [product]);
 	return (
 		<div className={styles.details_container}>
 			<div className={styles.title_container}>
@@ -83,7 +87,7 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 							<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
 							<OptionsDivider />
 							<span onClick={modalHandler(creteCodeModal)}> Add Single Code </span>
-							<CreateCodeModal onSubmit={console.log} state={creteCodeModal} />
+							<CreateCodeModal state={creteCodeModal} />
 						</>}/>
 					<RefreshButton onClick={()=>toast.info("refreshed")}/>
 					{deleteCodes?.length ? (<>
@@ -92,7 +96,6 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 							/>
 						<DeleteCodesModal 
 							state={deleteCodesModal}
-							onSubmit={console.log}
 							codes={deleteCodes}
 							product={product!} />
 					</>) : (
@@ -113,6 +116,7 @@ const ProductDetailsCard = ({ product }: ProductDetailsCardProps) => {
 								<SlideDown key={i}>
 									<Row
 										code={code}
+										id={i}
 										onSelect={() => handleSelect(i)}
 										isSelected={isSelected[i]}
 									/>
