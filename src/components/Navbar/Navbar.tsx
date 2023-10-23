@@ -12,55 +12,6 @@ let defaultUser: any = {
 };
 
 export default function Navbar({ user=defaultUser }) {
-    // let profileComp = null;
-
-    // if (user) {
-    //     profileComp = (
-    //         <div className={`${styles.navlink} ${styles.profile_container_outer}`}>            
-    //             <div className={`${styles.profile_container} ${styles.dropdown}`}>
-    //                 <div className={`${styles.dropdown_button} ${styles.profile_button}`}>
-    //                     <img className={styles.profile_icon} src="profile.svg"/>
-    //                     <div className={styles.profile_info}>
-    //                         <div className={styles.profile_info_username}>
-    //                             <h4>BrOdin</h4>
-    //                         </div>
-    //                         <div className={styles.profile_info_points}>
-    //                             <p>25.1234 RP</p>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 <div className={`${styles.profile_dropdown} ${styles.dropdown_content} ${styles.open}`}>
-    //                     <Link href="/inventory" className={styles.dropdown_link}><h3>Inventory</h3></Link>
-    //                     <Link href="/profile" className={styles.dropdown_link}><h3>Edit Profile</h3></Link>
-    //                     <Link href="/logout" className={styles.dropdown_link}><h3>Logout</h3></Link>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     );
-    // } else {
-    //     profileComp = (
-    //         <div className={`${styles.navlink} ${styles.profile_container_outer}`}>            
-    //             <Link href="/login">
-    //                 <div className={styles.profile_container}>
-    //                     <h3>Login</h3>
-    //                 </div>
-    //             </Link>
-    //         </div>
-    //     );
-    // }
-
-    // const adminComp = (
-    //     <div className={`${styles.dropdown} ${styles.admin_container}`}>
-    //         <div className={`${styles.dropdown_button}`}>
-    //             <NavLink href="/admin"><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></NavLink>
-    //         </div>
-    //         <div className={`${styles.admin_dropdown} ${styles.dropdown_content} ${styles.open}`}>
-    //             <Link href="/accounts" className={styles.dropdown_link}><h3>Accounts</h3></Link>
-    //             <Link href="/products" className={styles.dropdown_link}><h3>Products</h3></Link>
-    //         </div>
-    //     </div>
-    // );
-
     return (
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
