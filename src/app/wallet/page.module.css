@@ -1,0 +1,51 @@
+.section {
+    border: 3px solid red;
+    padding: 2rem 4rem;
+}
+
+.section > div {
+    border: 3px solid green;
+}
+
+.section > div > h1 {
+    display: inline-block;
+    border: 3px solid blue;
+}
+
+.section > div > div {
+    border: 3px solid purple;
+}
+
+.section > div > div > div {
+    border: 3px solid red;
+}
+
+.balance_subsection,
+.profile_subsection {
+    display: flex;
+}
+
+.content_block {
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.block_light {
+    border-color: #B7B7B7;
+    background-color: #F4F4F4;
+    color:  #252525;
+}
+
+.block_dark {
+    border-color: #111111;
+    background-color: #252525;
+    color: #F4F4F4;
+}
+
+.profile_container {
+    display: flex;
+}
+
+.transactions_page_container {
+    display: flex;
+}
