@@ -74,3 +74,106 @@
     justify-content: center;
     align-items: center;
 }
+
+.profile_container_outer {
+    padding: 0.5rem;
+    padding-right: 1.5rem;
+}
+
+.profile_container {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    height: 100%;
+    display: inline-block;
+    background-color: white;
+    border-radius: 5px;
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.login_container {
+    padding: 0.6rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_content {
+    margin: 0;
+    display: none;
+    position: absolute;
+    min-width: 100%;    
+    left: 0;
+    text-align: center;
+}
+
+.open {
+    display: inline-block;
+}
+
+.dropdown_link {
+    display: block;
+    padding: 0.4rem;
+    border-top: 2px solid #C6C6C6; 
+}
+
+.dropdown_button {
+    min-height: 100%;
+    min-width: 8rem;
+    padding: 0;
+    display: flex;
+}
+
+.profile_button {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.profile_icon {
+    display: inline-block;
+    margin-right: 0.4rem;
+}
+
+.profile_info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile_info_username {
+    flex-grow: 1;   
+    display: flex;
+    align-items: end;
+}
+
+.profile_info_points {
+    flex-grow: 1;
+    display: flex;
+    align-items: start;
+    font-style: italic;
+    font-size: 10px;
+}
+
+.profile_dropdown {
+    background-color: white;
+}
+
+.admin_container {
+    float: right;
+}
+
+.admin_dropdown {
+    background-color: #252525;
+}
+
+.admin_dropdown > .dropdown_link {
+    border-top: 2px solid #171717;
+}
+
+.dropdown_content:last-child {
+    border-radius: 0 0 10px 10px;
+}
