@@ -92,7 +92,7 @@ const accounts: Account[] = [
 
 export default function page() {
   const [searchValue, setSearchValue] = useState("");
-  const [filteredAccounts, setFilteredAccounts] = useState(accounts); 
+  const [filteredAccounts, setFilteredAccounts] = useState(accounts);
 
   const handleInputChange = (value: string) => {
     setSearchValue(value);
@@ -105,37 +105,39 @@ export default function page() {
 
   return (
     <div className={styles.main_container}>
-      <div className={styles.header_container}>
-        <h1 className={styles.header_text}>Account Management</h1>
+      <div className={styles.inner_container}>
+        <div className={styles.header_container}>
+          <h1 className={styles.header_text}>Account Management</h1>
 
-        <SearchBar onInputChange={handleInputChange} />
+          <SearchBar onInputChange={handleInputChange} />
 
-        <div className={styles.buttons_container}>
-          <div className={styles.button_container}>
-            <CiFilter className={styles.button} />
-          </div>
+          <div className={styles.buttons_container}>
+            <div className={styles.button_container}>
+              <CiFilter className={styles.button} />
+            </div>
 
-          <div className={styles.button_container}>
-            <MdRefresh className={styles.button} />
+            <div className={styles.button_container}>
+              <MdRefresh className={styles.button} />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={styles.table}>
-        <div className={styles.table_header_container}>
-          <h1 className={styles.username_column}>Username</h1>
-          <h1 className={styles.date_column}>Date Registered</h1>
-          <h1 className={styles.rank_column}>Rank</h1>
-          <h1 className={styles.actions_column}>Actions</h1>
+        <div className={styles.table}>
+          <div className={styles.table_header_container}>
+            <h1 className={styles.username_column}>Username</h1>
+            <h1 className={styles.date_column}>Date Registered</h1>
+            <h1 className={styles.rank_column}>Rank</h1>
+            <h1 className={styles.actions_column}>Actions</h1>
+          </div>
+
+          {filteredAccounts.map((account, index) => (
+            <TableRow
+              username={account.username}
+              date={account.date}
+              rank={account.rank}
+            />
+          ))}
         </div>
-
-        {filteredAccounts.map((account, index) => (
-          <TableRow
-            username={account.username}
-            date={account.date}
-            rank={account.rank}
-          />
-        ))}
       </div>
     </div>
   );
