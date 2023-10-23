@@ -2,7 +2,7 @@
 import styles from "./Navbar.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from 'next/navigation';
-import Image from 'next/image';
+import React, { useState, useRef, useEffect } from "react";
 
 let defaultUser: any = {
     username: "BrOdin",
@@ -67,12 +67,28 @@ function WalletConnectBox({ isConnected }) {
 }
 
 function NavDropdown({ children, options, classNames }) {
+    const [isOpen, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+          if (ref.current && !ref.current.contains(event.target)) {
+            setOpen(false);
+          }
+        }
+
+        window.addEventListener("click", handleClickOutside);
+        return () => {
+          window.removeEventListener("click", handleClickOutside);
+        };
+      }, [ref]);
+
     return (
-        <div className={`${styles.dropdown} ${classNames.outer}`}>
-            <div className={`${styles.dropdown_button} ${classNames.button}`}>
+        <div className={`${styles.dropdown} ${classNames.outer}`} ref={ref}>
+            <div className={`${styles.dropdown_button} ${classNames.button}`} onClick={() => setOpen(!isOpen)}>
                 {children}
             </div>
-            <div className={`${styles.dropdown_content} ${classNames.content} ${styles.open}`}>
+            <div className={`${styles.dropdown_content} ${classNames.content} ${isOpen && styles.open}`}>
                 {options.map((option) => {
                     return (
                         <Link href={option.href} className={styles.dropdown_link}><h3>{option.label}</h3></Link>
@@ -96,7 +112,7 @@ function ProfileComponent({ user }) {
                     {href: "/profile", label: "Edit Profile"},
                     {href: "/logout", label: "Logout"}
                 ]}>
-                    <img className={styles.profile_icon} src="profile.svg"/>
+                    <img className={styles.profile_icon} src="/profile.svg"/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
                             <h4>{user.username}</h4>
@@ -118,6 +134,8 @@ function ProfileComponent({ user }) {
 }
 
 function AdminComponent({ user }) {
+    const pathname = usePathname();
+
     return user?.isAdmin ? (
         <NavDropdown classNames={{
             outer: styles.admin_container,
@@ -127,7 +145,7 @@ function AdminComponent({ user }) {
             {href: "/accounts", label: "Accounts"},
             {href: "/products", label: "Products"}
         ]}>
-            <NavLink href="/admin"><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></NavLink>
+            <div className={`${styles.navlink} ${(pathname === "/accounts" || pathname === "/products") && styles.active}`}><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></div>
         </NavDropdown>
     ) : (
         <></> 

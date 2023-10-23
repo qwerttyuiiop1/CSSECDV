@@ -22,6 +22,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        {/* Footer shouldn't be on all pages, but I put it here for testing purposes */}
       </body>
     </html>
   )
