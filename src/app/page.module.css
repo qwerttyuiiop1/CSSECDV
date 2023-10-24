@@ -47,6 +47,7 @@
 
 .get_started_button {
   margin: 2rem 0;
+  cursor: pointer;
 
   display: flex;
   align-items: center;
@@ -63,6 +64,11 @@
   box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
   -webkit-box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
   -moz-box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
+}
+
+.link{
+  width: fit-content;
+  height: fit-content;
 }
 
 .img_wrapper {
