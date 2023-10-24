@@ -142,8 +142,8 @@ function AdminComponent({ user }) {
             button: "",
             content: styles.admin_dropdown,
         }} options={[
-            {href: "/accounts", label: "Accounts"},
-            {href: "/products", label: "Products"}
+            {href: "/admin/accounts", label: "Accounts"},
+            {href: "/admin/products", label: "Products"}
         ]}>
             <div className={`${styles.navlink} ${(pathname === "/accounts" || pathname === "/products") && styles.active}`}><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></div>
         </NavDropdown>
