@@ -9,10 +9,9 @@ import { PiShoppingCartSimpleFill } from "react-icons/pi";
 import { shops } from "./shops/page";
 import ShopCard from "@/components/ShopCard/ShopCard";
 import ViewMoreCard from "@/components/ShopCard/ViewMoreCard";
+import Link from "next/link";
 
 export default function Home() {
-
-
   return (
     <div>
       <div className={styles.section1}>
@@ -24,20 +23,22 @@ export default function Home() {
               pretium, magna id faucibus mattis, augue libero dictum metus, ut
               luctus mi lorem ut quam.
             </h1>
-            <button className={styles.get_started_button}>
-              GET STARTED
-              <AiOutlineArrowRight
-                style={{
-                  marginLeft: "0.5rem",
-                  padding: "0",
-                  strokeWidth: "50",
-                }}
-              />
-            </button>
+            <Link href={"/wallet"} className={styles.link}>
+              <button className={styles.get_started_button}>
+                GET STARTED
+                <AiOutlineArrowRight
+                  style={{
+                    marginLeft: "0.5rem",
+                    padding: "0",
+                    strokeWidth: "50",
+                  }}
+                />
+              </button>
+            </Link>
           </div>
           <div className={styles.section1_right}>
             <div className={styles.img_wrapper}>
-            <div className={styles.section1_img}></div>
+              <div className={styles.section1_img}></div>
             </div>
           </div>
         </div>
@@ -45,22 +46,28 @@ export default function Home() {
 
       <div className={styles.section2}>
         <div className={styles.stats_container}>
-          <BsGift className={styles.section2_icon}/>
+          <BsGift className={styles.section2_icon} />
           <h1 className={styles.section2_text}>500+</h1>
-          <h1 className={styles.section2_text} style={{ fontWeight: "300" }}>VOUCHERS AVAILABLE</h1>
+          <h1 className={styles.section2_text} style={{ fontWeight: "300" }}>
+            VOUCHERS AVAILABLE
+          </h1>
         </div>
 
         <div className={styles.stats_container}>
           <AiOutlineShop className={styles.section2_icon} />
           <h1 className={styles.section2_text}>50</h1>
-          <h1 className={styles.section2_text} style={{ fontWeight: "300" }}>VARIOUS BRANDS</h1>
+          <h1 className={styles.section2_text} style={{ fontWeight: "300" }}>
+            VARIOUS BRANDS
+          </h1>
         </div>
       </div>
 
       <div className={styles.section3}>
         <div className={styles.section3_upper}>
-          <h1  className={styles.section3_header}>Get started in a few minutes</h1>
-          <h2  className={styles.section3_subheader}>
+          <h1 className={styles.section3_header}>
+            Get started in a few minutes
+          </h1>
+          <h2 className={styles.section3_subheader}>
             with a few steps you can redeem various vouchers
           </h2>
         </div>
