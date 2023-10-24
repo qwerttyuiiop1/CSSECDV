@@ -443,6 +443,14 @@ function TransactionsSection({ transactions }) {
     const currentTransactionFirst = () => transactions.length > 0 ? page * transactionsPerPage + 1 : 0
     const currentTransactionLast = () => Math.min((page + 1) * transactionsPerPage, transactions.length);
 
+    const transactionTotalColor = (total) => {
+        if (total > 0)
+            return styles.transactions_total_plus;
+        else if (total < 0)
+            return styles.transactions_total_minus;
+        return "";
+    }
+
     console.log(transactions);
     console.log(transactions2D);
 
@@ -460,20 +468,20 @@ function TransactionsSection({ transactions }) {
             </div>
             <div className={styles.transactions_table_container}>
                 <table>
-                    <tr>
+                    <tr className={styles.transactions_row_dark}>
                         <th>Date</th>
                         <th>Type</th>
                         <th>Items</th>
                         <th>Total</th>
                         <th>Points Balance</th>
                     </tr>
-                    {transactions2D[page]?.map((transaction) => {
+                    {transactions2D[page]?.map((transaction, index) => {
                         return (
-                            <tr>
+                            <tr className={index % 2 == 0 ? styles.transactions_row_light : styles.transactions_row_dark}>
                                 <td>{transaction.date}</td>
                                 <td>{transaction.type}</td>
                                 <td>{transaction.items}</td>
-                                <td>{transaction.total}</td>
+                                <td className={transactionTotalColor(transaction.total)}>{transaction.total}</td>
                                 <td>{transaction.pointsBalance}</td>
                             </tr>
                         );

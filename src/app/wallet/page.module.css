@@ -116,3 +116,19 @@
     cursor: pointer;
     user-select: none;
 }
+
+.transactions_total_plus {
+    color: #61DD41;
+}
+
+.transactions_total_minus {
+    color: #DE5D5D;
+}
+
+.transactions_row_light {
+    background-color: #2C2C2C;
+}
+
+.transactions_row_dark {
+    background-color: #222222;
+}
