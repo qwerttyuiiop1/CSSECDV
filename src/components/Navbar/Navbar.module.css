@@ -8,7 +8,7 @@
 }
 
 .navlink {
-    height: 3.5rem;
+    height: var(--navbar-height);
     display: inline-block;
     padding-top: 1rem;
     padding-bottom: 1rem;
