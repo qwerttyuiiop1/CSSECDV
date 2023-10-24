@@ -12,23 +12,25 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../Brand";
+import { Product } from "../../../../components/Providers/Products/Brand";
+import { ProductId, useProducts } from "@/components/Providers/Products/Products";
 
 interface EditProductProps extends BaseModalProps {
-	onSubmit: (product: Product) => Promise<void> | void;
-	product: Product;
+	id: ProductId;
 }
 
 const EditProductModal: React.FC<EditProductProps> = ({
-	state, onSubmit, product
+	state, id
 }) => {
-	const form = useForm( { defaultValues: product } );
+	const { findProduct, updateProduct } = useProducts();
+	const product = findProduct(id)!;
+	const form = useForm( { defaultValues: {...product} } );
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		data.activeCodes = [];
+		data.activeCodes = product.activeCodes;
 		data.price = Number(data.price);
-		await onSubmit(data);
+		await updateProduct(id, data as Product);
 		toast.success("Product created: " + JSON.stringify(data));
 		close();
 		form.reset();

@@ -12,22 +12,21 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../Brand";
+import { Product } from "../../../../components/Providers/Products/Brand";
+import { useBrands, useProducts } from "@/components/Providers/Products/Products";
 
-interface CreateProductProps extends BaseModalProps {
-	onSubmit: (brand: Product) => Promise<void> | void;
-}
-
-const CreateProductModal: React.FC<CreateProductProps> = ({
-	state, onSubmit
+const CreateProductModal: React.FC<BaseModalProps> = ({
+	state
 }) => {
+	const { data } = useBrands();
+	const { createProduct } = useProducts();
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		data.activeCodes = [];
 		data.price = Number(data.price);
-		await onSubmit(data as Product);
+		createProduct({ brand: data.brand }, data as Product);
 		toast.success("Product created: " + JSON.stringify(data));
 		close();
 		form.reset();
@@ -41,14 +40,7 @@ const CreateProductModal: React.FC<CreateProductProps> = ({
 				Brand Name
 				<Dropdown 
 					id="brand"
-					values={[
-						"Never gonna give you up",
-						"Never gonna let you down",
-						"Never gonna run around and desert you",
-						"Never gonna make you cry",
-						"Never gonna say goodbye",
-						"Never gonna tell a lie and hurt you"
-					]}/>
+					values={data.map(b => b.name)}/>
 			</Label>
 			<CardRow>
 				<Label style={{flex: '1'}}>

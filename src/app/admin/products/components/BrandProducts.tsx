@@ -5,15 +5,17 @@ import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { EditButton, DeleteButton } from "./Components";
 import { AnimatePresence, motion } from "framer-motion";
-import { Brand, Product } from "../Brand";
+import { Brand, Product } from "../../../../components/Providers/Products/Brand";
 import EditBrandModal from "../modals/EditBrandModal";
 import DeleteBrandModal from "../modals/DeleteBrandModal";
 import EditProductModal from "../modals/EditProductModal";
 import DeleteProductModal from "../modals/DeleteProductModal";
 import { modalHandler } from "@/components/Modal/BaseModal";
+import { ProductId } from "@/components/Providers/Products/Products";
 
 export interface BrandProductsProps {
 	brand: Brand;
+	brandId: number;
 	selectedProduct: number;
 	isExpanded: boolean;
 	onSelectProduct: (index: number) => void;
@@ -21,9 +23,10 @@ export interface BrandProductsProps {
 }
 const Subrow: React.FC<{
 	product: Product,
+	id: ProductId,
 	onSelect: () => void,
 	selected: boolean,
-}> = ({ product, onSelect, selected }) => {
+}> = ({ product, onSelect, selected, id }) => {
 	const editModal = useState(false);
 	const deleteModal = useState(false);
 	return (
@@ -37,16 +40,16 @@ const Subrow: React.FC<{
 				<span className={styles.stock}>{product.activeCodes.length}</span>
 				<div className={`${styles.actions} ${styles.actions_container}`}>
 					<EditButton onClick={modalHandler(editModal)}/>
-					<EditProductModal state={editModal} product={product} onSubmit={console.log}/>
+					<EditProductModal state={editModal} id={id}/>
 					<DeleteButton onClick={modalHandler(deleteModal)}/>
-					<DeleteProductModal state={deleteModal} product={product} onSubmit={console.log}/>
+					<DeleteProductModal state={deleteModal} id={id}/>
 				</div>
 			</div>
 		</div>
 	);
 };
 const BrandProducts: React.FC<BrandProductsProps> = ({ 
-	brand, selectedProduct, onSelectProduct, isExpanded, onToggle
+	brand, selectedProduct, onSelectProduct, isExpanded, onToggle, brandId
 }) => {
 	const editModal = useState(false);
 	const deleteModal = useState(false);
@@ -57,9 +60,9 @@ const BrandProducts: React.FC<BrandProductsProps> = ({
 				<div className={styles.spacer} />
 				<div className={`${styles.actions} ${styles.actions_container}`}>
 					<EditButton onClick={modalHandler(editModal)}/>
-					<EditBrandModal state={editModal} brand={brand} onSubmit={console.log}/>
+					<EditBrandModal state={editModal} brand={brand}/>
 					<DeleteButton onClick={modalHandler(deleteModal)}/>
-					<DeleteBrandModal state={deleteModal} brand={brand} onSubmit={console.log}/>
+					<DeleteBrandModal state={deleteModal} brand={brand}/>
 					{ isExpanded ? (
 						<AiFillCaretUp className={styles.expand_icon} onClick={onToggle}/> 
 					) : (
@@ -74,6 +77,7 @@ const BrandProducts: React.FC<BrandProductsProps> = ({
 				transition={{ duration: 0.3 }}> {
 					brand.products.map((product, i) => (<Subrow
 						key={i}
+						id={[brandId, i]}
 						product={product}
 						onSelect={() => onSelectProduct(i)}
 						selected={i === selectedProduct}

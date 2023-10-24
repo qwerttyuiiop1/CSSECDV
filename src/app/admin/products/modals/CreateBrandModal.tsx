@@ -10,19 +10,17 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
+import { useBrands } from "@/components/Providers/Products/Products";
 
-interface CreateBrandProps extends BaseModalProps {
-	onSubmit: (name: string) => Promise<void> | void;
-}
-
-const CreateBrandModal: React.FC<CreateBrandProps> = ({
-	state, onSubmit
+const CreateBrandModal: React.FC<BaseModalProps> = ({
+	state
 }) => {
+	const { createBrand } = useBrands();
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await onSubmit(data.name);
+		await createBrand(data.name);
 		toast.success("Brand created: " + data.name);
 		close();
 		form.reset();
