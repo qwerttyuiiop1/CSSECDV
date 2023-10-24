@@ -16,13 +16,55 @@ const defaultProfile = {
     address: "123 Rizal St."
 }
 
-const defaultTransactions = [
+let defaultTransactions = [
     {
       "date": "09-30-2023",
       "type": "Deposit",
       "items": "-",
       "total": "+3000",
       "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+    "date": "09-30-2023",
+    "type": "Deposit",
+    "items": "-",
+    "total": "+3000",
+    "pointsBalance": 5500
+    },
+    {
+    "date": "09-30-2023",
+    "type": "Purchase",
+    "items": "2x Grab Voucher",
+    "total": -2000,
+    "pointsBalance": 2500
+    },
+    {
+    "date": "09-30-2023",
+    "type": "Purchase",
+    "items": "1x SM Gift Card",
+    "total": -1000,
+    "pointsBalance": 1500
     },
     {
       "date": "09-30-2023",
@@ -79,49 +121,196 @@ const defaultTransactions = [
       "items": "1x SM Gift Card",
       "total": -1000,
       "pointsBalance": 1500
-    },
+    }, 
     {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    }
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Deposit",
+        "items": "-",
+        "total": "+3000",
+        "pointsBalance": 5500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "2x Grab Voucher",
+        "total": -2000,
+        "pointsBalance": 2500
+      },
+      {
+        "date": "09-30-2023",
+        "type": "Purchase",
+        "items": "1x SM Gift Card",
+        "total": -1000,
+        "pointsBalance": 1500
+      }
   ];
 
 export default function Wallet({ 
@@ -227,15 +416,39 @@ function ProfileSection({ profile }) {
 }
 
 function TransactionsSection({ transactions }) {
+    const [page, setPage] = useState(0);
+
+    if (!transactions)
+        transactions = [];
+
+    const transactionsPerPage = 15;
+    const arrayTo2D = (arr, numPerRow) => {
+        let result = [];
+        for (let i=0; i < arr.length; i += numPerRow) 
+            result.push(arr.slice(i, i + numPerRow));
+        return result;
+    }
+    const transactions2D = arrayTo2D(transactions, transactionsPerPage);
+
+    const handlePageNext = () => setPage(Math.min(page+1, Math.max(transactions2D.length-1, 0)));
+    const handlePagePrev = () => setPage(Math.max(page-1, 0));
+
+    const currentTransactionFirst = () => transactions.length > 0 ? page * transactionsPerPage + 1 : 0
+    const currentTransactionLast = () => Math.min((page + 1) * transactionsPerPage, transactions.length);
+
     console.log(transactions);
+    console.log(transactions2D);
+
     return (
         <HeaderSection className={styles.transactions_subsection} header="My Transactions">
             <div className={styles.transactions_page_container}>
                 <div className={styles.transactions_amount_display}>
-                    Showing 1-15 of 213
+                    Showing {currentTransactionFirst()}-{currentTransactionLast()} of {transactions.length}
                 </div>
                 <div className={styles.transactions_page_selector}>
-                    Page 1
+                    <span className={styles.transactions_page_prev} onClick={handlePagePrev}>◀</span>
+                    <span>Page {page+1}</span>
+                    <span className={styles.transactions_page_next} onClick={handlePageNext}>▶</span>
                 </div>
             </div>
             <div className={styles.transactions_table_container}>
@@ -247,7 +460,7 @@ function TransactionsSection({ transactions }) {
                         <th>Total</th>
                         <th>Points Balance</th>
                     </tr>
-                    {transactions.map((transaction) => {
+                    {transactions2D[page]?.map((transaction) => {
                         return (
                             <tr>
                                 <td>{transaction.date}</td>

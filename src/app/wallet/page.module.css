@@ -110,3 +110,9 @@
 .transactions_table_container > table > tr > td {
     text-align: center;
 }
+
+.transactions_page_prev,
+.transactions_page_next {
+    cursor: pointer;
+    user-select: none;
+}
