@@ -86,6 +86,10 @@
     cursor: pointer;
 }
 
+.button.balance_toggle {
+    border: 0;
+}
+
 .button.points_add {
     border-color: #E7A600;
     background-color: #FFC52F;

@@ -1,5 +1,6 @@
 "use client"
 import styles from "./page.module.css";
+import { useState } from 'react'; 
 
 const defaultBalance = {
     points: 10000,
@@ -61,7 +62,9 @@ function IconTextButton({ className="", src, alt, text, onClick }) {
 
 function BalanceSection({ balance }) {
     return (
-        <HeaderSection className={styles.balance_subsection} header="My Balance" afterHeader={(<img src="/icons/eyes.svg" alt="Eye Toggle" />)}>
+        <HeaderSection className={styles.balance_subsection} header="My Balance" 
+            afterHeader={(<img onClick={() => console.log("Clicked")} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
+        >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
                 <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
                 <div>{balance.points}</div>
@@ -76,10 +79,35 @@ function BalanceSection({ balance }) {
 }
 
 function ProfileSection({ profile }) {
+    const [isEditable, setEditable] = useState(false);
+
     return (
         <HeaderSection className={styles.profile_subsection} header="My Profile">
             <div className={`${styles.profile_container} ${styles.content_block} ${styles.block_dark}`}>
-                <div className={styles.profile_table_container}>Profile Table</div>
+                <div className={styles.profile_table_container}>
+                    <table>
+                        <tr>
+                            <td>Username</td>
+                            <td><input defaultValue={profile.username} /></td>
+                        </tr>
+                        <tr>
+                            <td>Phone Number</td>
+                            <td><input defaultValue={profile.phoneNumber} /></td>
+                        </tr>
+                        <tr>
+                            <td>Country</td>
+                            <td><input defaultValue={profile.country} /></td>
+                        </tr>
+                        <tr>
+                            <td>City</td>
+                            <td><input defaultValue={profile.city} /></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td><input defaultValue={profile.address} /></td>
+                        </tr>
+                    </table>
+                </div>
                 {/* <HeaderSection>div className={`${styles.profile_cog_container} ${styles.button} ${styles.profile_edit}`}><img src="/icons/gear.svg" alt="Edit Profile"/></div> */}
                 <IconTextButton onClick={() => console.log("Clicked")} className={`${styles.profile_edit} ${styles.profile_cog_container}`} src="/icons/gear.svg" alt="Edit Profile" text="" />
             </div>
