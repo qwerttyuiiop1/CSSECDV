@@ -16,12 +16,18 @@ export interface BaseModalProps {
 const BaseModal: React.FC<BaseModalProps & { children: ReactNode }> = ({ 
 	children, state
 }) => {
+	const ref = React.useRef<HTMLDivElement>(null);
+	const handleClick = (e: React.MouseEvent) => {
+		if (state[0] === false) return;
+		if (ref.current?.contains(e.target as Node) ===  false)
+			state[1](false);
+	}
 	return (
 		<AnimatePresence>
 			{state[0] && <motion.div {...fadeInOptions}
 				className={styles.modal_overlay}
-				onClick={()=>state[1](false)}>
-				<div style={{display: 'relative'}} onClick={(e)=>e.stopPropagation()}>
+				onClick={handleClick}>
+				<div style={{display: 'relative'}} ref={ref}>
 					{children}
 				</div>
 			</motion.div>}
