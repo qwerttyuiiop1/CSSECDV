@@ -386,23 +386,27 @@ function ProfileSection({ profile }) {
                     <table>
                         <tr>
                             <td>Username</td>
-                            <td><input defaultValue={profile.username} /></td>
+                            <td>{profile.username}</td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td>********</td>
                         </tr>
                         <tr>
                             <td>Phone Number</td>
-                            <td><input defaultValue={profile.phoneNumber} /></td>
+                            <td>{profile.phoneNumber}</td>
                         </tr>
                         <tr>
                             <td>Country</td>
-                            <td><input defaultValue={profile.country} /></td>
+                            <td>{profile.country}</td>
                         </tr>
                         <tr>
                             <td>City</td>
-                            <td><input defaultValue={profile.city} /></td>
+                            <td>{profile.city}</td>
                         </tr>
                         <tr>
                             <td>Address</td>
-                            <td><input defaultValue={profile.address} /></td>
+                            <td>{profile.address}</td>
                         </tr>
                     </table>
                 </div>
