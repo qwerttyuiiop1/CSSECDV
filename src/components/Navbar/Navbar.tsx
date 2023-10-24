@@ -137,17 +137,20 @@ function ProfileComponent({ user }) {
 
 function AdminComponent({ user }) {
     const pathname = usePathname();
+    const adminOptions = [
+        {href: "/admin/accounts", label: "Accounts"},
+        {href: "/admin/products", label: "Products"}
+    ];
 
     return user?.isAdmin ? (
         <NavDropdown classNames={{
             outer: styles.admin_container,
             button: "",
             content: styles.admin_dropdown,
-        }} options={[
-            {href: "/admin/accounts", label: "Accounts"},
-            {href: "/admin/products", label: "Products"}
-        ]}>
-            <div className={`${styles.navlink} ${(pathname === "/accounts" || pathname === "/products") && styles.active}`}><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></div>
+        }} options={
+            adminOptions
+        }>
+            <div className={`${styles.navlink} ${adminOptions.some(link => link.href === pathname) && styles.active}`}><h3>Admin&nbsp;&nbsp;&nbsp;▾</h3></div>
         </NavDropdown>
     ) : (
         <></> 
