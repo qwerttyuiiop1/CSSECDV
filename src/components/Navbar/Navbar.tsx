@@ -93,7 +93,7 @@ function NavDropdown({ children, options, classNames }) {
             <div className={`${styles.dropdown_content} ${classNames.content} ${isOpen && styles.open}`}>
                 {options.map((option) => {
                     return (
-                        <Link href={option.href} className={styles.dropdown_link}><h3>{option.label}</h3></Link>
+                        <Link href={option.href} className={styles.dropdown_link} onClick={() => setOpen(!isOpen)}><h3>{option.label}</h3></Link>
                     );
                 })}
             </div>
