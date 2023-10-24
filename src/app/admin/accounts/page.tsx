@@ -7,13 +7,70 @@ import SearchBar from "@/components/SearchBar.tsx/SearchBar";
 import React, { useState } from "react";
 import FilterModal from "./components/FilterModal";
 import { modalHandler } from "@/components/Modal/BaseModal";
+import UserInfoModal from "./components/UserInfoModal";
 
 
-const TableRow: React.FC<{
+export interface Account {
   username: string;
   date: Date;
   rank: string;
-}> = ({ username, date, rank }) => {
+  phoneNumber: string;
+  country: string;
+  city: string;
+  address: string;
+}
+
+const accounts: Account[] = [
+  {
+    username: "Dom",
+    date: new Date(),
+    rank: "Super Admin",
+    phoneNumber: "(+63) 986 255 9923",
+    country: "Philippines",
+    city: "Manila",
+    address: "123 Taft Ave.",
+  },
+  {
+    username: "BrOdin",
+    date: new Date(),
+    rank: "Member",
+    phoneNumber: "(+63) 986 255 9923",
+    country: "Philippines",
+    city: "Manila",
+    address: "123 Taft Ave.",
+  },
+  {
+    username: "Kyle",
+    date: new Date(),
+    rank: "Member",
+    phoneNumber: "(+63) 986 255 9923",
+    country: "Philippines",
+    city: "Manila",
+    address: "123 Taft Ave.",
+  },
+  {
+    username: "Lars",
+    date: new Date(),
+    rank: "Admin",
+    phoneNumber: "(+63) 986 255 9923",
+    country: "Philippines",
+    city: "Manila",
+    address: "123 Taft Ave.",
+  },
+  {
+    username: "Sidney",
+    date: new Date(),
+    rank: "Member",
+    phoneNumber: "(+63) 986 255 9923",
+    country: "Philippines",
+    city: "Manila",
+    address: "123 Taft Ave.",
+  },
+];
+
+const TableRow: React.FC<{
+ account:Account
+}> = ({ account }) => {
   const formatDate = (date: Date) => {
     const months = [
       "January",
@@ -42,56 +99,27 @@ const TableRow: React.FC<{
     } ${day}, ${year} at ${hours}:${minutes}:${seconds}`;
   };
 
+  const isUserInfoModalOpen = useState(false);
+
   return (
     <div className={styles.table_row}>
-      <h1 className={styles.username_column}>{username}</h1>
-      <h1 className={styles.date_column}>{formatDate(date)}</h1>
-      <h1 className={styles.rank_column}>{rank}</h1>
-      <button className={styles.view_info_btn}>View Info</button>
+      <UserInfoModal state={isUserInfoModalOpen} user={account}/>
+      <h1 className={styles.username_column}>{account.username}</h1>
+      <h1 className={styles.date_column}>{formatDate(account.date)}</h1>
+      <h1 className={styles.rank_column}>{account.rank}</h1>
+      <button className={styles.view_info_btn} onClick={modalHandler(isUserInfoModalOpen)}>View Info</button>
 
-      {rank === "Admin" && (
+      {account.rank === "Admin" && (
         <button className={styles.give_admin_btn}>Give Admin</button>
       )}
-      {rank === "Member" && (
+      {account.rank === "Member" && (
         <button className={styles.remove_admin_btn}>Remove Admin</button>
       )}
     </div>
   );
 };
 
-interface Account {
-  username: string;
-  date: Date;
-  rank: string;
-}
 
-const accounts: Account[] = [
-  {
-    username: "Dom",
-    date: new Date(),
-    rank: "Super Admin",
-  },
-  {
-    username: "BrOdin",
-    date: new Date(),
-    rank: "Member",
-  },
-  {
-    username: "Kyle",
-    date: new Date(),
-    rank: "Member",
-  },
-  {
-    username: "Lars",
-    date: new Date(),
-    rank: "Admin",
-  },
-  {
-    username: "Sidney",
-    date: new Date(),
-    rank: "Member",
-  },
-];
 
 export default function page() {
   const [searchValue, setSearchValue] = useState("");
@@ -112,6 +140,7 @@ export default function page() {
   return (
     <div className={styles.main_container}>
       <FilterModal onSubmit={console.log} state={isFilterModalOpen} />
+
 
       <div className={styles.inner_container}>
         <div className={styles.header_container}>
@@ -140,9 +169,7 @@ export default function page() {
 
           {filteredAccounts.map((account, index) => (
             <TableRow
-              username={account.username}
-              date={account.date}
-              rank={account.rank}
+              account={account}
             />
           ))}
         </div>

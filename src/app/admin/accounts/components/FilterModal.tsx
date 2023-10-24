@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "./FilterModal.module.css";
+import styles from "./page.module.css";
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
@@ -52,8 +52,8 @@ const FilterModal: React.FC<CreateCodeProps> = ({ state, onSubmit }) => {
         <Card>
           <div className={styles.main_container}>
             <h1 className={styles.header}>Filter</h1>
-            <div className={styles.filter}>
-              <h1 className={styles.filter_name}>Rank</h1>
+            <div className={styles.horizontal_container}>
+              <h1 className={styles.name}>Rank</h1>
               <div className={styles.dropdown}>
                 <Dropdown
                   onSelectionChange={handleSelectionChange}
@@ -63,8 +63,8 @@ const FilterModal: React.FC<CreateCodeProps> = ({ state, onSubmit }) => {
               </div>
             </div>
 
-            <div className={styles.filter}>
-              <h1 className={styles.filter_name}>Sort by</h1>
+            <div className={styles.horizontal_container}>
+              <h1 className={styles.name}>Sort by</h1>
               <div className={styles.dropdown}>
                 <Dropdown
                   onSelectionChange={handleSelectionChange}
@@ -74,8 +74,8 @@ const FilterModal: React.FC<CreateCodeProps> = ({ state, onSubmit }) => {
               </div>
             </div>
 
-            <div className={styles.filter}>
-              <h1 className={styles.filter_name}>Order</h1>
+            <div className={styles.horizontal_container}>
+              <h1 className={styles.name}>Order</h1>
               <div className={styles.dropdown}>
                 <Dropdown
                   onSelectionChange={handleSelectionChange}

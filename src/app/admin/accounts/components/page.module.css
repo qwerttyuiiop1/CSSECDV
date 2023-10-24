@@ -5,11 +5,15 @@
     justify-content: center;
 }
 
-.filter{
+.horizontal_container, .details_container{
     display: flex;
     margin: 1rem 0;
     width: 100%;
     align-items: center;
+}
+
+.details_container{
+    width: 25rem;
 }
 
 .header{
@@ -18,7 +22,7 @@
 }
 
 
-.filter_name{
+.name{
     flex: 1;
     
 }
@@ -33,4 +37,8 @@
     display: flex;
     justify-content: space-around;
     margin: 2rem 0;
+}
+
+.details{
+    flex: 1;
 }
