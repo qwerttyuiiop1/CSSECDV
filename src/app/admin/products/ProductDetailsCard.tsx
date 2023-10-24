@@ -84,11 +84,11 @@ const ProductDetailsCard = () => {
 						button={<AddButton />}
 						content={<>
 							<span onClick={modalHandler(uploadCSVModal)}> Upload .CSV File </span>
-							<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
 							<OptionsDivider />
 							<span onClick={modalHandler(creteCodeModal)}> Add Single Code </span>
-							<CreateCodeModal state={creteCodeModal} />
 						</>}/>
+					<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
+					<CreateCodeModal state={creteCodeModal} />
 					<RefreshButton onClick={()=>toast.info("refreshed")}/>
 					{deleteCodes?.length ? (<>
 						<MinusButton onClick={modalHandler(deleteCodesModal)}

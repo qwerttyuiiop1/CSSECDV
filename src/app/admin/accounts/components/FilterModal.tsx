@@ -54,7 +54,7 @@ const FilterModal: React.FC<FilterProps> = ({ state, onSubmit }) => {
 
 
   return (
-    <BaseModal state={state}>
+    <BaseModal state={state} interceptClicks={false}>
       <FormContainer form={form}>
         <Card>
           <div className={styles.main_container}>
