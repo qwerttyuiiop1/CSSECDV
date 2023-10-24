@@ -356,19 +356,25 @@ function IconTextButton({ className="", src, alt, text, onClick }) {
 }
 
 function BalanceSection({ balance }) {
+    const [isVisible, setVisible] = useState(true);
+
     return (
         <HeaderSection className={styles.balance_subsection} header="My Balance" 
-            afterHeader={(<img onClick={() => console.log("Clicked")} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
+            afterHeader={(<img onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
         >
-            <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
-                <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
-                <div>{balance.points}</div>
-                <IconTextButton onClick={() => console.log("Clicked")} className={styles.points_add} src="/icons/plus.svg" alt="Add Points Icon" text="Add Points" />
-            </div>
-            <div className={`${styles.token_container} ${styles.content_block} ${styles.block_light}`}>
-                <IconTextWrapper src="/icons/token.svg" alt="Token Icon" text="Token" />
-                <div>{balance.token}</div>
-            </div>
+            {isVisible && ( 
+                <>
+                    <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
+                        <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
+                        <div>{balance.points}</div>
+                        <IconTextButton onClick={() => console.log("Clicked")} className={styles.points_add} src="/icons/plus.svg" alt="Add Points Icon" text="Add Points" />
+                    </div>
+                    <div className={`${styles.token_container} ${styles.content_block} ${styles.block_light}`}>
+                        <IconTextWrapper src="/icons/token.svg" alt="Token Icon" text="Token" />
+                        <div>{balance.token}</div>
+                    </div>
+                </>
+            )}
         </HeaderSection>
     );
 }
