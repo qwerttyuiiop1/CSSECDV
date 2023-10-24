@@ -10,20 +10,21 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
+import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
 interface EditCodeProps extends BaseModalProps {
-	onSubmit: (name: string) => Promise<void> | void; 
-	code: string;
+	code: number;
 }
 
 const EditCodeModal: React.FC<EditCodeProps> = ({
-	state, onSubmit, code
+	state, code
 }) => {
-	const form = useForm({ defaultValues: { code: code } });
+	const { updateCode, findCode } = useSelectedProduct();
+	const form = useForm({ values: { code: findCode(code) } });
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await onSubmit(data.code);
+		await updateCode(code, data.code!);
 		toast.success("Code edited: " + data.code);
 		close();
 		form.reset();

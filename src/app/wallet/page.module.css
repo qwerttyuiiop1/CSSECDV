@@ -1,0 +1,112 @@
+/* .section {
+    border: 3px solid red;
+    padding: 2rem 4rem;
+}
+
+.section > div {
+    border: 3px solid green;
+}
+
+.section > div > h1 {
+    display: inline-block;
+    border: 3px solid blue;
+}
+
+.section > div > div {
+    border: 3px solid purple;
+}
+
+.section > div > div > div {
+    border: 3px solid red;
+} 
+
+.section > div > div > div > img,
+.section > div > div > div > span {
+    border: 3px solid blue;
+} */
+/* uncomment above to see borders */
+
+.section {
+    padding: 2rem 4rem;
+}
+
+.section > div > h1 {
+    display: inline-block;
+}
+
+.balance_subsection,
+.profile_subsection {
+    display: flex;
+}
+
+.content_block {
+    display: inline-block;
+    border: 3px solid;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.block_light {
+    border-color: #B7B7B7;
+    background-color: #F4F4F4;
+    color:  #252525;
+}
+
+.block_dark {
+    border-color: #111111;
+    background-color: #252525;
+    color: #F4F4F4;
+}
+
+.profile_container {
+    display: flex;
+}
+
+.transactions_page_container {
+    display: flex;
+}
+
+.icon_text_wrapper {
+    display: flex;
+}
+
+.icon_text_wrapper > img {
+    margin: auto 0.3rem auto 0;
+    max-height: 1rem;
+}
+
+.icon_text_wrapper > span {
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    border: 3px solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button.balance_toggle {
+    border: 0;
+}
+
+.button.points_add {
+    border-color: #E7A600;
+    background-color: #FFC52F;
+    color:  #966C00;
+}
+
+.button.wallet_connect {
+    border-color: #2463C1;
+    background-color: #2E77E5;
+    color:  #BDD8FF;
+}
+
+.button.profile_edit {
+    border-color: #8C8C8C;
+    background-color: #B0B0B0;
+}
+
+.transactions_table_container > table > tr > td {
+    text-align: center;
+}

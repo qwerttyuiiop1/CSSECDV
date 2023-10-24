@@ -5,23 +5,27 @@ import {
 	Input,
 	Label,
 	CardRow,
-	SideButton
+	SideButton,
+	FileInput
 } from "@/components/CardPage/CardPage";
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
-const CreateCodeModal: React.FC<BaseModalProps> = ({
-	state
+interface UploadCSVProps extends BaseModalProps {
+	onSubmit: (file: File) => Promise<void> | void;
+}
+
+const UploadCSVModal: React.FC<UploadCSVProps> = ({
+	state, onSubmit
 }) => {
-	const { createCode } = useSelectedProduct();
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await createCode(data.code);
-		toast.success("Code created: " + data.code);
+		const file = data.file[0] as File;
+		await onSubmit(file);
+		toast.success("File uploaded: " + file.name);
 		close();
 		form.reset();
 	});
@@ -30,12 +34,9 @@ const CreateCodeModal: React.FC<BaseModalProps> = ({
 		<BaseModal state={state}>
 		<FormContainer form={form}>
 		<Card>
-			<Title>Add Single Code</Title>
-			<Label>
-				Code
-				<Input placeholder="Code" id="code" 
-					options={{required: "code is required"}}/>
-			</Label>
+			<Title>Upload .CSV FIle</Title>
+			<FileInput id="file" accept=".csv"
+				options={{required: "File is required"}}/>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
 					Cancel
@@ -50,4 +51,4 @@ const CreateCodeModal: React.FC<BaseModalProps> = ({
 	);
 }
 
-export default CreateCodeModal;
+export default UploadCSVModal;

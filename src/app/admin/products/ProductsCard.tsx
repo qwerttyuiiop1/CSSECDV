@@ -10,20 +10,18 @@ import {
 import styles from "./components/products.module.css"
 
 import BrandProducts from "./components/BrandProducts";
-import { Brand } from "./Brand";
+import { Brand } from "../../../components/Providers/Products/Brand";
 import { AnimatePresence } from "framer-motion";
 import { SlideDown } from "@/components/Animations/Animations";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 import CreateBrandModal from "./modals/CreateBrandModal";
 import CreateProductModal from "./modals/CreateProductModal";
 import { toast } from "react-toastify";
+import { useBrands, useProducts } from "@/components/Providers/Products/Products";
 
-interface ProductsCardProps {
-	brands: Brand[];
-	selectedProduct: [number, number];
-	onSelectProduct: (index: [number, number]) => void;
-}
-const ProductsCard = ({ brands, selectedProduct, onSelectProduct }: ProductsCardProps) => {
+const ProductsCard = () => {
+  const { data: brands } = useBrands();
+  const { selectedProduct, setSelectedProduct: onSelectProduct } = useProducts();
   const [ isExpanded, setIsExpanded ] = useState<boolean[]>(brands.map(() => false))
   const handleExpand = (index: number) => {
 	const arr = [...isExpanded]
@@ -40,8 +38,8 @@ const ProductsCard = ({ brands, selectedProduct, onSelectProduct }: ProductsCard
 
   return (
   	<div className={styles.products_container}>
-		<CreateBrandModal state={brandModal} onSubmit={log} />
-		<CreateProductModal state={productModal} onSubmit={log} />
+		<CreateBrandModal state={brandModal} />
+		<CreateProductModal state={productModal} />
 		<div className={styles.title_container}>
 			<span className={styles.title}> Product Management </span>
 		</div>
@@ -68,22 +66,21 @@ const ProductsCard = ({ brands, selectedProduct, onSelectProduct }: ProductsCard
 					<span className={styles.stock}>Stock</span>
 					<span className={styles.actions}>Actions</span>
 				</div>
-				<AnimatePresence>
-				<SlideDown>{
+				<AnimatePresence>{
 					brands.map((brand, i) => {
 						return (
+							<SlideDown key={i}>
 							<BrandProducts 
-								key={i}
+								brandId={i}
 								brand={brand}
 								selectedProduct={selectedProduct[0] === i ? selectedProduct[1] : -1}
 								onSelectProduct={(n) => onSelectProduct([i, n])}
 								isExpanded={isExpanded[i]}
-								onToggle={() => handleExpand(i)}
-							/>
+								onToggle={() => handleExpand(i)}/>
+							</SlideDown>
 						)
 					})
-				}</SlideDown>
-				</AnimatePresence>
+				}</AnimatePresence>
 			</div>
 		} />
 	</div>

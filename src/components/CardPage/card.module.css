@@ -63,6 +63,40 @@
 	word-wrap: break-word;
 	overflow-y: auto;
 }
+.file_input {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8rem;
+	align-items: center;
+	justify-content: center;
+
+	cursor: pointer;
+}
+.file_input_button {
+	border-radius: 1.25rem;
+	border: 3px solid #C9C9C9;
+	background: rgba(37, 37, 37, 0.00);
+	color: #F4F4F4;
+	text-align: center;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	padding: 0.2rem 0.75rem;
+}
+.file_input_name {
+	color: #C9C9C9;
+	font-family: Inter;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 .password_container {
 	display: flex;
 	flex-direction: row;
