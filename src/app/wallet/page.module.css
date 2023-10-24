@@ -106,3 +106,7 @@
     border-color: #8C8C8C;
     background-color: #B0B0B0;
 }
+
+.transactions_table_container > table > tr > td {
+    text-align: center;
+}

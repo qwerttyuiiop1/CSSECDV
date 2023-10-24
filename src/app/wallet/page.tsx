@@ -16,7 +16,113 @@ const defaultProfile = {
     address: "123 Rizal St."
 }
 
-const defaultTransactions = null;
+const defaultTransactions = [
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Deposit",
+      "items": "-",
+      "total": "+3000",
+      "pointsBalance": 5500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "2x Grab Voucher",
+      "total": -2000,
+      "pointsBalance": 2500
+    },
+    {
+      "date": "09-30-2023",
+      "type": "Purchase",
+      "items": "1x SM Gift Card",
+      "total": -1000,
+      "pointsBalance": 1500
+    }
+  ];
 
 export default function Wallet({ 
     balance=defaultBalance, 
@@ -121,6 +227,7 @@ function ProfileSection({ profile }) {
 }
 
 function TransactionsSection({ transactions }) {
+    console.log(transactions);
     return (
         <HeaderSection className={styles.transactions_subsection} header="My Transactions">
             <div className={styles.transactions_page_container}>
@@ -132,7 +239,26 @@ function TransactionsSection({ transactions }) {
                 </div>
             </div>
             <div className={styles.transactions_table_container}>
-                Table Contents
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Points Balance</th>
+                    </tr>
+                    {transactions.map((transaction) => {
+                        return (
+                            <tr>
+                                <td>{transaction.date}</td>
+                                <td>{transaction.type}</td>
+                                <td>{transaction.items}</td>
+                                <td>{transaction.total}</td>
+                                <td>{transaction.pointsBalance}</td>
+                            </tr>
+                        );
+                    })}
+                </table>
             </div>
         </HeaderSection>
     );
