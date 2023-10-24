@@ -5,6 +5,9 @@ import { MdRefresh } from "react-icons/md";
 import { CiFilter } from "react-icons/ci";
 import SearchBar from "@/components/SearchBar.tsx/SearchBar";
 import React, { useState } from "react";
+import FilterModal from "./components/FilterModal";
+import { modalHandler } from "@/components/Modal/BaseModal";
+
 
 const TableRow: React.FC<{
   username: string;
@@ -93,6 +96,7 @@ const accounts: Account[] = [
 export default function page() {
   const [searchValue, setSearchValue] = useState("");
   const [filteredAccounts, setFilteredAccounts] = useState(accounts);
+  const isFilterModalOpen = useState(false);
 
   const handleInputChange = (value: string) => {
     setSearchValue(value);
@@ -103,8 +107,12 @@ export default function page() {
     setFilteredAccounts(filtered);
   };
 
+ 
+
   return (
     <div className={styles.main_container}>
+      <FilterModal onSubmit={console.log} state={isFilterModalOpen} />
+
       <div className={styles.inner_container}>
         <div className={styles.header_container}>
           <h1 className={styles.header_text}>Account Management</h1>
@@ -112,7 +120,7 @@ export default function page() {
           <SearchBar onInputChange={handleInputChange} />
 
           <div className={styles.buttons_container}>
-            <div className={styles.button_container}>
+            <div className={styles.button_container} onClick={modalHandler(isFilterModalOpen)}>
               <CiFilter className={styles.button} />
             </div>
 

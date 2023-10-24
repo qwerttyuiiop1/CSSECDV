@@ -9,9 +9,10 @@ export interface DropdownItem {
 interface DropdownProps {
   options: DropdownItem[];
   onSelectionChange: (item: DropdownItem | null) => void;
+  isBorder?: boolean;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, onSelectionChange }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, onSelectionChange, isBorder }) => {
   const [isOpen, setOpen] = useState(false);
   const [items, setItems] = useState<DropdownItem[]>(options);
   const [selectedItem, setSelectedItem] = useState<number>(0);
@@ -39,12 +40,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelectionChange }) => {
   }, []);
 
   return (
-    <div className={`${styles.dropdown} ${isOpen && styles.open}`} ref={dropdownRef}>
+    <div className={`${styles.dropdown} ${isOpen && styles.open}  ${isBorder && styles.border} `} ref={dropdownRef}>
       <h3 className={styles.dropdown_header} onClick={toggleDropdown}>
         {items.find((item) => item.id === selectedItem)?.label}
         <div className={styles.arrow_down}></div>
       </h3>
-      <div className={`${styles.dropdown_body} ${isOpen && styles.open}`}>
+      <div className={`${styles.dropdown_body} ${isOpen && styles.open} ${isBorder && styles.border}`}>
         {items.map((item) => (
           <h3
             className={`${styles.dropdown_item} ${
