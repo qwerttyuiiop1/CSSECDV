@@ -13,6 +13,9 @@ let defaultUser: any = {
 
 export default function Navbar({ user=defaultUser }) {
     return (
+		<>
+		{/* TODO: fix this quick hack to make navbar take up space */}
+		<div style={{marginBottom: "60px"}}></div>
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
                 <img className={styles.logo_icon} src="/logo.svg" />
@@ -27,6 +30,7 @@ export default function Navbar({ user=defaultUser }) {
             <NavLink href="/"><h3>Home</h3></NavLink>
             <AdminComponent user={user} />
         </nav>
+		</>
     );
 }
 
