@@ -11,7 +11,7 @@ export default function Footer() {
         <footer className={styles.footer}>
             <SocialIconStyled url="https://www.facebook.com" />
             <SocialIconStyled url="https://www.instagram.com" />
-            <SocialIconStyled url="https://www.telegram.com" />
+            <SocialIconStyled url="https://web.telegram.org" />
             <SocialIconStyled url="https://www.discord.com" />
         </footer>
     );
