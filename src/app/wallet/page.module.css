@@ -1,4 +1,4 @@
-.section {
+/* .section {
     border: 3px solid red;
     padding: 2rem 4rem;
 }
@@ -18,6 +18,20 @@
 
 .section > div > div > div {
     border: 3px solid red;
+} */
+
+/*
+.section > div > div > div > img,
+.section > div > div > div > span {
+    border: 3px solid blue;
+}*/
+
+.section {
+    padding: 2rem 4rem;
+}
+
+.section > div > h1 {
+    display: inline-block;
 }
 
 .balance_subsection,
@@ -27,7 +41,9 @@
 
 .content_block {
     display: inline-block;
+    border: 3px solid;
     border-radius: 5px;
+    padding: 1rem;
 }
 
 .block_light {
@@ -48,4 +64,40 @@
 
 .transactions_page_container {
     display: flex;
+}
+
+.icon_text_wrapper {
+    display: flex;
+}
+
+.icon_text_wrapper > img {
+    margin: auto 0.3rem;
+    max-height: 1rem;
+}
+
+.icon_text_wrapper > span {
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    border: 3px solid;
+    border-radius: 5px;
+}
+
+.button.points_add {
+    border-color: #E7A600;
+    background-color: #FFC52F;
+    color:  #966C00;
+}
+
+.button.wallet_connect {
+    border-color: #2463C1;
+    background-color: #2E77E5;
+    color:  #BDD8FF;
+}
+
+.button.profile_edit {
+    border-color: #8C8C8C;
+    background-color: #B0B0B0;
 }

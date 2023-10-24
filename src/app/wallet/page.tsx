@@ -25,15 +25,15 @@ export default function Wallet({
     return (
         <>
             <section className={styles.section}>
-                <div><h1>My Balance</h1><span>Eye toggle</span></div>
+                <div><h1>My Balance</h1> <img src="/icons/eyes.svg" alt="Eye Toggle" /></div>
                 <div className={styles.balance_subsection}>
                     <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
-                        <div>Reward Points</div>
+                        <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
                         <div>{balance.points}</div>
-                        <div>Add Points</div>
+                        <IconTextWrapper className={`${styles.button} ${styles.points_add}`} src="/icons/plus.svg" alt="Add Points Icon" text="Add Points" />
                     </div>
                     <div className={`${styles.token_container} ${styles.content_block} ${styles.block_light}`}>
-                        <div>Token</div>
+                        <IconTextWrapper src="/icons/token.svg" alt="Token Icon" text="Token" />
                         <div>{balance.token}</div>
                     </div>
                 </div>
@@ -43,12 +43,12 @@ export default function Wallet({
                 <div className={styles.profile_subsection}>
                     <div className={`${styles.profile_container} ${styles.content_block} ${styles.block_dark}`}>
                         <div className={styles.profile_table_container}>Profile Table</div>
-                        <div className={styles.profile_cog_container}>Cog Button</div>
+                        <div className={`${styles.profile_cog_container} ${styles.button} ${styles.profile_edit}`}><img src="/icons/gear.svg" alt="Edit Profile"/></div>
                     </div>
                     <div className={`${styles.wallet_container} ${styles.content_block} ${styles.block_light}`}>
-                        <div>Wallet</div>
+                        <IconTextWrapper src="/icons/WalletConnect-Logo1.svg" alt="Wallet Connect Logo" text="Wallet" />
                         <div>No Wallet Connected</div>
-                        <div>Connect Wallet</div>
+                        <IconTextWrapper className={`${styles.button} ${styles.wallet_connect}`} src="/icons/link.svg" alt="Link Icon" text="Connect Wallet" />
                     </div>
                 </div>
             </section>
@@ -70,4 +70,36 @@ export default function Wallet({
             </section>
         </>
     );
+}
+
+// function HeaderSection({ children, className="", header, afterHeader=null }) {
+//     return (
+//         <section className={styles.section}>
+//             <div><h1>{header}</h1>{afterHeader}</div>
+//             <div className={className}>
+//                 {children}
+//             </div>
+//         </section>
+//     );
+// }
+
+function IconTextWrapper({ className="", src, alt, text }) {
+    return (
+        <div className={`${styles.icon_text_wrapper} ${className}`}>
+            <img src={src} alt={alt} /> 
+            <span>{text}</span>
+        </div>
+    );
+}
+
+function BalanceSection() {
+
+}
+
+function ProfileSection() {
+
+}
+
+function TransactionsSection() {
+
 }
