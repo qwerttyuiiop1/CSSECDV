@@ -18,13 +18,13 @@
 
 .section > div > div > div {
     border: 3px solid red;
-} */
+} 
 
-/*
 .section > div > div > div > img,
 .section > div > div > div > span {
     border: 3px solid blue;
-}*/
+} */
+/* uncomment above to see borders */
 
 .section {
     padding: 2rem 4rem;
@@ -71,7 +71,7 @@
 }
 
 .icon_text_wrapper > img {
-    margin: auto 0.3rem;
+    margin: auto 0.3rem auto 0;
     max-height: 1rem;
 }
 
@@ -83,6 +83,7 @@
 .button {
     border: 3px solid;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .button.points_add {
