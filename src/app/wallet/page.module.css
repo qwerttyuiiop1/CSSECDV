@@ -27,7 +27,7 @@
 /* uncomment above to see borders */
 
 .section {
-    padding: 2rem 4rem;
+    padding: 2rem 6rem;
 }
 
 .section > div > h1 {
@@ -41,8 +41,8 @@
 
 .content_block {
     display: inline-block;
-    border: 3px solid;
-    border-radius: 5px;
+    border: 4px solid;
+    border-radius: 15px;
     padding: 1rem;
 }
 
@@ -107,8 +107,29 @@
     background-color: #B0B0B0;
 }
 
-.transactions_table_container > table > tr > td {
-    text-align: center;
+.transactions_table_container {
+    border: 10px solid #F4F4F4;
+    border-radius: 20px;
+    background-color: #222222;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.transactions_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions_table > tr > th {
+    text-align: left;
+    background-color: #222222;
+    font-size: 1.3rem;
+    line-height: 2.1rem;
+}
+
+.transactions_table > tr > th,
+.transactions_table > tr > td {
+    padding: 0.4rem 2rem;
 }
 
 .transactions_page_prev,
@@ -131,4 +152,21 @@
 
 .transactions_row_dark {
     background-color: #222222;
+}
+
+.transactions_date {
+    width: 10%;
+}
+.transactions_type {
+    width: 10%;
+}
+.transactions_items {
+    width: 40%;
+}
+.transactions_total {
+    width: 20%;
+}
+.transactions_balance {
+    width: 20%;
+    border-left: 4px solid #757575;
 }

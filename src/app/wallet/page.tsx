@@ -467,13 +467,13 @@ function TransactionsSection({ transactions }) {
                 </div>
             </div>
             <div className={styles.transactions_table_container}>
-                <table>
+                <table className={styles.transactions_table}>
                     <tr className={styles.transactions_row_dark}>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Points Balance</th>
+                        <th className={styles.transactions_date}>Date</th>
+                        <th className={styles.transactions_type}>Type</th>
+                        <th className={styles.transactions_items}>Items</th>
+                        <th classNames={styles.transactions_total}>Total</th>
+                        <th className={styles.transactions_balance}>Points Balance</th>
                     </tr>
                     {transactions2D[page]?.map((transaction, index) => {
                         return (
@@ -482,7 +482,7 @@ function TransactionsSection({ transactions }) {
                                 <td>{transaction.type}</td>
                                 <td>{transaction.items}</td>
                                 <td className={transactionTotalColor(transaction.total)}>{transaction.total}</td>
-                                <td>{transaction.pointsBalance}</td>
+                                <td className={styles.transactions_balance}>{transaction.pointsBalance}</td>
                             </tr>
                         );
                     })}
