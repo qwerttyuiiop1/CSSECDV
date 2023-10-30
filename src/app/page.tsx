@@ -6,10 +6,11 @@ import { BsGift } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
 import { TfiWallet } from "react-icons/tfi";
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
-import { shops } from "./shops/page";
+import { shops } from "@/assets/data/shops";
 import ShopCard from "@/components/ShopCard/ShopCard";
 import ViewMoreCard from "@/components/ShopCard/ViewMoreCard";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -117,7 +118,7 @@ export default function Home() {
       <div className={styles.section5}>
         <div className={styles.section5_about_us}>ABOUT US</div>
         <div className={styles.section5_inner}>
-          <img className={styles.section5_img} src="" alt="company image" />
+          <Image className={styles.section5_img} src="" alt="company image" />
           <div className={styles.company_info}>
             <h1 className={styles.company_name}>COMPANY NAME</h1>
             <h3 className={styles.company_subtext}>

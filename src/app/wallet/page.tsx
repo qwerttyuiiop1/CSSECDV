@@ -1,13 +1,22 @@
 "use client"
+import Image from "next/image";
 import styles from "./page.module.css";
-import { useState } from 'react'; 
+import { ReactNode, useState } from 'react'; 
 
 const defaultBalance = {
     points: 10000,
     token: 25.1234 
 }
 
-const defaultProfile = {
+type Profile = {
+	username: string;
+	password: string;
+	phoneNumber: string;
+	country: string;
+	city: string;
+	address: string;
+}
+const defaultProfile: Profile = {
     username: "BrOdin",
     password: "hunter2",
     phoneNumber: "(+63) 986 255 9923",
@@ -16,7 +25,14 @@ const defaultProfile = {
     address: "123 Rizal St."
 }
 
-let defaultTransactions = [
+type Transaction = {
+	date: string;
+	type: string;
+	items: string;
+	total: string | number;
+	pointsBalance: number;
+}
+let defaultTransactions: Transaction[] = [
     {
       "date": "09-30-2023",
       "type": "Deposit",
@@ -313,7 +329,7 @@ let defaultTransactions = [
       }
   ];
 
-export default function Wallet({ 
+function Wallet({ 
     balance=defaultBalance, 
     profile=defaultProfile, 
     transactions=defaultTransactions 
@@ -327,7 +343,12 @@ export default function Wallet({
     );
 }
 
-function HeaderSection({ children, className="", header, afterHeader=null }) {
+const HeaderSection: React.FC<{
+	className?: string;
+	header: string;
+	afterHeader?: JSX.Element;
+	children: ReactNode;
+}> = ({ children, className="", header, afterHeader=null }) => {
     return (
         <section className={styles.section}>
             <div><h1>{header}</h1> {afterHeader}</div>
@@ -338,16 +359,23 @@ function HeaderSection({ children, className="", header, afterHeader=null }) {
     );
 }
 
-function IconTextWrapper({ className="", src, alt, text="" }) {
+interface IconProps {
+	className?: string;
+	src: string;
+	alt: string;
+	text?: string;
+}
+
+function IconTextWrapper({ className="", src, alt, text="" }: IconProps) {
     return (
         <div className={`${text && styles.icon_text_wrapper} ${className}`}>
-            <img src={src} alt={alt} /> 
+            <Image src={src} alt={alt} /> 
             {text && (<span>{text}</span>)}
         </div>
     );
 }
 
-function IconTextButton({ className="", src, alt, text, onClick }) {
+function IconTextButton({ className="", src, alt, text, onClick }: IconProps & { onClick: () => void }) {
     return (
         <div onClick={onClick}>
             <IconTextWrapper className={`${className} ${styles.button}`} src={src} alt={alt} text={text} />
@@ -355,13 +383,13 @@ function IconTextButton({ className="", src, alt, text, onClick }) {
     );
 }
 
-function BalanceSection({ balance }) {
+function BalanceSection({ balance }: { balance: typeof defaultBalance }) {
     const [isVisible, setVisible] = useState(false);
     const censor = "********";
 
     return (
         <HeaderSection className={styles.balance_subsection} header="My Balance" 
-            afterHeader={(<img onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
+            afterHeader={(<Image onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
         >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
                 <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
@@ -376,7 +404,7 @@ function BalanceSection({ balance }) {
     );
 }
 
-function ProfileSection({ profile }) {
+function ProfileSection({ profile }: { profile: Profile }) {
     const [isEditable, setEditable] = useState(false);
 
     return (
@@ -422,14 +450,14 @@ function ProfileSection({ profile }) {
     );
 }
 
-function TransactionsSection({ transactions }) {
+function TransactionsSection({ transactions }: { transactions: Transaction[] }) {
     const [page, setPage] = useState(0);
 
     if (!transactions)
         transactions = [];
 
     const transactionsPerPage = 15;
-    const arrayTo2D = (arr, numPerRow) => {
+    const arrayTo2D = (arr: Transaction[], numPerRow: number) => {
         let result = [];
         for (let i=0; i < arr.length; i += numPerRow) 
             result.push(arr.slice(i, i + numPerRow));
@@ -443,7 +471,8 @@ function TransactionsSection({ transactions }) {
     const currentTransactionFirst = () => transactions.length > 0 ? page * transactionsPerPage + 1 : 0
     const currentTransactionLast = () => Math.min((page + 1) * transactionsPerPage, transactions.length);
 
-    const transactionTotalColor = (total) => {
+    const transactionTotalColor = (total: number | string) => { // TODO: fix this
+		total = Number(total);
         if (total > 0)
             return styles.transactions_total_plus;
         else if (total < 0)
@@ -472,12 +501,12 @@ function TransactionsSection({ transactions }) {
                         <th className={styles.transactions_date}>Date</th>
                         <th className={styles.transactions_type}>Type</th>
                         <th className={styles.transactions_items}>Items</th>
-                        <th classNames={styles.transactions_total}>Total</th>
+                        <th className={styles.transactions_total}>Total</th>
                         <th className={styles.transactions_balance}>Points Balance</th>
                     </tr>
                     {transactions2D[page]?.map((transaction, index) => {
                         return (
-                            <tr className={index % 2 == 0 ? styles.transactions_row_light : styles.transactions_row_dark}>
+                            <tr className={index % 2 == 0 ? styles.transactions_row_light : styles.transactions_row_dark} key={index}>
                                 <td>{transaction.date}</td>
                                 <td>{transaction.type}</td>
                                 <td>{transaction.items}</td>
@@ -490,4 +519,9 @@ function TransactionsSection({ transactions }) {
             </div>
         </HeaderSection>
     );
+}
+
+
+export default function Wrapper() {
+	return <Wallet />
 }

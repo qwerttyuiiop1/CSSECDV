@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import { shops } from "../page";
+import { shops } from "@/assets/data/shops";
 import coinAnimation from "../../../assets/lottie/animation_coin.json";
 import checkAnimation from "../../../assets/lottie/animation_check.json";
 import errorAnimation from "../../../assets/lottie/animation_error.json";

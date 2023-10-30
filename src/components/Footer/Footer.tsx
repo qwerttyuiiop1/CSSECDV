@@ -2,7 +2,7 @@
 import styles from "./Footer.module.css";
 import { SocialIcon } from 'react-social-icons'
 
-function SocialIconStyled({ url }) {
+function SocialIconStyled({ url }: { url: string }) {
     return <SocialIcon url={url} bgColor="white" fgColor="black" className={styles.footer_icon} />;
 }
 

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import styles from "./Navbar.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from 'next/navigation';
@@ -16,13 +17,13 @@ export default function Navbar({ user=defaultUser }) {
 		<>
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
-                <img className={styles.logo_icon} src="/logo.svg" />
+                <Image className={styles.logo_icon} src="/logo.svg" alt={user.name}/>
                 <h1>Website Name</h1>
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
             <ProfileComponent user={user} />
             <WalletConnectBox isConnected={user?.walletConnected} />
-            <NavLink href="/cart"><img src="/cart.svg" /></NavLink>
+            <NavLink href="/cart"><Image src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
             <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
             <NavLink href="/"><h3>Home</h3></NavLink>
@@ -32,8 +33,13 @@ export default function Navbar({ user=defaultUser }) {
     );
 }
 
-function NavLink({ children, href="/", className=styles.navlink, enableHighlight=true }) {
-    if (enableHighlight && href === usePathname()) {
+const NavLink: React.FC<{
+	href?: string,
+	className?: string,
+	enableHighlight?: boolean,
+	children: React.ReactNode
+}> = ({ children, href="/", className=styles.navlink, enableHighlight=true }) => {
+    if (href === usePathname() && enableHighlight) {
         className = `${className} ${styles.active}`;
     }
 
@@ -42,7 +48,7 @@ function NavLink({ children, href="/", className=styles.navlink, enableHighlight
     );
 }
 
-function WalletConnectBox({ isConnected }) {
+function WalletConnectBox({ isConnected = false }) { //TODO: fix types
     let connect_style = null;
     let connect_text = null;
     let connect_src = null;
@@ -61,20 +67,30 @@ function WalletConnectBox({ isConnected }) {
         <NavLink href="/wallet/connect" className={`${styles.navlink} ${styles.connect_container}`} enableHighlight={false}>
             <div className={`${styles.connect} ${connect_style}`}>
                 {connect_text}
-                {/* TODO: there is a few pixels gap between the img and the border, fix */}
-                <img className={styles.connect_icon} src={connect_src} />
+                {/* TODO: there is a few pixels gap between the img and the border, fix 
+				also fix alt
+				*/}
+                <Image className={styles.connect_icon} src={connect_src} alt=""/>
             </div>
         </NavLink>
     );
 }
 
-function NavDropdown({ children, options, classNames }) {
+const NavDropdown: React.FC<{
+	children: React.ReactNode,
+	options: {href: string, label: string}[],
+	classNames: {
+		outer: string,
+		button: string,
+		content: string
+	}
+}> = ({ children, options, classNames }) => {
     const [isOpen, setOpen] = useState(false);
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        function handleClickOutside(event) {
-          if (ref.current && !ref.current.contains(event.target)) {
+        function handleClickOutside(event: MouseEvent) {
+          if (ref.current && ref.current.contains(event.target as Node)) {
             setOpen(false);
           }
         }
@@ -91,9 +107,9 @@ function NavDropdown({ children, options, classNames }) {
                 {children}
             </div>
             <div className={`${styles.dropdown_content} ${classNames.content} ${isOpen && styles.open}`}>
-                {options.map((option) => {
+                {options.map((option, i) => {
                     return (
-                        <Link href={option.href} className={styles.dropdown_link} onClick={() => setOpen(!isOpen)}><h3>{option.label}</h3></Link>
+                        <Link key={i} href={option.href} className={styles.dropdown_link} onClick={() => setOpen(!isOpen)}><h3>{option.label}</h3></Link>
                     );
                 })}
             </div>
@@ -101,7 +117,8 @@ function NavDropdown({ children, options, classNames }) {
     );
 }
 
-function ProfileComponent({ user }) {
+//TODO: fix types, fix any
+function ProfileComponent({ user }: { user: any }) {
     return (
         <div className={`${styles.navlink} ${styles.profile_container_outer}`}> 
             {user ? (
@@ -114,7 +131,7 @@ function ProfileComponent({ user }) {
                     {href: "/profile", label: "Edit Profile"},
                     {href: "/logout", label: "Logout"}
                 ]}>
-                    <img className={styles.profile_icon} src="/profile.svg"/>
+                    <Image className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
                             <h4>{user.username}</h4>
@@ -135,7 +152,7 @@ function ProfileComponent({ user }) {
     );
 }
 
-function AdminComponent({ user }) {
+function AdminComponent({ user }: { user: any }) {
     const pathname = usePathname();
     const adminOptions = [
         {href: "/admin/accounts", label: "Accounts"},

@@ -36,7 +36,7 @@ export default function Page() {
       if (!groupedItems[item.shop]) {
         groupedItems[item.shop] = [];
       }
-      groupedItems[item.shop].push(item);
+      groupedItems[item.shop]!.push(item);
     });
     return groupedItems;
   }
@@ -67,7 +67,8 @@ export default function Page() {
   
     // Remove header category if all items within the category are selected
     const updatedGroupedItems: { [key in Shop]?: CartItem[] } = { ...groupedItems };
-    for (const shop in updatedGroupedItems) {
+    for (const str in updatedGroupedItems) {
+	  const shop = str as Shop;
       updatedGroupedItems[shop] = updatedGroupedItems[shop]?.filter(item => !selectedItems[item.id]);
       if (updatedGroupedItems[shop]?.length === 0) {
         delete updatedGroupedItems[shop];
@@ -148,7 +149,7 @@ export default function Page() {
               {Object.keys(groupedItems).map((shop) => (
                 <div key={shop}>
                   <h2 className={styles['shop-name']}>{shop}</h2>
-                  {groupedItems[shop]?.map((item) => (
+                  {groupedItems[shop as Shop]?.map((item) => (
                     <div
                       key={item.id}
                       className={`${styles.cart_item} ${selectedItems[item.id] ? styles.selected : ''}`}

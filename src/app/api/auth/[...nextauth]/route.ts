@@ -8,8 +8,12 @@ const authOptions: NextAuthOptions = {
    clientSecret: process.env.GOOGLE_SECRET!,
   }),
  ],
- session: {
-  strategy: 'jwt',
+ callbacks: {
+    async signIn({ user, account, profile }) {
+		console.log('User signed in:', user);
+		console.log('Authentication provider:', account?.provider);
+		return '/profile/signup';
+	},
  },
 };
 const handler = NextAuth(authOptions);

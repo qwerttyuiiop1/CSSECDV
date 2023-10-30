@@ -121,7 +121,7 @@ const TableRow: React.FC<{
 
 
 
-export default function page() {
+export default function AccountPage() {
   const [searchValue, setSearchValue] = useState("");
   const [filteredAccounts, setFilteredAccounts] = useState(accounts);
   const isFilterModalOpen = useState(false);
@@ -168,7 +168,7 @@ export default function page() {
           </div>
 
           {filteredAccounts.map((account, index) => (
-            <TableRow
+            <TableRow key={index}
               account={account}
             />
           ))}
