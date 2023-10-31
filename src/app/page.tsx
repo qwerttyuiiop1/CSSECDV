@@ -118,7 +118,7 @@ export default function Home() {
       <div className={styles.section5}>
         <div className={styles.section5_about_us}>ABOUT US</div>
         <div className={styles.section5_inner}>
-          <Image className={styles.section5_img} src="" alt="company image" />
+          <img className={styles.section5_img} src="" alt="company image" />
           <div className={styles.company_info}>
             <h1 className={styles.company_name}>COMPANY NAME</h1>
             <h3 className={styles.company_subtext}>

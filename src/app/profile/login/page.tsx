@@ -47,9 +47,7 @@ export default function Page() {
 		  </div>
 		</BigButton>
 		<Separator text="OR"/>
-		<BigButton onClick={() => {
-			signIn("google", { callbackUrl: "/" });
-		}}>
+		<BigButton onClick={()=>signIn('google')}>
 		  <CardRow>
 		  	<FcGoogle className={styles.google_icon}/>
 		  	<div className={styles.google_text}> Sign-in with Google </div>

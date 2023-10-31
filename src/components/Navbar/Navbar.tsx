@@ -17,13 +17,13 @@ export default function Navbar({ user=defaultUser }) {
 		<>
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
-                <Image className={styles.logo_icon} src="/logo.svg" alt={user.name}/>
+                <img className={styles.logo_icon} src="/logo.svg" alt={user.name}/>
                 <h1>Website Name</h1>
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
             <ProfileComponent user={user} />
             <WalletConnectBox isConnected={user?.walletConnected} />
-            <NavLink href="/cart"><Image src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
+            <NavLink href="/cart"><img src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
             <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
             <NavLink href="/"><h3>Home</h3></NavLink>
@@ -70,7 +70,7 @@ function WalletConnectBox({ isConnected = false }) { //TODO: fix types
                 {/* TODO: there is a few pixels gap between the img and the border, fix 
 				also fix alt
 				*/}
-                <Image className={styles.connect_icon} src={connect_src} alt=""/>
+                <img className={styles.connect_icon} src={connect_src} alt=""/>
             </div>
         </NavLink>
     );
@@ -131,7 +131,7 @@ function ProfileComponent({ user }: { user: any }) {
                     {href: "/profile", label: "Edit Profile"},
                     {href: "/logout", label: "Logout"}
                 ]}>
-                    <Image className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
+                    <img className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
                             <h4>{user.username}</h4>

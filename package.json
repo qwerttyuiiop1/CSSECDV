@@ -2,6 +2,9 @@
   "name": "rewards-app",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "schema": "./src/lib/prisma/schema.prisma"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +12,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^0.4.4-canary.81",
+    "@prisma/client": "^5.5.2",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.1",
     "dotenv": "^16.3.1",

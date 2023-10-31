@@ -369,7 +369,7 @@ interface IconProps {
 function IconTextWrapper({ className="", src, alt, text="" }: IconProps) {
     return (
         <div className={`${text && styles.icon_text_wrapper} ${className}`}>
-            <Image src={src} alt={alt} /> 
+            <img src={src} alt={alt} /> 
             {text && (<span>{text}</span>)}
         </div>
     );
@@ -389,7 +389,7 @@ function BalanceSection({ balance }: { balance: typeof defaultBalance }) {
 
     return (
         <HeaderSection className={styles.balance_subsection} header="My Balance" 
-            afterHeader={(<Image onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
+            afterHeader={(<img onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
         >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
                 <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />

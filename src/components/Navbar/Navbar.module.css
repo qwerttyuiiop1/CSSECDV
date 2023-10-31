@@ -137,6 +137,8 @@
 .profile_icon {
     display: inline-block;
     margin-right: 0.4rem;
+	width: 30px;
+	height: 30px; /* TODO: fix */
 }
 
 .profile_info {
