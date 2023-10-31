@@ -11,23 +11,23 @@ const handler = NextAuth({
    clientId: process.env.GOOGLE_ID!,
    clientSecret: process.env.GOOGLE_SECRET!,
   }),
-//   Credentials({
-//    name: 'Credentials',
-//    credentials: {
-// 	username: { label: "Username", type: "text" },
-// 	password: { label: "Password", type: "password" }
-//    },
-//    async authorize(credentials) {
-// 	if (!credentials) return null;
-// 	const user = await prisma.user.findUnique({
-// 		where: { name: credentials.username },
-// 	});
-// 	if (user && user.password === credentials.password)
-// 		return user;
-// 	else
-// 		return null;
-//    }
-//   }),
+  Credentials({
+   name: 'Credentials',
+   credentials: {
+	username: { label: "Username", type: "text" },
+	password: { label: "Password", type: "password" }
+   },
+   async authorize(credentials) {
+	if (!credentials) return null;
+	const user = await prisma.user.findUnique({
+		where: { name: credentials.username },
+	});
+	if (user && user.password === credentials.password)
+		return user;
+	else
+		return null;
+   }
+  }),
  ],
  callbacks: {
   async signIn({ user, account, profile: p }) {
