@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma/prisma'
 import { NextApiHandler } from 'next';
 import { NextRequest } from 'next/server';
 
-const authOptions: NextAuthOptions = {
+const handler = NextAuth({
  providers: [
   GoogleProvider({
    clientId: process.env.GOOGLE_ID!,
@@ -60,8 +60,6 @@ const authOptions: NextAuthOptions = {
   maxAge: 30 * 24 * 60 * 60,
   updateAge: 24 * 60 * 60,
  },
-};
-
-const handler = NextAuth(authOptions);
+});
 
 export { handler as GET, handler as POST }
