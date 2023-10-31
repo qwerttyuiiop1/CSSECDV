@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
+        {/* <Navbar /> */}
 		<Providers>
 		  {children}
 		</Providers>
         {/* Footer shouldn't be on all pages, but I put it here for testing purposes */}
-        <Footer />
+        {/* <Footer /> */}
 	  </body>
     </html>
   )
