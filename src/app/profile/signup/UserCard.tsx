@@ -33,10 +33,7 @@ export interface UserCardProps {
 
 export default function UserCard({ onSubmit, data }: UserCardProps) {
 	const form = useForm( { values: data || undefined });
-	const handleSubmit = form.handleSubmit(data => {
-		console.log(data);
-		onSubmit(data);
-	})
+	const handleSubmit = form.handleSubmit(onSubmit)
 	return (
 		<FormContainer form={form}>
 		<ErrorContainer form={form} />

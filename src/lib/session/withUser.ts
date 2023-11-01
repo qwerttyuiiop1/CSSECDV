@@ -1,25 +1,22 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { JWT, getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-type UserApiRequest = NextApiRequest & {
+type UserRequest = NextRequest & {
 	// TODO: fix when user is typed
-	session: Session
+	token: JWT
 }
-export type UserApiHandler = (req: UserApiRequest, res: NextApiResponse) => void | Promise<void>;
+export type UserHandler = (req: UserRequest) => NextResponse | Promise<NextResponse>;
 
-function withUser(handler: UserApiHandler): NextApiHandler {
-	return async (req, res) => {
-		const session = await getSession({ req });
-		if (!session) {
-			res.status(401).end();
-			return;
-		}
-		// TODO: if user is not verified, redirect to /profile/signup
-		const ureq = req as UserApiRequest;
-		ureq.session = session;
-		return handler(ureq, res);
+const withUser = (handler: UserHandler) => 
+	async (req: NextRequest) => {
+		const token = await getToken({ req, secret: process.env.SECRET });
+		if (!token)
+			return NextResponse.json({ message: "Not logged in" }, { status: 401 });
+		const ureq = req as UserRequest;
+		ureq.token = token;
+		return handler(ureq);
 	}
-}
 
-export default withUser;
+export {
+	withUser,
+}

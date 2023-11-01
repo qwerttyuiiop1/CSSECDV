@@ -1,7 +1,7 @@
 "use client"
 import styles from "../login.module.css";
-import React, { useState } from "react";
-import { signIn } from "next-auth/react";
+import React from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { 
 	CardPage, 
 	Card, 
@@ -16,9 +16,9 @@ import CardStyles from "@/components/CardPage/card.module.css";
 import { FcGoogle } from "react-icons/fc"
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { email, password } from '../validations'
+import { ErrorContainer, FormContainer, useFormError } from "@/components/Providers/Forms";
 import { useRouter } from "next/navigation";
-import { username, password } from '../validations'
-import { ErrorContainer, FormContainer } from "@/components/Providers/Forms";
 
 
 // TODO: lottie animation for loading
@@ -26,19 +26,27 @@ import { ErrorContainer, FormContainer } from "@/components/Providers/Forms";
 export default function Page() {
   const form = useForm();
   const router = useRouter();
-  const onSubmit = form.handleSubmit(data => {
-	if (data.password === "12345678") {
-	  router.push("/");
-	}
+  const toast = useFormError(form);
+  const onSubmit = form.handleSubmit(async data => {
+	const res = await signIn("credentials", {
+	  email: data.email,
+	  password: data.password,
+	  redirect: false
+	});
+	if (res?.error)
+	  toast.error('Invalid email or password');
+	else
+	  router.push('/');
   });
   return (
 	<CardPage>
 	  <FormContainer form={form}>
 	  <ErrorContainer form={form} />
 	  <Card>
+		<BigButton onClick={()=>signOut()}> Sign-out </BigButton>
 		<Title className={styles.width}> Login </Title>
-		<Input placeholder="Username" id="username"
-			options={username}/>
+		<Input placeholder="Email" id="email"
+			options={email}/>
 		<Password placeholder="Password" id="password"
 			options={password}/>
 		<BigButton onClick={onSubmit}> 

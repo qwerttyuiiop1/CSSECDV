@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id            String		@default(cuid()) @id
-  name          String?		@unique
+  name          String?
   image			String?
   email         String?		@unique
 
@@ -27,18 +27,8 @@ model User {
   country		String?
   mobileno		String?
 
-  isDeleted		Boolean		@default(false)
   createdAt     DateTime	@default(now()) @map(name: "created_at")
   updatedAt     DateTime	@updatedAt @map(name: "updated_at")
-
-  sessions		Session[]
+  
   @@map(name: "users")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique @map(name: "session_token")
-  userId       String   @map(name: "user_id")
-  expires      DateTime
-  user         User     @relation(fields:[userId], references:[id], onDelete: Cascade)
 }
