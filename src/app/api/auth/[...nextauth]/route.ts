@@ -3,6 +3,7 @@ import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import prisma from '@/lib/prisma/prisma'
 import bcrypt from 'bcrypt';
+import { userSelection } from '@/lib/types/User';
 
 const authOptions: NextAuthOptions = {
  providers: [
@@ -17,12 +18,15 @@ const authOptions: NextAuthOptions = {
 	if (!credentials) return null;
 	const user = await prisma.user.findUnique({
 		where: { email: credentials.email },
+		select: { ...userSelection, password: true },
 	});
 	if (user?.password && 
-		await bcrypt.compare(credentials.password, user.password))
+		await bcrypt.compare(credentials.password, user.password)) {
+		delete (user as any).password;
 		return user;
-	else
+	} else {
 		return null;
+	}
    },
   }),
   GoogleProvider({
@@ -32,24 +36,23 @@ const authOptions: NextAuthOptions = {
  ],
  callbacks: {
   async signIn({ user, account, profile: p }) {
-	if (account?.provider === 'credentials')
-		return true;
-	else if (account?.provider !== 'google') 
-		return false;
+	if (account?.provider !== 'google') 
+		return account?.provider === 'credentials';
 	const profile = p as GoogleProfile;
 	const existingUser = await prisma.user.findUnique({
 		where: { googleId: user.id },
 	});
-	if (!existingUser)
-		await prisma.user.create({
-			data: {
-				googleId: user.id,
-				email: profile.email,
-				name: profile.name,
-				image: profile.image,
-			},
-		});
-	return true;
+	if (existingUser)
+		return true;
+	await prisma.user.create({
+		data: {
+			googleId: user.id,
+			email: profile.email,
+			name: profile.name,
+			image: profile.image,
+		},
+	});
+	return '/edit-profile';
   },
   async jwt({ token, user }) {
 	if (!token.user) token.user = user;
@@ -57,6 +60,7 @@ const authOptions: NextAuthOptions = {
 	if ((token.user as any).verified === undefined) {
 		const user = await prisma.user.findUnique({
 			where: { email: (token.user as any).email },
+			select: userSelection,
 		});
 		if (user) token.user = user;
 	}
