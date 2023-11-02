@@ -55,9 +55,9 @@ const authOptions: NextAuthOptions = {
 	return '/edit-profile';
   },
   async jwt({ token, user }) {
-	if (!token.user) token.user = user;
+	if (!token.user) (token.user as any) = user;
 	// verified is defined if the user is logged in with credentials
-	if ((token.user as any).verified === undefined) {
+	if (token.user.verified === undefined) {
 		const user = await prisma.user.findUnique({
 			where: { email: (token.user as any).email },
 			select: userSelection,
