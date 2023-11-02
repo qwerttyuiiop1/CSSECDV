@@ -23,7 +23,7 @@
 
 .table {
   font-size: 0.7rem;
-  border: 0.5rem solid white;
+  border: 0.25rem solid white;
   border-radius: 1rem;
   padding: 3rem 1rem;
   background-color: #222222;
@@ -41,7 +41,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.4rem;
-  border: 0.4rem solid #c9c9c9;
+  border: 0.25rem solid #c9c9c9;
   border-radius: 0.8rem;
   margin: 0 0.4rem;
   cursor: pointer;
@@ -68,7 +68,7 @@
   margin-top: 1rem;
   font-style: 100;
   background-color: #2c2c2c;
-  border: 0.3rem solid #353535;
+  border: 0.25rem solid #353535;
   border-radius: 0.4rem;
   padding: 0.4rem 3rem;
 }
@@ -90,18 +90,18 @@
 }
 
 .view_info_btn {
-  border: 0.3rem solid #c9c9c9;
+  border: 0.15rem solid #c9c9c9;
   color: #c9c9c9;
   width: 8rem;
 }
 
 .give_admin_btn {
-  border: 0.3rem solid #61dd41;
+  border: 0.15rem solid #61dd41;
   color: #61dd41;
 }
 
 .remove_admin_btn {
-  border: 0.3rem solid #ff4a4a;
+  border: 0.15rem solid #ff4a4a;
   color: #ff4a4a;
 }
 

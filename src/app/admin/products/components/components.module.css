@@ -1,14 +1,14 @@
 .card {
 	border-radius: 1.25rem;
-	border: 10px solid #F4F4F4;
+	border: 5px solid #F4F4F4;
 	background: #222;
-	margin: 1rem 0;
+	margin: 0rem 0rem 3rem;
 	padding: 1rem;
 	overflow: hidden;
 	min-height: 50vh;
 }
 .divider {
-	height: 10px;
+	height: 5px;
 	background: #F4F4F4;
 	margin: 1rem -1rem;
 }
@@ -25,7 +25,7 @@
 .header_button {
 	min-height: 2.125rem;
 	border-radius: 0.625rem;
-	border: 5px solid #C9C9C9;
+	border: 4px solid #C9C9C9;
 	background: rgba(97, 221, 65, 0.00);
 
 	cursor: pointer;
@@ -47,14 +47,14 @@
 	padding: 0.2rem;
 }
 .edit_icon {
-	border: 5px solid green;
+	border: 3px solid green;
 	width: 2rem;
 	height: 2rem;
 	color: green;
 	border-radius: 20%;
 }
 .delete_icon {
-	border: 5px solid red;
+	border: 3px solid red;
 	width: 2rem;
 	height: 2rem;
 	color: red;
