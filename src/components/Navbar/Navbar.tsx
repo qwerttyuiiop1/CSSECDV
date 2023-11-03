@@ -4,6 +4,8 @@ import styles from "./Navbar.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useRef, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { User } from "@/lib/types/User";
 
 let defaultUser: any = {
     username: "BrOdin",
@@ -12,22 +14,26 @@ let defaultUser: any = {
     walletConnected: true
 };
 
-export default function Navbar({ user=defaultUser }) {
+export default function Navbar() {
+	const { data: session } = useSession();
+	const user = session?.user;
     return (
 		<>
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
-                <img className={styles.logo_icon} src="/logo.svg" alt={user.name}/>
+                <img className={styles.logo_icon} src="/logo.svg"/>
                 <h1>Website Name</h1>
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
-            <ProfileComponent user={user} />
+            { user ? <ProfileComponent user={user} />
+			: <NavLink href="/profile/login"><h3>Login</h3></NavLink>}
             <WalletConnectBox isConnected={user?.walletConnected} />
             <NavLink href="/cart"><img src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
             <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
             <NavLink href="/"><h3>Home</h3></NavLink>
-            <AdminComponent user={user} />
+            { user ? <AdminComponent user={user} />
+			: <NavLink href="/profile/login"><h3>Login</h3></NavLink>}
         </nav>
 		</>
     );
@@ -118,7 +124,7 @@ const NavDropdown: React.FC<{
 }
 
 //TODO: fix types, fix any
-function ProfileComponent({ user }: { user: any }) {
+function ProfileComponent({ user }: { user: User }) {
     return (
         <div className={`${styles.navlink} ${styles.profile_container_outer}`}> 
             {user ? (
@@ -134,15 +140,15 @@ function ProfileComponent({ user }: { user: any }) {
                     <img className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
-                            <h4>{user.username}</h4>
+                            <h4>{user.name}</h4>
                         </div>
                         <div className={styles.profile_info_points}>
-                            <p>{user.points} RP</p>
+                            <p>{1000} RP</p> {/* TODO: fix points */}
                         </div>
                     </div>
                 </NavDropdown>
             ) : (
-                <Link href="/login">
+                <Link href="/profile/login">
                     <div className={`${styles.profile_container} ${styles.login_container}`}>
                         <h3>Login</h3>
                     </div>
@@ -152,7 +158,7 @@ function ProfileComponent({ user }: { user: any }) {
     );
 }
 
-function AdminComponent({ user }: { user: any }) {
+function AdminComponent({ user }: { user: User }) {
     const pathname = usePathname();
     const adminOptions = [
         {href: "/admin/accounts", label: "Accounts"},

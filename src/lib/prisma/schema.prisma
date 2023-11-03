@@ -16,6 +16,9 @@ model User {
   image			String?
   email         String?		@unique
 
+  walletConnected	Boolean	@default(false)
+  points		Float		@default(0.0)
+
   emailVerified	Boolean		@default(false)
   password		String?
   googleId		String?		@map(name: "google_id") @unique

@@ -3,7 +3,7 @@ import { User as _DBUser } from '@prisma/client'
 export type DBUser = _DBUser
 
 export type User = Pick<DBUser, 
-	'id' | 'name' | 'email' | 'image' | 'email' | 'verified' | 'isAdmin'>
+	'id' | 'name' | 'email' | 'image' | 'email' | 'verified' | 'isAdmin' | 'walletConnected' | 'points'>
 export const userSelection: Record<keyof User, true> = {
 	id: true,
 	name: true,
@@ -11,6 +11,8 @@ export const userSelection: Record<keyof User, true> = {
 	image: true,
 	verified: true,
 	isAdmin: true,
+	walletConnected: true,
+	points: true,
 }
 
 export type UserDetail = Omit<DBUser, 'password' | 'createdAt' | 'updatedAt' | 'googleId'>
@@ -27,4 +29,6 @@ export const userDetailSelection: Record<keyof UserDetail, true> = {
     country: true,
     mobileno: true,
     isAdmin: true,
+	walletConnected: true,
+	points: true,
 }
