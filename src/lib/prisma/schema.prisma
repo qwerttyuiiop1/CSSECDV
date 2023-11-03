@@ -29,6 +29,34 @@ model User {
 
   createdAt     DateTime	@default(now()) @map(name: "created_at")
   updatedAt     DateTime	@updatedAt @map(name: "updated_at")
+
+  isAdmin		Boolean		@default(false)
   
   @@map(name: "users")
+}
+
+model Brand {
+  id        String		@default(cuid()) @id
+  name		String
+  products	Product[]
+}
+
+model Product {
+  id        String		@default(cuid()) @id
+  name		String
+  price		Float
+  tos		String
+  brandId	String
+  
+  brand		Brand		@relation(fields: [brandId], references: [id])
+  codes		Code[]
+}
+
+// do codes expire?
+model Code {
+  id        String		@default(cuid()) @id
+  code		String
+  productId	String
+
+  product	Product		@relation(fields: [productId], references: [id])
 }

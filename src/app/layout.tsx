@@ -1,12 +1,12 @@
 import Providers from '@/components/Providers/providers'
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
 import 'react-toastify/dist/ReactToastify.css';
 
-const inter = Inter({ subsets: ['latin'] })
+const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,13 +20,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Navbar />
+      <body className={montserrat.className}>
 		<Providers>
+          <Navbar />
 		  {children}
+          <Footer />
 		</Providers>
         {/* Footer shouldn't be on all pages, but I put it here for testing purposes */}
-        <Footer />
 	  </body>
     </html>
   )

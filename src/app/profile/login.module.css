@@ -3,7 +3,7 @@
 	height: 1.6rem;
 }
 .login_button_text {
-	font-family: Inter;
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
@@ -11,7 +11,7 @@
 }
 .google_text {
 	color: #FFF;
-	font-family: Inter;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 700;
@@ -19,7 +19,7 @@
 }
 .no_account {
 	color: #F4F4F4;
-	font-family: Inter;
+	
 	font-size: 1.125rem;
 	font-style: normal;
 	font-weight: 700;
@@ -28,7 +28,7 @@
 .forgot_password {
 	color: #AFAFAF;
 
-	font-family: Inter;
+	
 	font-size: 1.125rem;
 	font-style: normal;
 	font-weight: 700;
@@ -41,7 +41,7 @@
 }
 .sign_up {
 	color: #F4F4F4;
-	font-family: Inter;
+	
 	font-size: 1.125rem;
 	font-style: normal;
 	font-weight: 700;
@@ -67,7 +67,7 @@
 }
 .back_text {
 	color: #F4F4F4;
-	font-family: Inter;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 700;

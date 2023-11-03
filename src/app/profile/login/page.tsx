@@ -43,7 +43,6 @@ export default function Page() {
 	  <FormContainer form={form}>
 	  <ErrorContainer form={form} />
 	  <Card>
-		<BigButton onClick={()=>signOut()}> Sign-out </BigButton>
 		<Title className={styles.width}> Login </Title>
 		<Input placeholder="Email" id="email"
 			options={email}/>
