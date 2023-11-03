@@ -6,6 +6,7 @@
 
 .cart_header {
   padding: 1rem; /* Add padding around the header */
+  padding-top: 0.5rem;
   font-size: 2rem;
 }
 
