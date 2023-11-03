@@ -1,6 +1,6 @@
 .font_body {
 	color: #F4F4F4;
-	font-family: Urbanist;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 700;
@@ -17,7 +17,7 @@
 }
 .header_row {
 	color: #F4F4F4;
-	font-family: Urbanist;
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
@@ -68,7 +68,7 @@
 }
 .product {
 	flex: 1;
-	min-width: 15rem;
+	min-width: 10rem;
 }
 .price {
 	min-width: 5rem;
@@ -95,7 +95,7 @@
 }
 .title {
 	color: #F4F4F4;
-	font-family: Urbanist;
+	
 	font-size: 3rem;
 	font-style: normal;
 	font-weight: 400;
@@ -104,7 +104,7 @@
 }
 .title_product {
 	color: #F4F4F4;
-	font-family: Urbanist;
+	
 	font-size: 2rem;
 	font-style: normal;
 	font-weight: 400;
@@ -112,7 +112,7 @@
 }
 .title_stock {
 	color: #9F9F9F;
-	font-family: Urbanist;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 400;
@@ -154,7 +154,7 @@
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 	color: #8A8A8A;
-	font-family: Urbanist;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 400;

@@ -103,5 +103,7 @@ a {
 /*@media (prefers-color-scheme: dark) {*/
   html {
     color-scheme: dark;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 100;
   }
 /*}*/

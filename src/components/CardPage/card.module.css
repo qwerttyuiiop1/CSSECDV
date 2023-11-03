@@ -17,7 +17,7 @@
 .title {
 	color: #F4F4F4;
 	text-align: center;
-	font-family: Urbanist;
+	
 	font-size: 3rem;
 	font-style: normal;
 	font-weight: 700;
@@ -47,7 +47,7 @@
 	padding: 0.5rem 2rem;
 
 	color: #F4F4F4;
-	font-family: 'Inter';
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
@@ -79,7 +79,7 @@
 	background: rgba(37, 37, 37, 0.00);
 	color: #F4F4F4;
 	text-align: center;
-	font-family: Inter;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 400;
@@ -88,7 +88,7 @@
 }
 .file_input_name {
 	color: #C9C9C9;
-	font-family: Inter;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 400;
@@ -141,7 +141,7 @@
 }
 .separator_text {
 	color: #FFF;
-	font-family: Inter;
+	
 	font-size: 1.25rem;
 	font-style: normal;
 	font-weight: 700;
@@ -181,7 +181,7 @@
 	padding: 0 2rem;
 
 	color: #F4F4F4;
-	font-family: 'Inter';
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
@@ -194,7 +194,7 @@
 
 .label {
 	color: #F4F4F4;
-	font-family: Inter;
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
@@ -207,7 +207,7 @@
 .side_button {
 	border: 2px solid black;
 	text-align: center;
-	font-family: Inter;
+	
 	font-size: 1.5rem;
 	font-style: normal;
 	font-weight: 700;
