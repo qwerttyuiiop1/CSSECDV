@@ -54,11 +54,12 @@ const authOptions: NextAuthOptions = {
 	return true;
   },
   async jwt({ token, user }) {
-	if (!token.user) (token.user as any) = user;
+	if (user?.email && token.user?.email !== user.email) 
+		(token.user as any) = user;
 	// verified is defined if the user is logged in with credentials
 	if (token.user.verified === undefined) {
 		const user = await prisma.user.findUnique({
-			where: { email: (token.user as any).email },
+			where: { email: token.user.email },
 			select: userSelection,
 		});
 		if (user) token.user = user;
