@@ -392,13 +392,13 @@ function BalanceSection({ balance }: { balance: typeof defaultBalance }) {
             afterHeader={(<img onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
         >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
-                <IconTextWrapper src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
-                <div>{isVisible ? balance.points : censor}</div>
+                <IconTextWrapper className={styles.rp_title} src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
+                <div className={styles.rp_points}>{isVisible ? balance.points : censor}</div>
                 <IconTextButton onClick={() => console.log("Clicked")} className={styles.points_add} src="/icons/plus.svg" alt="Add Points Icon" text="Add Points" />
             </div>
             <div className={`${styles.token_container} ${styles.content_block} ${styles.block_light}`}>
-                <IconTextWrapper src="/icons/token.svg" alt="Token Icon" text="Token" />
-                <div>{isVisible ? balance.token : censor}</div>
+                <IconTextWrapper className={styles.token_title} src="/icons/token.svg" alt="Token Icon" text="Token" />
+                <div className={styles.token_points}>{isVisible ? balance.token : censor}</div>
             </div>        
         </HeaderSection>
     );
@@ -442,8 +442,8 @@ function ProfileSection({ profile }: { profile: Profile }) {
                 <IconTextButton onClick={() => console.log("Clicked")} className={`${styles.profile_edit} ${styles.profile_cog_container}`} src="/icons/gear.svg" alt="Edit Profile" text="" />
             </div>
             <div className={`${styles.wallet_container} ${styles.content_block} ${styles.block_light}`}>
-                <IconTextWrapper src="/icons/WalletConnect-Logo1.svg" alt="Wallet Connect Logo" text="Wallet" />
-                <div>No Wallet Connected</div>
+                <IconTextWrapper className={styles.wallet_title} src="/icons/WalletConnect-Logo1.svg" alt="Wallet Connect Logo" text="Wallet" />
+                <div className={styles.wallet_status}>No Wallet Connected</div>
                 <IconTextButton onClick={() => console.log("Clicked")} className={styles.wallet_connect} src="/icons/link.svg" alt="Link Icon" text="Connect Wallet" />
             </div>
         </HeaderSection>
