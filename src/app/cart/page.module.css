@@ -6,6 +6,7 @@
 
 .cart_header {
   padding: 1rem; /* Add padding around the header */
+  padding-top: 0.5rem;
   font-size: 2rem;
 }
 
@@ -28,10 +29,16 @@
   flex-direction: column;
   border-radius: 1rem;
   background-color:  #343434;
-  padding-top: 2rem;
-  margin: 1rem;
+  padding-top: 1.2rem;
+  margin: 5rem 3rem 1rem 1rem;
   color: rgb(255, 255, 255);
 }
+
+.checkout_title {
+  padding-bottom: 1.2rem;
+  font-size: 2rem;
+}
+
 .checkout_inside
 {
   color:black;
@@ -42,10 +49,15 @@
   width: 100%;
 }
 
+.total_title {
+  font-weight: bold;
+  padding-right: 0.8rem;
+}
+
 .cart_summary {
   font-size: 1.8rem;
   display: flex;
-  justify-content: space-between; /* Align total and price horizontally */
+  flex-direction: row;
 }
 
 .redeem_code {
@@ -69,6 +81,7 @@
   justify-content: space-between;
   margin: 1rem 0;
   padding: 1rem;
+  margin-left: 2rem;
   border: 2px solid #242323;
   border-radius: 0.5rem;
   justify-content: space-between;
@@ -140,7 +153,9 @@
 }
 
 .checkout_button {
-  margin-top: 2rem;
+  margin: 2rem 1rem;
+  margin-left: 0rem;
+  margin-bottom: 1rem;
   padding: 1rem 2rem;
   font-size: 1.5rem;
   border-radius: 0.8rem;
@@ -150,8 +165,8 @@
   color: white;
 }
 
-.remove_button {
-  margin-top: 2rem;
+.edit_button {
+  margin: 2rem 1rem 1rem;
   padding: 1rem 2rem;
   font-size: 1.5rem;
   border-radius: 0.8rem;
@@ -161,9 +176,20 @@
   box-shadow: inset 0 0 10px 0 #00000050;
 }
 
+.remove_button {
+  margin: 2rem 1rem 1rem;
+  padding: 1rem 2rem;
+  margin-left: 0rem;
+  font-size: 1.5rem;
+  border-radius: 0.8rem;
+  background-color: red;
+  color: white;
+  border: 0;
+  box-shadow: inset 0 0 10px 0 #00000050;
+}
+
 .cancel_button {
-  display: flex;
-  margin-top: 2rem;
+  margin: 1rem;
   padding: 1rem 2rem;
   font-size: 1.5rem;
   border-radius: 0.8rem;
@@ -181,6 +207,7 @@
 .quantity_input {
   height: 2.5rem;
   width: 2.5rem;
+  margin: 0.5rem;
   text-align: center;
   font-size: 1.5rem;
   color: black; /* Leave this as it is or change it to white as needed */
@@ -195,6 +222,7 @@
   border-bottom: 2px solid white; 
   padding-bottom: 0.25rem; 
   margin-top: 1rem;
+  margin-left: 1rem;
 }
 
 

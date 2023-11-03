@@ -207,11 +207,11 @@ export default function Page() {
               ))}
             </div>
             <div className={styles.checkout_box}>
-              <h1>ORDER SUMMARY</h1>
+              <h1 className={styles.checkout_title}>Order Summary</h1>
               <div className={styles.checkout_inside}>
-                <h2>TOTAL</h2>
                 <div className={styles.cart_summary}>
-                  <p>{totalPrice} RP</p>
+                  <p className={styles.total_title}>TOTAL: </p>
+                  <p> {totalPrice} RP</p>
                 </div>
                 <div className={styles.redeem_code}>
                   <input
@@ -224,7 +224,7 @@ export default function Page() {
                 <div className={styles.selection_buttons}>
                   {isSelecting ? (
                     <button onClick={handleRemoveSelectedItems} className={styles.remove_button}>
-                      Remove Selected
+                      Remove
                     </button>
                   ) : (
                     <button onClick={handleCheckout} className={styles.checkout_button}>
@@ -236,7 +236,7 @@ export default function Page() {
                       Cancel
                     </button>
                   ) : (
-                    <button onClick={handleStartSelection} className={styles.remove_button}>
+                    <button onClick={handleStartSelection} className={styles.edit_button}>
                       Edit Cart
                     </button>
                   )}
