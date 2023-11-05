@@ -57,13 +57,13 @@
   font-size: 1.8rem;
   padding: 1.2rem;
   color: black;
-  background-color: white;
+  background-color: #FFAC00;
   font-style: italic;
   border-radius: 4rem;
 
-  box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
-  -webkit-box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
-  -moz-box-shadow: 2px 4px 0px 0px rgba(110, 108, 108, 0.75);
+  box-shadow: 2px 4px 0px 0px rgba(255, 172, 08, 0.3);
+  -webkit-box-shadow: 2px 4px 0px 0px rgba(255, 172, 0, 0.3);
+  -moz-box-shadow: 2px 4px 0px 0px rgba(255, 172, 0, 0.3);
 }
 
 .link{
@@ -227,23 +227,43 @@
 .section5_img {
   height: 40rem;
   width: 40rem;
-  background-color: white;
-  border-radius: 2rem;
+  background-color: black;
+  border-radius: 4rem;
+  border-style: solid;
+  border-color: #FFAC00;
+  background-image: url("../assets/gold.png");
+  background-position: center;
+  background-size: 100%;
 }
 
 .company_info {
   margin-left: 3rem;
-  max-width: 40%;
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .company_name {
-  font-size: 5rem;
+  font-size: 4rem;
   font-weight: 800;
   margin-bottom: 1rem;
   font-style: italic;
+  color: #FFAC00;
+}
+
+.company_quote1 {
+  font-size: 2rem;
+  font-weight: 300;
+  text-align: center;
+  color: #FFAC00;
+}
+
+.company_quote2 {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #FFAC00;
 }
 
 .company_subtext {
