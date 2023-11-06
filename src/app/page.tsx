@@ -123,9 +123,9 @@ export default function Home() {
             <h2 className={styles.company_quote2}>TECHNOLOGY</h2>
             <h3 className={styles.company_subtext}>
               <br/>
-              <b>Who We Are</b><br/>
+              <p className={styles.company_subtext_title}>Who We Are</p>
               We are a software development company that specializes in Web 2 and Web 3 development.<br/><br/>
-              <b>What We Do</b><br/>
+              <p className={styles.company_subtext_title}>What We Do</p>
               We create solutions to meet and exceed our client's goals.
             </h3>
           </div>

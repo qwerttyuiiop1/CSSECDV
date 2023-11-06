@@ -41,7 +41,7 @@
 .subtext {
   font-size: 1.6rem;
   font-style: italic;
-  font-weight: 200;
+  font-weight: 400;
   width: 70%;
 }
 
@@ -155,7 +155,7 @@
 
 .section3_subheader,
 .section4_subheader {
-  font-weight: 100;
+  font-weight: 400;
 }
 
 .section3_upper,
@@ -254,7 +254,7 @@
 
 .company_quote1 {
   font-size: 2rem;
-  font-weight: 300;
+  font-weight: 400;
   text-align: center;
   color: #FFAC00;
 }
@@ -268,8 +268,13 @@
 
 .company_subtext {
   font-size: 2rem;
-  font-weight: 100;
+  font-weight: 400;
   font-style: italic;
+}
+
+.company_subtext_title {
+  font-weight: 700;
+  line-height: 3rem;
 }
 
 .section5_about_us {
