@@ -82,8 +82,8 @@ export default function Page({
   };
 
   const cardStyle = {
-    height: "40rem",
-    width: "40rem",
+    height: "50rem",
+    width: "50rem",
     border: "3rem solid #242323",
     padding: "5rem",
     marginRight: "2rem",
