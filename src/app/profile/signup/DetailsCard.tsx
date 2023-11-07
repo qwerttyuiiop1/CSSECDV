@@ -15,7 +15,8 @@ import { useForm } from "react-hook-form";
 import { address1, phone_code, phone, city } from '../validations'
 import {
 	FormContainer,
-	ErrorContainer
+	ErrorContainer,
+	useFormError
 } from "@/components/Providers/Forms";
 import countryList from "@/assets/data/countries";
 
@@ -37,9 +38,9 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 	const form = useForm({ values: data || undefined });
 	const handleSubmit = form.handleSubmit(onSubmit)
 	const handleBack = () => onBack(form.getValues());
+	useFormError(form);
 	return (
 		<FormContainer form={form}>
-		<ErrorContainer form={form}/>
 		<Card>
 			<Title>Sign-up</Title>
 			<Input placeholder="Address Line 1" id="address1"

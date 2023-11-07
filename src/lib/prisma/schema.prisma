@@ -12,9 +12,12 @@ datasource db {
 
 model User {
   id            String		@default(cuid()) @id
-  name          String?
+  name          String
   image			String?
-  email         String?		@unique
+  email         String		@unique
+
+  walletConnected	Boolean	@default(false)
+  points		Float		@default(0.0)
 
   emailVerified	Boolean		@default(false)
   password		String?

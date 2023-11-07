@@ -17,7 +17,7 @@ import { LuArrowRight } from "react-icons/lu"
 import Link from "next/link";
 import { FieldValues, useForm } from "react-hook-form";
 import { username, password, email } from '../validations'
-import { ErrorContainer, FormContainer } from "@/components/Providers/Forms";
+import { ErrorContainer, FormContainer, useFormError } from "@/components/Providers/Forms";
 import { signIn } from "next-auth/react";
 
 export interface UserCardOutput extends FieldValues {
@@ -34,9 +34,9 @@ export interface UserCardProps {
 export default function UserCard({ onSubmit, data }: UserCardProps) {
 	const form = useForm( { values: data || undefined });
 	const handleSubmit = form.handleSubmit(onSubmit)
+	useFormError(form);
 	return (
 		<FormContainer form={form}>
-		<ErrorContainer form={form} />
 		<Card>
 			<Title className={styles.width}>Sign-up</Title>
 			<Input placeholder="Username" id="username"
