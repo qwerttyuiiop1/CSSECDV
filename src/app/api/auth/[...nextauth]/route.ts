@@ -42,16 +42,17 @@ const authOptions: NextAuthOptions = {
 	const existingUser = await prisma.user.findUnique({
 		where: { googleId: user.id },
 	});
-	if (!existingUser)
-		await prisma.user.create({
-			data: {
-				googleId: user.id,
-				email: profile.email,
-				name: profile.name,
-				image: profile.image,
-			},
-		});
-	return true;
+	if (existingUser)
+		return true;
+	await prisma.user.create({
+		data: {
+			googleId: user.id,
+			email: profile.email,
+			name: profile.name,
+			image: profile.image,
+		},
+	});
+	return '/edit-profile';
   },
   async jwt({ token, user }) {
 	if (user?.email && token.user?.email !== user.email) 

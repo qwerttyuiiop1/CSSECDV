@@ -106,6 +106,7 @@
 
 .transactions_page_container {
     display: flex;
+    margin: 1rem 0rem;
 }
 
 .icon_text_wrapper {
@@ -203,6 +204,7 @@
 .transactions_page_next {
     cursor: pointer;
     user-select: none;
+    margin: 1rem;
 }
 
 .transactions_total_plus {
