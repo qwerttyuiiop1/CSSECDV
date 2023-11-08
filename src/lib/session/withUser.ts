@@ -1,6 +1,7 @@
 import { JWT, getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { User } from "../types/User";
+import { UserRole } from "@prisma/client";
 
 type UserRequest = NextRequest & {
 	user: User
@@ -20,13 +21,13 @@ const withAnyUser = (handler: UserHandler) =>
 	}
 const withUser = (handler: UserHandler) =>
 	withAnyUser((req) => {
-		if (!req.user.verified)
+		if (req.user.role === UserRole.UNVERIFIED)
 			return NextResponse.json({ message: "User not verified" }, { status: 401 });
 		return handler(req);
 	});
 const withAdmin = (handler: UserHandler) =>
 	withAnyUser((req) => {
-		if (!req.user.isAdmin || !req.user.verified)
+		if (req.user.role !== UserRole.ADMIN && req.user.role !== UserRole.SUPERADMIN)
 			return NextResponse.json({ message: "User not admin" }, { status: 401 });
 		return handler(req);
 	});

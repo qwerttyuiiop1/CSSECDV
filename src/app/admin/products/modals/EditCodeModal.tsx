@@ -13,14 +13,14 @@ import { FormContainer, useFormError } from "@/components/Providers/Forms";
 import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
 interface EditCodeProps extends BaseModalProps {
-	code: number;
+	code: string;
 }
 
 const EditCodeModal: React.FC<EditCodeProps> = ({
 	state, code
 }) => {
 	const { updateCode, findCode } = useSelectedProduct();
-	const form = useForm({ values: { code: findCode(code) } });
+	const form = useForm({ values: findCode(code) });
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {

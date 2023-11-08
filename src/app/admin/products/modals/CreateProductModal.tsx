@@ -12,13 +12,13 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../../../../components/Providers/Products/Brand";
-import { useBrands, useProducts } from "@/components/Providers/Products/Products";
+import { Product } from "../../../../lib/types/Shop";
+import { useShops, useProducts } from "@/components/Providers/Products/Products";
 
 const CreateProductModal: React.FC<BaseModalProps> = ({
 	state
 }) => {
-	const { data } = useBrands();
+	const { data } = useShops();
 	const { createProduct } = useProducts();
 	const form = useForm();
 	const toast = useFormError(form);
@@ -26,7 +26,7 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 	const handleSubmit = form.handleSubmit(async (data) => {
 		data.activeCodes = [];
 		data.price = Number(data.price);
-		createProduct({ brand: data.brand }, data as Product);
+		createProduct(data.shop, data as Product);
 		toast.success("Product created: " + JSON.stringify(data));
 		close();
 		form.reset();
@@ -39,7 +39,7 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 			<Label>
 				Brand Name
 				<Dropdown 
-					id="brand"
+					id="shop"
 					values={data.map(b => b.name)}/>
 			</Label>
 			<CardRow>

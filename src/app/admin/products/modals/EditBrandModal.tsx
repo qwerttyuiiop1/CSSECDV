@@ -10,22 +10,22 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Brand } from "../../../../components/Providers/Products/Brand";
-import { useBrands } from "@/components/Providers/Products/Products";
+import { Shop } from "../../../../lib/types/Shop";
+import { useShops } from "@/components/Providers/Products/Products";
 
-interface EditBrandProps extends BaseModalProps {
-	brand: Brand;
+interface EditShopProps extends BaseModalProps {
+	shop: Shop;
 }
 
-const EditBrandModal: React.FC<EditBrandProps> = ({
-	state, brand
+const EditBrandModal: React.FC<EditShopProps> = ({
+	state, shop: brand
 }) => {
-	const { updateBrand } = useBrands();
+	const { updateShop: updateBrand } = useShops();
 	const form = useForm({ values: { name: brand.name } });
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await updateBrand({ brand: brand.name, name: data.name });
+		await updateBrand(brand.name, data.name);
 		toast.success("Brand edited: " + data.name);
 		close();
 		form.reset();

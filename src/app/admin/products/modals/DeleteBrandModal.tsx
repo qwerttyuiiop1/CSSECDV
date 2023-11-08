@@ -8,21 +8,21 @@ import {
 } from "@/components/CardPage/CardPage";
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
-import { Brand } from "../../../../components/Providers/Products/Brand";
+import { Shop } from "../../../../lib/types/Shop";
 import { toast } from "react-toastify";
-import { useBrands } from "@/components/Providers/Products/Products";
+import { useShops } from "@/components/Providers/Products/Products";
 
-interface DeleteBrandProps extends BaseModalProps {
-	brand: Brand;
+interface DeleteShopProps extends BaseModalProps {
+	shop: Shop;
 }
 
-const DeleteBrandModal: React.FC<DeleteBrandProps> = ({
-	state, brand
+const DeleteShopModal: React.FC<DeleteShopProps> = ({
+	state, shop: brand
 }) => {
 	const close = () => state[1](false);
-	const { deleteBrand } = useBrands();
+	const { deleteShop: deleteBrand } = useShops();
 	const handleSubmit = async () => {
-		await deleteBrand({ brand: brand.name });
+		await deleteBrand(brand.name);
 		toast.success("Brand deleted: " + brand.name);
 		close();
 	};
@@ -51,4 +51,4 @@ const DeleteBrandModal: React.FC<DeleteBrandProps> = ({
 	);
 }
 
-export default DeleteBrandModal;
+export default DeleteShopModal;

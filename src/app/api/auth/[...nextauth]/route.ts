@@ -22,8 +22,7 @@ const authOptions: NextAuthOptions = {
 	});
 	if (user?.password && 
 		await bcrypt.compare(credentials.password, user.password)) {
-		delete (user as any).password;
-		return user;
+		return { ...user, id: user.email, password: undefined };
 	} else {
 		return null;
 	}
@@ -56,8 +55,8 @@ const authOptions: NextAuthOptions = {
   async jwt({ token, user }) {
 	if (user?.email && token.user?.email !== user.email) 
 		(token.user as any) = user;
-	// verified is defined if the user is logged in with credentials
-	if (token.user.verified === undefined) {
+	// role is defined if the user is logged in with credentials
+	if (token.user.role === undefined) {
 		const user = await prisma.user.findUnique({
 			where: { email: token.user.email },
 			select: userSelection,

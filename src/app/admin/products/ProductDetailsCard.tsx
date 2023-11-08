@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Product } from "../../../components/Providers/Products/Brand";
+import { Product } from "../../../lib/types/Shop";
 import styles from "./components/products.module.css";
 import { 
 	AddButton, 
@@ -27,8 +27,7 @@ const Row: React.FC<{
 	isSelected: boolean;
 	onSelect: () => void;
 	code: string;
-	id: number;
-}> = ({ isSelected, onSelect, code, id }) => {
+}> = ({ isSelected, onSelect, code }) => {
 	const editCodeModal = useState(false);
 	return (
 		<div className={`${styles.row} ${isSelected ? styles.delete : ''}`}>
@@ -39,16 +38,16 @@ const Row: React.FC<{
 			)}
 			<span className={styles.code}>{code}</span>
 			<EditButton onClick={modalHandler(editCodeModal)}/>
-			<EditCodeModal state={editCodeModal} code={id} />
+			<EditCodeModal state={editCodeModal} code={code} />
 		</div>
 	)
 }
 
 const ProductDetailsCard = () => {
-	const { selectedProduct: product } = useSelectedProduct();
+	const { product: product } = useSelectedProduct();
 	const [ filter, setFilter ] = useState<string>("");
 	const [ isSelected, setIsSelected ] = useState<boolean[]>([]);
-	const deleteCodes =  product?.activeCodes.filter((v, i) => isSelected[i] && v.includes(filter));
+	const deleteCodes =  product?.codes.filter((v, i) => isSelected[i] && v.code.includes(filter));
 	const handleSelect = (index: number) => {
 		const arr = [...isSelected];
 		arr[index] = !arr[index];
@@ -59,14 +58,14 @@ const ProductDetailsCard = () => {
 	const uploadCSVModal = useState(false);
 
 	useEffect(() => {
-		setIsSelected(product?.activeCodes.map(() => false) || []);
+		setIsSelected(product?.codes.map(() => false) || []);
 	}, [product]);
 	return (
 		<div className={styles.details_container}>
 			<div className={styles.title_container}>
 				{product && <>
 					<span className={styles.title_product}> {product.name} </span>
-					<span className={styles.title_stock}> {'Stock: ' + product.activeCodes.length} </span>
+					<span className={styles.title_stock}> {'Stock: ' + product.codes.length} </span>
 				</>}
 			</div>
 			<Card header={
@@ -96,7 +95,7 @@ const ProductDetailsCard = () => {
 							/>
 						<DeleteCodesModal 
 							state={deleteCodesModal}
-							codes={deleteCodes}
+							codes={deleteCodes.map(v => v.code)}
 							product={product!} />
 					</>) : (
 						<MinusButton opacity='50%'/>
@@ -111,12 +110,11 @@ const ProductDetailsCard = () => {
 					</div>
 
 					<AnimatePresence>{
-						product?.activeCodes.map((code, i) => 
-							code.includes(filter) && (
+						product?.codes.map((code, i) => 
+							code.code.includes(filter) && (
 								<SlideDown key={i}>
 									<Row
-										code={code}
-										id={i}
+										code={code.code}
 										onSelect={() => handleSelect(i)}
 										isSelected={isSelected[i]}
 									/>
