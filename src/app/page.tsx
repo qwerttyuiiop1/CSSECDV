@@ -20,9 +20,7 @@ export default function Home() {
           <div className={styles.section1_left}>
             <h1 className={styles.catchphrase}>EXCHANGE POINTS FOR VOUCHERS</h1>
             <h1 className={styles.subtext}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              pretium, magna id faucibus mattis, augue libero dictum metus, ut
-              luctus mi lorem ut quam.
+              Welcome to Rewards Platform WebApp – Where Crypto Meets Rewards! Start converting your tokens into exciting vouchers today!
             </h1>
             <Link href={"/wallet"} className={styles.link}>
               <button className={styles.get_started_button}>
@@ -118,14 +116,17 @@ export default function Home() {
       <div className={styles.section5}>
         <div className={styles.section5_about_us}>ABOUT US</div>
         <div className={styles.section5_inner}>
-          <img className={styles.section5_img} src="" alt="company image" />
+          <img className={styles.section5_img}/>
           <div className={styles.company_info}>
-            <h1 className={styles.company_name}>COMPANY NAME</h1>
+            <h1 className={styles.company_name}>ADAMANT INTELLIGENT SOLUTIONS INC.</h1>
+            <h2 className={styles.company_quote1}>CRAFTING YOUR VISION THROUGH</h2>
+            <h2 className={styles.company_quote2}>TECHNOLOGY</h2>
             <h3 className={styles.company_subtext}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
+              <br/>
+              <p className={styles.company_subtext_title}>Who We Are</p>
+              We are a software development company that specializes in Web 2 and Web 3 development.<br/><br/>
+              <p className={styles.company_subtext_title}>What We Do</p>
+              We create solutions to meet and exceed our client's goals.
             </h3>
           </div>
         </div>

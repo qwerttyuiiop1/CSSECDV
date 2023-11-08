@@ -97,7 +97,7 @@ const NavDropdown: React.FC<{
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-          if (ref.current && ref.current.contains(event.target as Node)) {
+          if (ref.current && !ref.current.contains(event.target as Node)) {
             setOpen(false);
           }
         }
