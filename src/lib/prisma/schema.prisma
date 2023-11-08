@@ -68,7 +68,7 @@ model Product {
   details	String
   category	ProductCategory	
   
-  shop		Shop			@relation(fields: [shopName], references: [name])
+  shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   codes		Code[]
 
   @@map(name: "products")
@@ -80,7 +80,7 @@ model Code {
 
   productName	String		@map(name: "product_name")
   shopName		String		@map(name: "shop_name")
-  product		Product		@relation(fields: [productName, shopName], references: [name, shopName])
+  product		Product		@relation(fields: [productName, shopName], references: [name, shopName], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([code, shopName])
   @@map(name: "codes")

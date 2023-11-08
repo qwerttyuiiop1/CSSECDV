@@ -1,0 +1,11 @@
+.change_password_btn {
+	color: #555;
+	background: #B0B0B0;
+}
+.input_label {
+	color: #F4F4F4;
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-right: auto;
+	padding-right: 3rem;
+}
