@@ -112,7 +112,7 @@
   border: 0.19rem solid white;
   border-radius: 1rem;
   width: 10rem;
-  margin-right: 0.5rem;
+  margin-right: 0.9rem;
 }
 
 .unredeemedButton.inactive, .redeemedButton.inactive {
@@ -139,12 +139,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 0.625rem;
+  margin-bottom: 1.2rem;
 }
 
 /* CSS for inventory label text */
 .inventoryLabelText {
-  font-size: 1.875rem;
+  font-size: 2.4rem;
   font-weight: bold;
   color: white;
   margin: 0;
@@ -169,9 +169,10 @@
   align-items: flex-start;
   border: 0.4rem solid white;
   border-radius: 1rem;
-  padding: 1.25rem;
+  padding: 2.3rem;
   height: auto;
-  width: 47.5rem;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 /* Updated CSS for inventory item panels */
@@ -181,6 +182,11 @@
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 0.625rem;
+  width: 100%;
+  justify-items: center;
+  padding-top: 1.4rem;
+  padding-bottom: 1.4rem;
+  border-top: 0.3rem solid white;
 }
 
 /* Updated CSS for each inventory item */
@@ -188,6 +194,12 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: fill;
+}
+
+.inventoryItem {
+  height: 15rem;
+  width: 15rem;
+  border: 0.2rem solid #424242;
 }
 
 /* Add hover effect for circular panels */

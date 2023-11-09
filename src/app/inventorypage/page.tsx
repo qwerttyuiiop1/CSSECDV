@@ -134,7 +134,6 @@ export default function InventoryPage() {
               <p className={styles.inventoryLabelText}>
                 {showRedeemed ? 'Redeemed' : 'Unredeemed'}
               </p>
-              <div className={styles.inventoryLabelLine}></div>
             </div>
             <div className={styles.itemPanels}>
               {paginatedItems.map(item => (
