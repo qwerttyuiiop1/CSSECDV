@@ -82,7 +82,7 @@ export default function InventoryPage() {
   return (
     <div className={styles.userInventoryPage}>
       <div className={styles.header}>
-        <h1>Inventory</h1>
+        <p>Inventory</p>
       </div>
       <div className={styles.underHeader}>
         <div className={styles.inventoryContent}>
@@ -107,23 +107,25 @@ export default function InventoryPage() {
                 Redeemed
               </button>
             </div>
-            <div className={styles.pageInfo}>
-              Showing {((currentPage - 1) * itemsPerPage + 1)}-
-              {Math.min(currentPage * itemsPerPage, inventory.length)} of {inventory.length}
-            </div>
-            <div className={styles.pagination}>
-              <div
-                className={currentPage > 1 ? styles.pageButton : `${styles.pageButton}`}
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                &lt;
+            <div className={styles.pageInfoContainer}>
+              <div className={styles.pageInfo}>
+                Showing {((currentPage - 1) * itemsPerPage + 1)}-
+                {Math.min(currentPage * itemsPerPage, inventory.length)} of {inventory.length}
               </div>
-              <span>Page {currentPage}</span>
-              <div
-                className={currentPage < totalPages ? styles.pageButton : `${styles.pageButton} `}
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                &gt;
+              <div className={styles.pagination}>
+                <div
+                  className={currentPage > 1 ? styles.pageButton : `${styles.pageButton}`}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  &lt;
+                </div>
+                <span>Page {currentPage}</span>
+                <div
+                  className={currentPage < totalPages ? styles.pageButton : `${styles.pageButton} `}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  &gt;
+                </div>
               </div>
             </div>
           </div>
