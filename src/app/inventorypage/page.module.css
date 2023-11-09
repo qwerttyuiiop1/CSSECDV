@@ -34,7 +34,7 @@
 
 .inventoryContent {
   display: flex;
-  height: 50rem;
+  height: auto;
   width: 65%;
   margin-right: 1.875rem;
   flex-direction: column;
@@ -79,13 +79,13 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-  width: 10rem;
-  height: 9.375rem;
+  width: 13rem;
+  height: 13rem;
   border-radius: 0.9375rem;
-  border: 0.125rem solid white;
   cursor: pointer;
   overflow: hidden;
   margin: 0.3125rem;
+  border: 0.2rem solid #424242;
   transition: filter 0.3s; /* Transition filter property for redeemed items */
 }
 
@@ -93,14 +93,22 @@
 .itemName {
   background-color: #252525;
   padding: 0.35rem;
+  display: flex;
   color: white;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   position: absolute;
   bottom: 0;
   left: 0;
   margin: 0;
-  font-size: 0.7rem;
+  height: 4rem;
+}
+
+.itemNameText{
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 420;
 }
 
 .unredeemedButton, .redeemedButton {
@@ -170,9 +178,10 @@
   border: 0.4rem solid white;
   border-radius: 1rem;
   padding: 2.3rem;
-  height: auto;
   width: 100%;
   margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
 }
 
 /* Updated CSS for inventory item panels */
@@ -196,12 +205,6 @@
   object-fit: fill;
 }
 
-.inventoryItem {
-  height: 15rem;
-  width: 15rem;
-  border: 0.2rem solid #424242;
-}
-
 /* Add hover effect for circular panels */
 .inventoryItem.checked {
   background-color: lightgray;
@@ -212,11 +215,10 @@
   border: 0.4rem solid white;
   border-radius: 1rem;
   padding: 0.625rem;
-  margin-top: 14rem;
-  height: 38rem;
+  margin-top: 4.6rem;
+  height: 53rem;
   overflow-y: auto;
   background-color: #252525;
-  background-color: blue;
 }
 
 .checkboxButtonContainer {
@@ -254,12 +256,15 @@
 }
 
 .itemId {
-  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-width: 0.05rem;
   -webkit-text-stroke-color: black;
+  color: white;
   position: absolute;
   top: 0;
   left: 0;
   font-weight: bold;
+  margin: 0.7rem;
+  font-size: 1.1rem;
 }
 
 .inventoryItem.redeemed {

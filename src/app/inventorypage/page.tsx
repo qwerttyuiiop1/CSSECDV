@@ -164,7 +164,9 @@ export default function InventoryPage() {
                         className={item.redeemed ? styles.redeemedImage : ''}
                       />
                     </div>
-                    <div className={styles.itemName}>{item.name}</div>
+                    <div className={styles.itemName}>
+                      <p className={styles.itemNameText}>{item.name}</p>
+                    </div>
                   </div>
                 </div>
               ))}
