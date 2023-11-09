@@ -119,7 +119,7 @@ export default function InventoryPage() {
                 >
                   &lt;
                 </div>
-                <span>Page {currentPage}</span>
+                <span className={styles.pagetitle}>Page {currentPage}</span>
                 <div
                   className={currentPage < totalPages ? styles.pageButton : `${styles.pageButton} `}
                   onClick={() => handlePageChange(currentPage + 1)}

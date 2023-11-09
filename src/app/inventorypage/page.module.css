@@ -54,6 +54,16 @@
   width: 14.3rem;
   font-size: 1.3rem;
   justify-content: space-between;
+  height: 3rem;
+}
+
+.pagetitle {
+  display: flex;
+  border-left: 0.2rem solid white;
+  border-right: 0.2rem solid white;
+  padding: 0.76rem;
+  width: 10rem;
+  justify-content: center;
 }
 
 .buttonsContainer {
@@ -111,13 +121,13 @@
 
 /* Styles for the page number buttons */
 .pageButton {
-  background-color: #252525;
-  border: 0.125rem solid white;
-  border-radius: 0.9375rem;
-  padding: 0.3125rem 0.625rem;
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
   cursor: pointer;
   margin: 0.3125rem;
   color: white;
+  font-weight: bolder;
+  font-size: 2rem;
 }
 
 .pageButton.active {
