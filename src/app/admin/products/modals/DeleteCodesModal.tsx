@@ -9,7 +9,7 @@ import {
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { toast } from "react-toastify";
-import { Product } from "../../../../components/Providers/Products/Brand";
+import { Product } from "../../../../lib/types/Shop";
 import { useSelectedProduct } from "@/components/Providers/Products/Products";
 
 interface DeleteCodesProps extends BaseModalProps {

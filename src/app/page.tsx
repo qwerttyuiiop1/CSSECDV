@@ -126,7 +126,7 @@ export default function Home() {
               <p className={styles.company_subtext_title}>Who We Are</p>
               We are a software development company that specializes in Web 2 and Web 3 development.<br/><br/>
               <p className={styles.company_subtext_title}>What We Do</p>
-              We create solutions to meet and exceed our client's goals.
+              We create solutions to meet and exceed our client&apos;s goals.
             </h3>
           </div>
         </div>

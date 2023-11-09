@@ -1,19 +1,7 @@
-export interface Brand {
-	name: string;
-	products: Product[];
-}
-export interface Product {
-	name: string;
-	price: number;
-	details: string;
-	tos: string;
-	activeCodes: string[];
-	brand: string;
-}
+import { ProductCategory } from '@prisma/client'
+import prisma from './prisma'
 
-
-
-export const data: Brand[] = [
+const dummy = [
 	{
 		name: "Brand 1",
 		products: [
@@ -99,3 +87,31 @@ export const data: Brand[] = [
 		]
 	}
 ]
+export const uploadDummyProducts = async () => {
+	for (const shop of dummy) {
+		const dbShop = await prisma.shop.create({
+			data: {
+				name: shop.name
+			}
+		})
+		for (const product of shop.products) {
+			await prisma.product.create({
+				data: {
+					shopName: dbShop.name,
+					name: product.name,
+					price: product.price,
+					tos: product.tos,
+					details: product.details,
+					category: ProductCategory.BF,
+				}
+			})
+			await prisma.code.createMany({
+				data: product.activeCodes.map(code => ({
+					code,
+					productName: product.name,
+					shopName: dbShop.name
+				}))
+			})
+		}
+	}
+}

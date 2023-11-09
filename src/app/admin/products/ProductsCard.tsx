@@ -10,17 +10,16 @@ import {
 import styles from "./components/products.module.css"
 
 import BrandProducts from "./components/BrandProducts";
-import { Brand } from "../../../components/Providers/Products/Brand";
 import { AnimatePresence } from "framer-motion";
 import { SlideDown } from "@/components/Animations/Animations";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 import CreateBrandModal from "./modals/CreateBrandModal";
 import CreateProductModal from "./modals/CreateProductModal";
 import { toast } from "react-toastify";
-import { useBrands, useProducts } from "@/components/Providers/Products/Products";
+import { useShops, useProducts } from "@/components/Providers/Products/Products";
 
 const ProductsCard = () => {
-  const { data: brands } = useBrands();
+  const { data: brands } = useShops();
   const { selectedProduct, setSelectedProduct: onSelectProduct } = useProducts();
   const [ isExpanded, setIsExpanded ] = useState<boolean[]>(brands.map(() => false))
   const handleExpand = (index: number) => {
@@ -71,10 +70,9 @@ const ProductsCard = () => {
 						return (
 							<SlideDown key={i}>
 							<BrandProducts 
-								brandId={i}
-								brand={brand}
-								selectedProduct={selectedProduct[0] === i ? selectedProduct[1] : -1}
-								onSelectProduct={(n) => onSelectProduct([i, n])}
+								shop={brand}
+								selectedProduct={selectedProduct}
+								onSelectProduct={onSelectProduct}
 								isExpanded={isExpanded[i]}
 								onToggle={() => handleExpand(i)}/>
 							</SlideDown>
