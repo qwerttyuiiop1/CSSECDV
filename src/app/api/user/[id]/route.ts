@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma/prisma";
 import { withAnyUser } from "@/lib/session/withUser";
 import { userDetailSelection } from "@/lib/types/User";
 import { validatePatch } from "../validate";
+import bcrypt from 'bcrypt';
 export const GET = withAnyUser(async (req) => {
 	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 	if (!detail)
@@ -26,10 +27,11 @@ export const PATCH = withAnyUser(async (req) => {
 	if (user.password) {
 		if (data.oldPassword === undefined)
 			return NextResponse.json({ message: 'Old password is required' }, { status: 400 });
-		if (user.password !== data.oldPassword)
+		if (bcrypt.compareSync(data.oldPassword, user.password) === false)
 			return NextResponse.json({ message: 'Old password is incorrect' }, { status: 400 });
-		if (user.password === data.password)
+		if (bcrypt.compareSync(data.password!, user.password) === true)
 			return NextResponse.json({ message: 'New password must be different from old password' }, { status: 400 });
+		data.password = bcrypt.hashSync(data.password!, 10);
 		delete data.oldPassword;
 	}
 	

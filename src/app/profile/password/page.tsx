@@ -15,20 +15,37 @@ import { useForm } from "react-hook-form";
 import { password } from '../validations'
 import { ErrorContainer, FormContainer, useFormError } from "@/components/Providers/Forms";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import User404, { UserLoading } from "../404";
 
 
 // TODO: lottie animation for loading
 
-export default function Page() {
+function Page({ id }: { id: string }) {
   const form = useForm();
   const router = useRouter();
   const toast = useFormError(form);
   const onSubmit = form.handleSubmit(async data => {
 	const {
 		old_password,
-		new_password,
-		confirm_password
+		new_password
 	} = data;
+	const res = await fetch(`/api/user/${id}`, {
+	  method: "PATCH",
+	  headers: {
+		"Content-Type": "application/json",
+	  },
+	  body: JSON.stringify({
+		oldPassword: old_password,
+		password: new_password,
+	  }),
+    });
+	const json = await res.json();
+	if (res.ok) {
+	  toast.success("Password updated");
+	} else {
+	  toast.error(json.message);
+	}
   });
   return (
 	<CardPage>
@@ -54,14 +71,14 @@ export default function Page() {
 			<Password placeholder="Confirm Password" id="confirm_password"
 				options={{
 					required: "Confirm Password is required.",
-					validate: value => form.watch('old_password') === value || "Passwords do not match."
+					validate: value => form.watch('new_password') === value || "Passwords do not match."
 				}}/>
 		</div>
 
 		<div/>
 		
 		<CardRow>
-			<SideButton color="green">
+			<SideButton color="green" onClick={onSubmit}>
 				Save
 			</SideButton>
 			<SideButton color="gray">
@@ -72,4 +89,11 @@ export default function Page() {
 	  </FormContainer>
 	</CardPage>
   );
+}
+
+export default function Wrapper() {
+  const { data: session, status } = useSession();
+  if (status === "loading") return <UserLoading/>;
+  if (!session) return <User404/>;
+  return <Page id={session.user.email}/>;
 }

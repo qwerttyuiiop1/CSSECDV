@@ -1,8 +1,7 @@
-import bcrypt from 'bcrypt';
 import { DBUser } from "@/lib/types/User";
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
-type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }
-type SignupBody = Required<Data> & { email: string; address2?: string; }
+export type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }
+export type SignupBody = Required<Data> & { email: string; address2?: string; }
 
 export const validateSignup = (body: any): string | SignupBody => {
 	const { 
@@ -41,7 +40,7 @@ export const validateSignup = (body: any): string | SignupBody => {
 	return {
 		name,
 		email,
-		password: bcrypt.hashSync(password, 10),
+		password,
 		address1,
 		city,
 		country,
@@ -62,9 +61,9 @@ export const validatePatch = (body: PatchBody): string | PatchBody => {
 	if (password) {
 		if (typeof password !== 'string' || password.length < 8)
 			return 'Password must be at least 8 characters long';
-		ret.password = bcrypt.hashSync(password, 10);
+		ret.password = password
 		if (oldPassword)
-			ret.oldPassword = bcrypt.hashSync(oldPassword, 10);
+			ret.oldPassword = oldPassword;
 	}
 	if (address1) {
 		if (typeof address1 !== 'string' || address1.length < 5 || address1.length > 100)
