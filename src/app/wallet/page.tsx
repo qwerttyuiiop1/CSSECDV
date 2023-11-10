@@ -540,7 +540,6 @@ export default function Wrapper() {
 
   useEffect(() => {
     setRewardPoints(user?.points ?? 0)
-
     balance.points = user?.points ?? 0
     //token not fetched from db yet, only points
 
