@@ -25,6 +25,7 @@ model User {
   walletConnected	Boolean		@default(false) @map(name: "wallet_connected")
   points			Float		@default(0.0)
 
+  phoneVerified		Boolean		@default(false) @map(name: "phone_verified")
   emailVerified		Boolean		@default(false) @map(name: "email_verified")
   password			String?
   googleId			String?		@unique @map(name: "google_id")

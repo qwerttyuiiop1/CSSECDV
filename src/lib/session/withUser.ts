@@ -31,9 +31,15 @@ const withAdmin = (handler: UserHandler) =>
 			return NextResponse.json({ message: "User not admin" }, { status: 401 });
 		return handler(req);
 	});
-
+const withSuperAdmin = (handler: UserHandler) =>
+	withAnyUser((req) => {
+		if (req.user.role !== UserRole.SUPERADMIN)
+			return NextResponse.json({ message: "User not superadmin" }, { status: 401 });
+		return handler(req);
+	});
 export {
 	withAnyUser,
 	withUser,
-	withAdmin
+	withAdmin,
+	withSuperAdmin,
 }

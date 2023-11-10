@@ -1,8 +1,8 @@
-// api/auth/signup/route.ts
-
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/prisma";
 import bcrypt from 'bcrypt';
-import { NextResponse } from "next/server";
+import { withSuperAdmin } from "@/lib/session/withUser";
+import { userSelection } from "@/lib/types/User";
 
 type SignupBody = {
 	name: string,
@@ -33,13 +33,14 @@ const validate = (body: any): string | SignupBody => {
 	if (!(username && email && password && 
 		address1 && city && country && phone_code && phone))
 		return 'Missing required fields';
-	if (username.length < 8 || username.length > 20)
-		return 'Username must be between 8 and 20 characters';
+	if (username.length < 5 || username.length > 20)
+		return 'Username must be between 5 and 20 characters';
+	if (/\S+@\S+\.\S+/i.test(email) === false)
+		return 'Invalid email';
 	if (password.length < 8)
 		return 'Password must be at least 8 characters long';
-	if (phone.length < 10)
-		return 'Invalid phone number';
-
+	
+	// TODO: validate phone, city, country, address1, address2
 	return {
 		name: username,
 		email,
@@ -51,7 +52,7 @@ const validate = (body: any): string | SignupBody => {
 		address2
 	};
 }
-const handler = async (req: Request) => {
+export const POST = async (req: Request) => {
   try {
     const data = validate(await req.json());
     if (typeof data === 'string')
@@ -63,5 +64,9 @@ const handler = async (req: Request) => {
   	return new NextResponse("Something went wrong", { status: 500 });
   }
 }
-
-export { handler as POST };
+export const GET = withSuperAdmin(async () => {
+	const users = await prisma.user.findMany({
+		select: userSelection
+	});
+	return NextResponse.json({ users });
+})

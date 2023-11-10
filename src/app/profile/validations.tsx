@@ -5,7 +5,11 @@ const username: RegisterOptions<FieldValues, string> = {
 	minLength: {
 		value: 5,
 		message: "Username must be at least 5 characters."
-	}
+	},
+	maxLength: {
+		value: 20,
+		message: "Username must be at most 20 characters."
+	},
 }
 
 const email: RegisterOptions<FieldValues, string> = {
@@ -22,7 +26,7 @@ const password: RegisterOptions<FieldValues, string> = {
 		message: "Password must be at least 8 characters."
 	}
 }
-const address1: RegisterOptions<FieldValues, string> = {
+const address: RegisterOptions<FieldValues, string> = {
 	required: "Address Line 1 is required."
 }
 const phone_code: RegisterOptions<FieldValues, string> = {
@@ -32,12 +36,24 @@ const phone_code: RegisterOptions<FieldValues, string> = {
 		message: "Phone Code is invalid."
 	},
 }
-const phone: RegisterOptions<FieldValues, string> = {
+const phone_number: RegisterOptions<FieldValues, string> = {
 	required: "Phone is required.",
 	min: {
 		value: 1000000000,
 		message: "Phone is invalid."
 	},
+	max: {
+		value: 9999999999,
+		message: "Phone is invalid."
+	}
+}
+// format: (+XX) XXXXXXXXX
+const phone: RegisterOptions<FieldValues, string> = {
+	required: "Phone is required.",
+	pattern: {
+		value: /\(\+\d{2}\)\s\d{10}/,
+		message: "Phone is invalid."
+	}
 }
 const city: RegisterOptions<FieldValues, string> = {
 	required: "City is required."
@@ -50,9 +66,10 @@ export {
 	username,
 	email,
 	password,
-	address1,
-	phone_code,
+	address,
 	phone,
+	phone_code,
+	phone_number,
 	city,
 	country
 }

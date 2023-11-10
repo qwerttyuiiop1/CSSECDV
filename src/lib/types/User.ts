@@ -18,6 +18,7 @@ export const userDetailSelection: Record<keyof UserDetail, true> = {
     name: true,
     image: true,
     email: true,
+	phoneVerified: true,
     emailVerified: true,
     address1: true,
     address2: true,
