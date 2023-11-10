@@ -21,7 +21,7 @@ import { ErrorContainer, FormContainer, useFormError } from "@/components/Provid
 import { signIn } from "next-auth/react";
 
 export interface UserCardOutput extends FieldValues {
-	username: string;
+	name: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
@@ -39,7 +39,7 @@ export default function UserCard({ onSubmit, data }: UserCardProps) {
 		<FormContainer form={form}>
 		<Card>
 			<Title className={styles.width}>Sign-up</Title>
-			<Input placeholder="Username" id="username"
+			<Input placeholder="Username" id="name"
 				options={username}/>
 			<Input placeholder="Email" type="email" id="email"
 				options={email}/>

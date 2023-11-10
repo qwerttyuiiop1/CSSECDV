@@ -24,7 +24,11 @@ export default function Page() {
   const router = useRouter();
   const toast = useFormError(form);
   const onSubmit = form.handleSubmit(async data => {
-
+	const {
+		old_password,
+		new_password,
+		confirm_password
+	} = data;
   });
   return (
 	<CardPage>
@@ -36,8 +40,7 @@ export default function Page() {
 
 		<div className={styles.password_container}>
 			<span className={styles.password_label}>Old Password</span>
-			<Password placeholder="Old Password" id="old_password"
-				options={password}/>
+			<Password placeholder="Old Password" id="old_password" />
 		</div>
 
 		<div className={styles.password_container}>
@@ -49,7 +52,10 @@ export default function Page() {
 		<div className={styles.password_container}>
 			<span className={styles.password_label}>Confirm Password</span>
 			<Password placeholder="Confirm Password" id="confirm_password"
-				options={password}/>
+				options={{
+					required: "Confirm Password is required.",
+					validate: value => form.watch('old_password') === value || "Passwords do not match."
+				}}/>
 		</div>
 
 		<div/>
