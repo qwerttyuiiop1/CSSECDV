@@ -37,6 +37,8 @@ model User {
 
   createdAt     	DateTime	@default(now()) @map(name: "created_at")
   updatedAt     	DateTime	@updatedAt @map(name: "updated_at")
+
+  transactions    Transaction[] 
   
   @@map(name: "users")
 }
@@ -71,6 +73,8 @@ model Product {
   shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   codes		Code[]
 
+  transactionItems      TransactionItem[]
+
   @@map(name: "products")
   @@id([name, shopName])
 }
@@ -84,4 +88,35 @@ model Code {
 
   @@id([code, shopName])
   @@map(name: "codes")
+}
+
+model Transaction {
+  date          DateTime @default(now())
+  userEmail     String
+  user          User      @relation(fields: [userEmail], references: [email])
+
+  type          TransactionType
+  total         Float
+  pointsBalance Int
+
+  items      TransactionItem[]
+
+  @@id([userEmail, date])
+}
+
+model TransactionItem {
+  productName String
+  shopName String
+  product Product @relation(fields: [productName, shopName], references: [name, shopName])
+
+  userEmail String
+  transactionDate DateTime
+  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date])
+
+  @@id([productName, shopName, userEmail, transactionDate])
+}
+
+enum TransactionType {
+  DEPOSIT
+  PURCHASE
 }
