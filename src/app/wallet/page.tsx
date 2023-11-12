@@ -2,6 +2,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { ReactNode, useState } from 'react'; 
+import { useSession } from 'next-auth/react';
+import { useEffect } from "react";
 
 const defaultBalance = {
     points: 10000,
@@ -480,8 +482,11 @@ function TransactionsSection({ transactions }: { transactions: Transaction[] }) 
         return "";
     }
 
-    console.log(transactions);
-    console.log(transactions2D);
+
+    
+
+    //console.log(transactions);
+    //console.log(transactions2D);
 
     return (
         <HeaderSection className={styles.transactions_subsection} header="My Transactions">
@@ -523,5 +528,22 @@ function TransactionsSection({ transactions }: { transactions: Transaction[] }) 
 
 
 export default function Wrapper() {
-	return <Wallet />
+  const [rewardPoints, setRewardPoints] = useState(0)
+
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const balance = {
+    points: 0,
+    token: 0   
+  }
+
+  useEffect(() => {
+    setRewardPoints(user?.points ?? 0)
+    balance.points = user?.points ?? 0
+    //token not fetched from db yet, only points
+
+  }, [user])
+
+	return <Wallet balance={balance}/>
 }
