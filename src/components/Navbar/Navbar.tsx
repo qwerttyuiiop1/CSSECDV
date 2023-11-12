@@ -9,7 +9,7 @@ import { User } from "@/lib/types/User";
 import { UserRole } from "@prisma/client";
 
 let defaultUser: any = {
-    username: "BrOdin",
+    name: "BrOdin",
     points: 25.1234,
     isAdmin: true,
     walletConnected: true
@@ -18,6 +18,9 @@ let defaultUser: any = {
 export default function Navbar() {
 	const { data: session } = useSession();
 	const user = session?.user;
+
+    console.log(user);
+
     return (
 		<>
         <nav className={styles.navbar}>
@@ -26,15 +29,13 @@ export default function Navbar() {
                 <h1>Website Name</h1>
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
-            { user ? <ProfileComponent user={user} />
-			: <NavLink href="/profile/login"><h3>Login</h3></NavLink>}
-            <WalletConnectBox isConnected={user?.walletConnected} />
+            <ProfileComponent user={user} />
+            <WalletConnectBox isConnected={Boolean(user?.walletConnected) || false} />
             <NavLink href="/cart"><img src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
             <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
             <NavLink href="/"><h3>Home</h3></NavLink>
-            { user ? <AdminComponent user={user} />
-			: <NavLink href="/profile/login"><h3>Login</h3></NavLink>}
+            <AdminComponent user={user} />
         </nav>
 		</>
     );
@@ -85,7 +86,7 @@ function WalletConnectBox({ isConnected = false }) { //TODO: fix types
 
 const NavDropdown: React.FC<{
 	children: React.ReactNode,
-	options: {href: string, label: string}[],
+	options: {href: string, label: string, onClick?: () => void}[],
 	classNames: {
 		outer: string,
 		button: string,
@@ -116,7 +117,15 @@ const NavDropdown: React.FC<{
             <div className={`${styles.dropdown_content} ${classNames.content} ${isOpen && styles.open}`}>
                 {options.map((option, i) => {
                     return (
-                        <Link key={i} href={option.href} className={styles.dropdown_link} onClick={() => setOpen(!isOpen)}><h3>{option.label}</h3></Link>
+                        <Link 
+                        key={i} 
+                        href={option.href} 
+                        className={styles.dropdown_link} 
+                        onClick={() => {
+                            if (option.onClick)
+                                option.onClick()
+                            setOpen(!isOpen)
+                        }}><h3>{option.label}</h3></Link>
                     );
                 })}
             </div>
@@ -124,8 +133,7 @@ const NavDropdown: React.FC<{
     );
 }
 
-//TODO: fix types, fix any
-function ProfileComponent({ user }: { user: User }) {
+function ProfileComponent({ user }: { user: User | undefined }) {
     return (
         <div className={`${styles.navlink} ${styles.profile_container_outer}`}> 
             {user ? (
@@ -136,7 +144,7 @@ function ProfileComponent({ user }: { user: User }) {
                 }} options={[
                     {href: "/inventory", label: "Inventory"},
                     {href: "/profile", label: "Edit Profile"},
-                    {href: "/logout", label: "Logout"}
+                    {href: "/", label: "Logout", onClick: signOut}
                 ]}>
                     <img className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
                     <div className={styles.profile_info}>
@@ -159,7 +167,7 @@ function ProfileComponent({ user }: { user: User }) {
     );
 }
 
-function AdminComponent({ user }: { user: User }) {
+function AdminComponent({ user }: { user: User | undefined }) {
     const pathname = usePathname();
     const adminOptions = [
         {href: "/admin/accounts", label: "Accounts"},
