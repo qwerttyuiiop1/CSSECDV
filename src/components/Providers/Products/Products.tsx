@@ -1,96 +1,95 @@
 import React, { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { Brand, Product, data } from './Brand';
+import { Product, Shop, ProductId, Code } from '../../../lib/types/Shop';
 import { toast } from 'react-toastify';
 
 
-export type ProductId = [number, number];
-export type BrandId = {
-  brand?: string;
-  brandId?: number;
-};
-type CodeId = number;
+
 
 interface ProductsContext {
-  data: Brand[];
-  setData: (data: Brand[]) => void;
-  selectedProduct: ProductId;
+  data: Shop[];
+  setData: (data: Shop[]) => void;
+  selectedProduct: ProductId | null;
   setSelectedProduct: (data: ProductId) => void;
 }
 const productsContext = createContext<ProductsContext | undefined>(undefined);
 
-export interface useBrandsReturn {
-  data: Brand[];
-  createBrand: (brand: string) => Promise<void>;
-  findBrand: (a: BrandId) => Brand | undefined;
-  updateBrand: (a: BrandId & { name: string }) => Promise<void>;
-  deleteBrand: (a: BrandId) => Promise<void>;
+export interface useShopsReturn {
+  data: Shop[];
+  createShop: (name: string) => Promise<void>;
+  findShop: (name: string) => Shop | undefined;
+  findShopi: (name: string) => number;
+  updateShop: (name: string, newName: string) => Promise<void>;
+  deleteShop: (name: string) => Promise<void>;
 }
 export interface useProductsReturn {
 	setSelectedProduct: (data: ProductId) => void;
-	selectedProduct: ProductId;
-	createProduct: (brand: BrandId, p: Product) => Promise<void>;
+	selectedProduct: ProductId | null;
+	createProduct: (shop: string, p: Product) => Promise<void>;
 	findProduct: (id: ProductId) => Product | undefined;
+	findProducti: (id: ProductId) => [number, number];
 	updateProduct: (id: ProductId, p: Product) => Promise<void>;
 	deleteProduct: (id: ProductId) => Promise<void>;
 }
 export interface useSelectedProductReturn {
-  selectedProduct: Product | undefined;
-  productId: ProductId;
+  product: Product | undefined;
+  productId: ProductId | null;
   createCode: (code: string) => Promise<void>;
-  findCode: (id: CodeId) => string | undefined;
-  updateCode: (id: CodeId, code: string) => Promise<void>;
-  deleteCode: (id: CodeId) => Promise<void>;
+  findCode: (code: string) => Code | undefined;
+  findCodei: (code: string) => number;
+  updateCode: (code: string, newCode: string) => Promise<void>;
+  deleteCode: (code: string) => Promise<void>;
   deleteCodes: (codes: string[]) => Promise<void>;
 }
 
 
-export function useBrands(): useBrandsReturn {
+export function useShops(): useShopsReturn {
   const context = useContext(productsContext);
   if (context === undefined)
     throw new Error('useBrands must be used within a ProductsProviderProps');
   const { data, setData: updateData } = context;
 
-  const findBrand = useCallback(({ brand, brandId }: BrandId) => {
-	if (brandId !== undefined)
-	  return data[brandId];
-	return data.find(b => b.name === brand);
+  const findShopi = useCallback((name: string) => {
+	return data.findIndex(b => b.name === name);
+  }, [data]);
+  const findShop = useCallback((name: string) => {
+	return data.find(b => b.name === name);
   }, [data]);
 
-  const createBrand = useCallback(async (brand: string) => {
-	if (findBrand({ brand })) {
+  const createShop = useCallback(async (name: string) => {
+	if (findShop(name)) {
 	  toast.error("Brand already exists");
 	  return;
 	}
-	updateData([...data, { name: brand, products: [] }]);
-  }, [data, findBrand, updateData]);
+	updateData([...data, { name, products: [] }]);
+  }, [data, findShop, updateData]);
 
-  const updateBrand = useCallback(async (id: BrandId & { name: string }) => {
-	try {
-		const brand = findBrand(id);
-		if (!brand) {
-			toast.error("Unable to find brand");
-			return;
-		}
-		brand.name = id.name;
-		updateData([...data]);
-	} catch (e) {
-		
+  const updateShop = useCallback(async (name: string, newName: string) => {
+	const i = findShopi(name);
+	if (i === -1) {
+	  toast.error("Unable to find brand");
+	  return;
 	}
-  }, [data, findBrand, updateData]);
+	data[i].name = newName;
+	updateData([...data]);
+  }, [data, findShopi, updateData]);
 
-  const deleteBrand = useCallback(async ({ brand, brandId: i }: BrandId) => {
-	if (i !== undefined)
-	  updateData([...data].splice(i, 1));
-	else
-	  updateData(data.filter(b => b.name !== brand));
-  }, [data, updateData]);
+  const deleteShop = useCallback(async (name: string) => {
+	const i = findShopi(name);
+	if (i === -1) {
+	  toast.error("Unable to find brand");
+	  return;
+	}
+	data.splice(i, 1);
+	updateData([...data]);
+  }, [data, findShopi, updateData]);
 
   return {
 	data,
-	createBrand,
-	findBrand,
-	updateBrand,
-	deleteBrand,
+	createShop,
+	findShop,
+	findShopi,
+	updateShop,
+	deleteShop,
   };
 }
 export function useProducts(): useProductsReturn {
@@ -100,49 +99,58 @@ export function useProducts(): useProductsReturn {
   const { 
 	setSelectedProduct, data, setData: updateData, selectedProduct
   } = context;
-  const { findBrand } = useBrands();
+  const { findShopi, findShop } = useShops();
 
-  const findProduct = useCallback(
-	(id: ProductId) => data[id[0]]?.products[id[1]],
-	[data]
-  );
+  const findProducti = useCallback((id: ProductId): [number, number] => {
+	const shopI = findShopi(id[0]);
+	if (shopI === -1) return [-1, -1];
+	return [shopI, data[shopI].products.findIndex(p => p.name === id[1])];
+  }, [findShopi, data]);
+  const findProduct = useCallback((id: ProductId) => {
+	return findShop(id[0])?.products.find(p => p.name === id[1]);
+  }, [findShop]);
 
-  const createProduct = useCallback(async (id: BrandId, p: Product) => {
-	const brand = findBrand(id);
-	if (!brand) {
-		toast.error("Unable to find brand");
-		return;
+  const createProduct = useCallback(async (shopName: string, p: Product) => {
+	const prodI = findProducti([shopName, p.name]);
+	if (prodI[1] !== -1) {
+	  toast.error("Product already exists");
+	} else if (prodI[0] === -1) {
+	  toast.error("Brand does not exist");
+	} else {
+	  data[prodI[0]].products.push(p);
+	  updateData([...data]);
 	}
-	if (brand.products.find(pr => pr.name === p.name)) {
-		toast.error("Product already exists");
-		return;
-	}
-	brand.products.push(p);
-	updateData([...data]);
-  }, [data, findBrand, updateData]);
+  }, [data, findProducti, updateData]);
 
   const updateProduct = useCallback(async (id: ProductId, p: Product) => {
-	try {
-	  data[id[0]].products[id[1]] = p;
-	  updateData([...data]);
-	} catch (e) {
+	const prodI = findProducti(id);
+	if (prodI[1] === -1) {
 	  toast.error("Unable to find product");
+	} else if (prodI[0] === -1) {
+	  toast.error("Unable to find brand");
+	} else {
+	  data[prodI[0]].products[prodI[1]] = p;
+	  updateData([...data]);
 	}
-  }, [data, updateData]);
+  }, [data, findProducti, updateData]);
 
   const deleteProduct = useCallback(async (id: ProductId) => {
-	try {
-	  data[id[0]].products.splice(id[1], 1);
-	  updateData([...data]);
-	} catch (e) {
+	const prodI = findProducti(id);
+	if (prodI[1] === -1) {
 	  toast.error("Unable to find product");
+	} else if (prodI[0] === -1) {
+	  toast.error("Unable to find brand");
+	} else {
+	  data[prodI[0]].products.splice(prodI[1], 1);
+	  updateData([...data]);
 	}
-  }, [data, updateData]);
+  }, [data, findProducti, updateData]);
   return {
 	setSelectedProduct,
 	selectedProduct,
 	createProduct,
 	findProduct,
+	findProducti,
 	updateProduct,
 	deleteProduct,
   };
@@ -154,53 +162,55 @@ export function useSelectedProduct(): useSelectedProductReturn {
 	  throw new Error('useSelectedProduct must be used within a ProductsProviderProps');
 	const { selectedProduct: productId, data, setData: updateData } = context;
 	const { findProduct } = useProducts();
-	const product = findProduct(productId);
+	const product = productId ? findProduct(productId) : undefined;
 
-	const findCode = useCallback((code: CodeId) => {
-		return product?.activeCodes[code]
+	const findCode = useCallback((code: string) => {
+		return product?.codes.find(c => c.code === code);
+	}, [product]);
+	const findCodei = useCallback((code: string) => {
+		return product?.codes.findIndex(c => c.code === code) ?? -1;
 	}, [product]);
 
 	const createCode = useCallback(async (code: string) => {
-		if (product?.activeCodes.find(c => c === code)) {
+		if (!product) return
+		if (findCode(code)) {
 			toast.error("Code already exists");
 			return;
 		}
-		product?.activeCodes.push(code);
+		product.codes.push({ code, productName: product.name, shopName: product.shopName });
+		updateData([...data]);
+	}, [data, findCode, product, updateData]);
+
+	const updateCode = useCallback(async (code: string, newCode: string) => {
+		if (!product) return
+		const a = findCode(code);
+		if (!a) {
+			toast.error("Unable to find code");
+			return;
+		}
+		a.code = newCode;
+		updateData([...data]);
+	}, [data, findCode, product, updateData]);
+
+	const deleteCode = useCallback(async (code: string) => {
+		if (!product) return
+		const i = findCodei(code);
+		product.codes.splice(i, 1);
+		updateData([...data]);
+	}, [data, findCodei, product, updateData]);
+
+	const deleteCodes = useCallback(async (codes: string[]) => {
+		if (!product) return
+		product.codes = product.codes.filter(c => !codes.includes(c.code));
 		updateData([...data]);
 	}, [data, product, updateData]);
 
-	const updateCode = useCallback(async (id: CodeId, code: string) => {
-		try {
-			product!.activeCodes[id] = code;
-			updateData([...data]);
-		} catch (e) {
-			toast.error("Unable to find code");
-		}
-	}, [data, product, updateData]);
-
-	const deleteCode = useCallback(async (id: CodeId) => {
-		try {
-			product!.activeCodes.splice(id, 1);
-			updateData([...data]);
-		} catch (e) {
-			toast.error("Unable to find code");
-		}
-	}, [data, product, updateData]);
-
-	const deleteCodes = useCallback(async (codes: string[]) => {
-		try {
-			product!.activeCodes = product!.activeCodes.filter(c => !codes.includes(c));
-			updateData([...data]);
-		} catch (e) {
-			toast.error("Unable to find code");
-		}
-	}, [data, product, updateData]);
-
 	return {
-		selectedProduct: product,
+		product,
 		productId,
 		createCode,
 		findCode,
+		findCodei,
 		updateCode,
 		deleteCode,
 		deleteCodes,
@@ -211,8 +221,8 @@ interface ProductsProviderProps {
   children: ReactNode;
 }
 export function ProductsProvider({ children }: ProductsProviderProps) {
-  const [brands, setData] = useState<Brand[]>(data);
-  const [selectedProduct, setSelectedProduct] = useState<ProductId>([-1, -1]);
+  const [brands, setData] = useState<Shop[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
 
   const contextValue: ProductsContext = {
     data: brands,

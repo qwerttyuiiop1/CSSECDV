@@ -4,7 +4,7 @@ import ProductsCard from "./ProductsCard";
 import ProductDetailsCard from "./ProductDetailsCard";
 import styles from "./page.module.css";
 import { DefaultToastContainer } from "@/components/Providers/Forms";
-import { ProductsProvider, useBrands } from "@/components/Providers/Products/Products";
+import { ProductsProvider, useShops } from "@/components/Providers/Products/Products";
 
 const ProductsPage = () => {
   return (

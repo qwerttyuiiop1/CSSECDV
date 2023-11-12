@@ -10,56 +10,79 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum UserRole {
+	UNVERIFIED
+	SUPERADMIN
+	ADMIN
+	USER
+}
 model User {
-  id            String		@default(cuid()) @id
-  name          String
-  image			String?
-  email         String		@unique
+  name          	String
+  image				String?
+  email         	String		@id
+  role				UserRole	@default(UNVERIFIED)
 
-  walletConnected	Boolean	@default(false)
-  points		Float		@default(0.0)
+  walletConnected	Boolean		@default(false) @map(name: "wallet_connected")
+  points			Float		@default(0.0)
 
-  emailVerified	Boolean		@default(false)
-  password		String?
-  googleId		String?		@map(name: "google_id") @unique
-  verified		Boolean		@default(false)
+  phoneVerified		Boolean		@default(false) @map(name: "phone_verified")
+  emailVerified		Boolean		@default(false) @map(name: "email_verified")
+  password			String?
+  googleId			String?		@unique @map(name: "google_id")
 
-  address1		String?
-  address2		String?
-  city			String?
-  country		String?
-  mobileno		String?
+  address1			String?
+  address2			String?
+  city				String?
+  country			String?
+  mobileno			String?		@unique
 
-  createdAt     DateTime	@default(now()) @map(name: "created_at")
-  updatedAt     DateTime	@updatedAt @map(name: "updated_at")
-
-  isAdmin		Boolean		@default(false)
+  createdAt     	DateTime	@default(now()) @map(name: "created_at")
+  updatedAt     	DateTime	@updatedAt @map(name: "updated_at")
   
   @@map(name: "users")
 }
 
-model Brand {
-  id        String		@default(cuid()) @id
-  name		String
+model Shop {
+  name		String		@id
   products	Product[]
+
+  @@map(name: "shops")
+}
+
+enum ProductCategory {
+  BF // @map("Beauty & Fashion")
+  DS // @map("Department Stores")
+  EL // @map("Electronics")
+  FD // @map("Food & Drinks")
+  GM // @map("Gaming")
+  HB // @map("Hobbies")
+  LS // @map("Lifestyle")
+  TR // @map("Travel")
+  OS // @map("Online Shopping")
 }
 
 model Product {
-  id        String		@default(cuid()) @id
+  shopName	String			@map(name: "shop_name")
   name		String
   price		Float
   tos		String
-  brandId	String
+  details	String
+  category	ProductCategory	
   
-  brand		Brand		@relation(fields: [brandId], references: [id])
+  shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   codes		Code[]
+
+  @@map(name: "products")
+  @@id([name, shopName])
 }
 
-// do codes expire?
 model Code {
-  id        String		@default(cuid()) @id
-  code		String
-  productId	String
+  code			String
 
-  product	Product		@relation(fields: [productId], references: [id])
+  productName	String		@map(name: "product_name")
+  shopName		String		@map(name: "shop_name")
+  product		Product		@relation(fields: [productName, shopName], references: [name, shopName], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([code, shopName])
+  @@map(name: "codes")
 }

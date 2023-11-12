@@ -157,6 +157,7 @@ const SideButton: React.FC<ButtonProps & {
 	else if (color === "red") className = styles.button_red;
 	if (props.side === "left") className += " " + styles.button_left;
 	else if (props.side === "right") className += " " + styles.button_right;
+	if (props.className) className += " " + props.className;
 	return (
 	  <button {...props} className={`${styles.side_button} ${className}`}>
 		{children}

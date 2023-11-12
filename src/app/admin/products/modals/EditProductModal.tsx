@@ -12,8 +12,9 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../../../../components/Providers/Products/Brand";
-import { ProductId, useProducts } from "@/components/Providers/Products/Products";
+import { Product } from "../../../../lib/types/Shop";
+import { useProducts } from "@/components/Providers/Products/Products";
+import { ProductId } from "@/lib/types/Shop";
 
 interface EditProductProps extends BaseModalProps {
 	id: ProductId;
@@ -28,7 +29,7 @@ const EditProductModal: React.FC<EditProductProps> = ({
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		data.activeCodes = product.activeCodes;
+		data.codes = product.codes;
 		data.price = Number(data.price);
 		await updateProduct(id, data as Product);
 		toast.success("Product created: " + JSON.stringify(data));
