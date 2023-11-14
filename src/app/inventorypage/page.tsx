@@ -174,7 +174,8 @@ export default function InventoryPage() {
           </div>
         </div>
         <div className={styles.descriptionContainer}>
-          <DescriptionContainer selectedItem={selectedItem} />
+		  {/** TODO: i changed the Description container, to fix, move to common file */}
+          <DescriptionContainer />
         </div>
       </div>
     </div>

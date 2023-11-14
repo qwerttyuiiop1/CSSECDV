@@ -7,7 +7,14 @@ interface DescriptionContainerProps {
   selectedItem: InventoryItem | null;
 }
 
-const DescriptionContainer: React.FC<DescriptionContainerProps> = ({ selectedItem }) => {
+const DescriptionContainer = () => {
+  const selectedItem: InventoryItem = {
+	id: -1,
+	name: "name",
+	redeemed: false,
+	code: "code",
+	imageSrc: ""
+  }; // TODO: export default can't have props
   if (!selectedItem) {
     return <p>Select an item to see its description.</p>;
   }
