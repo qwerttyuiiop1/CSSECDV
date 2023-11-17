@@ -50,10 +50,10 @@ const phone_number: RegisterOptions<FieldValues, string> = {
 // format: (+XX) XXXXXXXXX
 const phone: RegisterOptions<FieldValues, string> = {
 	required: "Phone is required.",
-	pattern: {
-		value: /\(\+\d{2}\)\s\d{10}/,
-		message: "Phone is invalid."
-	}
+	// pattern: {
+	// 	value: /\(\+\d{2}\)\s?\d{10}/,
+	// 	message: "Phone is invalid."
+	// }
 }
 const city: RegisterOptions<FieldValues, string> = {
 	required: "City is required."

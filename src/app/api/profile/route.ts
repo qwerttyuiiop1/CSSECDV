@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/prisma";
-import { withAnyUser, withUser } from "@/lib/session/withUser";
+import { withAnyUser } from "@/lib/session/withUser";
 import { userDetailSelection, userSelection } from "@/lib/types/User";
 import { validatePatch, validateSignup } from "./validate";
 import bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
   }
 }
 
-export const GET = withUser(async (req) => {
+export const GET = withAnyUser(async (req) => {
 	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 	const res = await prisma.user.findUnique({
 		where: { email: req.user.email },
