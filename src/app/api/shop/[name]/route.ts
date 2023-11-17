@@ -4,7 +4,7 @@ import { shopSelection } from '@/lib/types/Shop';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: NextRequest, {params: { name }}: {params: {name: string}}) => {
-	const all = req.nextUrl.searchParams.get('all') === 'true';
+	const all = req.nextUrl.searchParams.get('full') === 'true';
 	const options = all ? {
 		where: { name },
 		...shopSelection

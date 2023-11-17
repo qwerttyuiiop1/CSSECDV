@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState, useCallback } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useCallback, use, useEffect } from 'react';
 import { Product, Shop, ProductId, Code } from '../../../lib/types/Shop';
 import { toast } from 'react-toastify';
 
@@ -223,6 +223,16 @@ interface ProductsProviderProps {
 export function ProductsProvider({ children }: ProductsProviderProps) {
   const [brands, setData] = useState<Shop[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
+  useEffect(() => {
+	fetch('/api/shop?full=true').then(async res => {
+	  if (res.status !== 200) {
+		console.error(res);
+		return;
+	  }
+	  const data = await res.json();
+	  setData(data.shops);
+	});
+  }, []);
 
   const contextValue: ProductsContext = {
     data: brands,
