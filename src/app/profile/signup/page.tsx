@@ -16,7 +16,7 @@ export default function SignupPage() {
 	const handleSubmit = async (data: UserCardOutput & DetailsCardOutput) => {
 		const rest = data as any;
 		delete rest.confirmPassword;
-		const res = await fetch('/api/user', {
+		const res = await fetch('/api/profile', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

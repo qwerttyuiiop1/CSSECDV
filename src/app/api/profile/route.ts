@@ -1,19 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/prisma";
-import { withAnyUser } from "@/lib/session/withUser";
-import { userDetailSelection } from "@/lib/types/User";
-import { validatePatch } from "../validate";
+import { withAnyUser, withUser } from "@/lib/session/withUser";
+import { userDetailSelection, userSelection } from "@/lib/types/User";
+import { validatePatch, validateSignup } from "./validate";
 import bcrypt from 'bcrypt';
-export const GET = withAnyUser(async (req) => {
+
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const data = validateSignup(await req.json());
+    if (typeof data === 'string')
+	  return new NextResponse(data, { status: 400 });
+	data.password = bcrypt.hashSync(data.password!, 10);
+	
 	const detail = req.nextUrl.searchParams.get('detail') === 'true';
-	if (!detail)
-		return NextResponse.json(req.user);
+  	const user = await prisma.user.create({ 
+		data,
+		select: detail ? userDetailSelection : userSelection
+	});
+	return NextResponse.json(user);
+  } catch (error) {
+	console.error(error);
+  	return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
+  }
+}
+
+export const GET = withUser(async (req) => {
+	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 	const res = await prisma.user.findUnique({
 		where: { email: req.user.email },
-		select: userDetailSelection
+		select: detail ? userDetailSelection : userSelection
 	});
 	return NextResponse.json(res);
 })
+
+
 export const PATCH = withAnyUser(async (req) => {
 	const data = validatePatch(await req.json());
 	if (typeof data === 'string')
@@ -35,9 +56,11 @@ export const PATCH = withAnyUser(async (req) => {
 		delete data.oldPassword;
 	}
 	
+	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 	const res = await prisma.user.update({
 		where: { email: req.user.email },
-		data: data
+		data: data,
+		select: detail ? userDetailSelection : userSelection
 	});
 	return NextResponse.json(res);
 })
