@@ -56,31 +56,62 @@ export function useShops(): useShopsReturn {
   }, [data]);
 
   const createShop = useCallback(async (name: string) => {
-	if (findShop(name)) {
-	  toast.error("Brand already exists");
-	  return;
+	const res = await fetch('/api/shop', {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify({ name }),
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
+	} else {
+	  json.shop.products = [];
+	  toast.success("Created brand: " + json.shop.name);
+	  updateData([...data, json.shop]);
 	}
-	updateData([...data, { name, products: [] }]);
-  }, [data, findShop, updateData]);
+  }, [data, updateData]);
 
   const updateShop = useCallback(async (name: string, newName: string) => {
-	const i = findShopi(name);
-	if (i === -1) {
+	const shop = findShop(name);
+	if (!shop) {
 	  toast.error("Unable to find brand");
 	  return;
 	}
-	data[i].name = newName;
-	updateData([...data]);
-  }, [data, findShopi, updateData]);
+	const res = await fetch('/api/shop/' + name, {
+	  method: 'PATCH',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify({ name: newName }),
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
+	} else {
+	  shop.name = json.shop.name;
+	  toast.success("Edited brand: " + json.shop.name);
+	  updateData([...data]);
+	}
+  }, [data, findShop, updateData]);
 
   const deleteShop = useCallback(async (name: string) => {
-	const i = findShopi(name);
-	if (i === -1) {
-	  toast.error("Unable to find brand");
-	  return;
+	const res = await fetch('/api/shop/' + name, {
+	  method: 'DELETE',
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
+	} else {
+	  toast.success("Deleted brand: " + name);
+	  const i = findShopi(name);
+	  data.splice(i, 1);
+	  updateData([...data]);
 	}
-	data.splice(i, 1);
-	updateData([...data]);
   }, [data, findShopi, updateData]);
 
   return {

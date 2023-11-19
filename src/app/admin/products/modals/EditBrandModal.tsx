@@ -26,7 +26,6 @@ const EditBrandModal: React.FC<EditShopProps> = ({
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		await updateBrand(brand.name, data.name);
-		toast.success("Brand edited: " + data.name);
 		close();
 		form.reset();
 	});

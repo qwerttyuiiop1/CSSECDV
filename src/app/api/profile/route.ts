@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
 	return NextResponse.json(user);
   } catch (error) {
 	console.error(error);
-  	return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
+  	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
 
@@ -36,22 +36,23 @@ export const GET = withAnyUser(async (req) => {
 
 
 export const PATCH = withAnyUser(async (req) => {
+  try {
 	const data = validatePatch(await req.json());
 	if (typeof data === 'string')
-		return NextResponse.json({ message: data }, { status: 400 });
+		return NextResponse.json({ error: data }, { status: 400 });
 	const user = await prisma.user.findUnique({
 		where: { email: req.user.email },
 		select: { password: true }
 	});
 	if (!user)
-		return NextResponse.json({ message: 'User not found' }, { status: 400 });
+		return NextResponse.json({ error: 'User not found' }, { status: 400 });
 	if (user.password) {
 		if (data.oldPassword === undefined)
-			return NextResponse.json({ message: 'Old password is required' }, { status: 400 });
+			return NextResponse.json({ error: 'Old password is required' }, { status: 400 });
 		if (bcrypt.compareSync(data.oldPassword, user.password) === false)
-			return NextResponse.json({ message: 'Old password is incorrect' }, { status: 400 });
+			return NextResponse.json({ error: 'Old password is incorrect' }, { status: 400 });
 		if (bcrypt.compareSync(data.password!, user.password) === true)
-			return NextResponse.json({ message: 'New password must be different from old password' }, { status: 400 });
+			return NextResponse.json({ error: 'New password must be different from old password' }, { status: 400 });
 		data.password = bcrypt.hashSync(data.password!, 10);
 		delete data.oldPassword;
 	}
@@ -63,4 +64,8 @@ export const PATCH = withAnyUser(async (req) => {
 		select: detail ? userDetailSelection : userSelection
 	});
 	return NextResponse.json(res);
+  } catch (error) {
+	console.error(error);
+	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+  }
 })

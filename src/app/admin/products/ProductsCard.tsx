@@ -29,7 +29,6 @@ const ProductsCard = () => {
   };
   const openAll = () => setIsExpanded(shops.map(() => true))
   const collapseAll = () => setIsExpanded(shops.map(() => false))
-  const log = async (data: any) => console.log(data)
   const handleCreateBrand = () => brandModal[1](true)
   const handleCreateProduct = () => productModal[1](true)
   const brandModal = useState(false);

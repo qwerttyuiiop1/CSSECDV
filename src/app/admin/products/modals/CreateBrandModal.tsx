@@ -21,7 +21,6 @@ const CreateBrandModal: React.FC<BaseModalProps> = ({
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		await createBrand(data.name);
-		toast.success("Brand created: " + data.name);
 		close();
 		form.reset();
 	});
