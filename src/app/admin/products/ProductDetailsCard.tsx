@@ -88,7 +88,7 @@ const ProductDetailsCard = () => {
 							<OptionsDivider />
 							<span onClick={modalHandler(creteCodeModal)}> Add Single Code </span>
 						</>}/>
-					<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
+					<UploadCSVModal state={uploadCSVModal} />
 					<CreateCodeModal state={creteCodeModal} />
 					<RefreshButton onClick={refresh}/>
 					{deleteCodes?.length ? (<>

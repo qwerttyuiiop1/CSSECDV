@@ -19,6 +19,7 @@ export interface useShopsReturn {
   updateShop: (name: string, newName: string) => Promise<void>;
   deleteShop: (name: string) => Promise<void>;
   refresh: () => Promise<void>;
+  uploadcsv: (file: File) => Promise<void>;
 }
 export interface useProductsReturn {
 	setSelectedProduct: (data: ProductId) => void;
@@ -114,6 +115,22 @@ export function useShops(): useShopsReturn {
 	toast.info("Refreshed");
   }, [_refresh])
 
+  const uploadcsv = useCallback(async (file: File) => {
+	const data = new FormData();
+	data.append('file', file);
+	const res = await fetch('/api/admin/productcsv', {
+	  method: 'POST',
+	  body: data,
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
+	}
+	await _refresh();
+	toast.success("Uploaded csv");
+  }, [_refresh]);
+
   return {
 	data,
 	createShop,
@@ -121,7 +138,8 @@ export function useShops(): useShopsReturn {
 	findShopi,
 	updateShop,
 	deleteShop,
-	refresh
+	refresh,
+	uploadcsv,
   };
 }
 export function useProducts(): useProductsReturn {
