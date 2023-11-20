@@ -2,14 +2,12 @@ import React, { createContext, useContext, ReactNode, useState, useCallback, use
 import { Product, Shop, ProductId, Code } from '../../../lib/types/Shop';
 import { toast } from 'react-toastify';
 
-
-
-
 interface ProductsContext {
   data: Shop[];
   setData: (data: Shop[]) => void;
   selectedProduct: ProductId | null;
   setSelectedProduct: (data: ProductId) => void;
+  refresh: () => Promise<void>;
 }
 const productsContext = createContext<ProductsContext | undefined>(undefined);
 
@@ -20,6 +18,7 @@ export interface useShopsReturn {
   findShopi: (name: string) => number;
   updateShop: (name: string, newName: string) => Promise<void>;
   deleteShop: (name: string) => Promise<void>;
+  refresh: () => Promise<void>;
 }
 export interface useProductsReturn {
 	setSelectedProduct: (data: ProductId) => void;
@@ -46,7 +45,7 @@ export function useShops(): useShopsReturn {
   const context = useContext(productsContext);
   if (context === undefined)
     throw new Error('useBrands must be used within a ProductsProviderProps');
-  const { data, setData: updateData } = context;
+  const { data, setData: updateData, refresh: _refresh } = context;
 
   const findShopi = useCallback((name: string) => {
 	return data.findIndex(b => b.name === name);
@@ -75,11 +74,6 @@ export function useShops(): useShopsReturn {
   }, [data, updateData]);
 
   const updateShop = useCallback(async (name: string, newName: string) => {
-	const shop = findShop(name);
-	if (!shop) {
-	  toast.error("Unable to find brand");
-	  return;
-	}
 	const res = await fetch('/api/shop/' + name, {
 	  method: 'PATCH',
 	  headers: {
@@ -92,8 +86,9 @@ export function useShops(): useShopsReturn {
 	  toast.error(json.error);
 	  return 
 	} else {
+	  const shop = findShop(name)!;
 	  shop.name = json.shop.name;
-	  toast.success("Edited brand: " + json.shop.name);
+	  toast.success("Edited brand: " + shop.name);
 	  updateData([...data]);
 	}
   }, [data, findShop, updateData]);
@@ -114,6 +109,11 @@ export function useShops(): useShopsReturn {
 	}
   }, [data, findShopi, updateData]);
 
+  const refresh = useCallback(async () => {
+	await _refresh();
+	toast.info("Refreshed");
+  }, [_refresh])
+
   return {
 	data,
 	createShop,
@@ -121,6 +121,7 @@ export function useShops(): useShopsReturn {
 	findShopi,
 	updateShop,
 	deleteShop,
+	refresh
   };
 }
 export function useProducts(): useProductsReturn {
@@ -142,38 +143,61 @@ export function useProducts(): useProductsReturn {
   }, [findShop]);
 
   const createProduct = useCallback(async (shopName: string, p: Product) => {
-	const prodI = findProducti([shopName, p.name]);
-	if (prodI[1] !== -1) {
-	  toast.error("Product already exists");
-	} else if (prodI[0] === -1) {
-	  toast.error("Brand does not exist");
+	const res = await fetch('/api/shop/' + shopName + '/product', {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify(p),
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
 	} else {
-	  data[prodI[0]].products.push(p);
-	  updateData([...data]);
+		const prod = json.product as Product;
+		const shop = findShop(prod.shopName)!;
+		shop.products.push(prod);
+		toast.success("Created product: " + prod.name);
 	}
-  }, [data, findProducti, updateData]);
+  }, [findShop]);
 
   const updateProduct = useCallback(async (id: ProductId, p: Product) => {
-	const prodI = findProducti(id);
-	if (prodI[1] === -1) {
-	  toast.error("Unable to find product");
-	} else if (prodI[0] === -1) {
-	  toast.error("Unable to find brand");
+	const res = await fetch('/api/shop/' + id[0] + '/product/' + id[1], {
+	  method: 'PATCH',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify(p),
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return 
 	} else {
-	  data[prodI[0]].products[prodI[1]] = p;
-	  updateData([...data]);
+		const prod = json.product as Product;
+		const [shopI, prodI] = findProducti(id);
+		data[shopI].products[prodI] = prod;
+		toast.success("Edited product: " + prod.name);
+		updateData([...data]);
 	}
   }, [data, findProducti, updateData]);
 
   const deleteProduct = useCallback(async (id: ProductId) => {
-	const prodI = findProducti(id);
-	if (prodI[1] === -1) {
-	  toast.error("Unable to find product");
-	} else if (prodI[0] === -1) {
-	  toast.error("Unable to find brand");
+	const res = await fetch('/api/shop/' + id[0] + '/product/' + id[1], {
+	  method: 'DELETE',
+	});
+	const json = await res.json()
+	if (!res.ok) {
+	  toast.error(json.error);
+	  return
 	} else {
-	  data[prodI[0]].products.splice(prodI[1], 1);
-	  updateData([...data]);
+		const [shopI, prodI] = findProducti(id);
+		const shop = data[shopI];
+		const prod = shop.products[prodI];
+		shop.products.splice(prodI, 1);
+		toast.success("Deleted product: " + prod.name);
+		updateData([...data]);
 	}
   }, [data, findProducti, updateData]);
   return {
@@ -254,22 +278,25 @@ interface ProductsProviderProps {
 export function ProductsProvider({ children }: ProductsProviderProps) {
   const [brands, setData] = useState<Shop[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
-  useEffect(() => {
-	fetch('/api/shop?full=true').then(async res => {
-	  if (res.status !== 200) {
-		console.error(res);
-		return;
-	  }
-	  const data = await res.json();
-	  setData(data.shops);
-	});
+  const refresh = useCallback(async () => {
+	const res = await fetch('/api/shop?full=true')
+	if (res.status !== 200) {
+	  console.error(res);
+	  return;
+	}
+	const data = await res.json();
+	setData(data.shops);
   }, []);
+  useEffect(() => {
+	refresh();
+  }, [refresh]);
 
   const contextValue: ProductsContext = {
     data: brands,
 	selectedProduct,
     setData,
 	setSelectedProduct,
+	refresh,
   };
   return <productsContext.Provider value={contextValue}>{children}</productsContext.Provider>;
 }

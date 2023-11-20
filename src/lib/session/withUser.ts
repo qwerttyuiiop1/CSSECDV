@@ -13,7 +13,7 @@ const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
 	async (req: NextRequest, t: T) => {
 		const token = await getToken({ req, secret: process.env.SECRET });
 		if (!token)
-			return NextResponse.json({ message: "Not logged in" }, { status: 401 });
+			return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 		const ureq = req as UserRequest;
 		ureq.token = token;
 		ureq.user = token.user as User;
@@ -22,19 +22,19 @@ const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
 const withUser = <T=undefined>(handler: UserHandler<T>) =>
 	withAnyUser((req, t: T) => {
 		if (req.user.role === UserRole.UNVERIFIED)
-			return NextResponse.json({ message: "User not verified" }, { status: 401 });
+			return NextResponse.json({ error: "User not verified" }, { status: 401 });
 		return handler(req, t);
 	});
 const withAdmin = <T=undefined>(handler: UserHandler<T>) =>
 	withAnyUser((req, t: T) => {
 		if (req.user.role !== UserRole.ADMIN && req.user.role !== UserRole.SUPERADMIN)
-			return NextResponse.json({ message: "User not admin" }, { status: 401 });
+			return NextResponse.json({ error: "User not admin" }, { status: 401 });
 		return handler(req, t);
 	});
 const withSuperAdmin = <T=undefined>(handler: UserHandler<T>) =>
 	withAnyUser((req, t: T) => {
 		if (req.user.role !== UserRole.SUPERADMIN)
-			return NextResponse.json({ message: "User not superadmin" }, { status: 401 });
+			return NextResponse.json({ error: "User not superadmin" }, { status: 401 });
 		return handler(req, t);
 	});
 export {

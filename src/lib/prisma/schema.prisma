@@ -52,6 +52,7 @@ model Shop {
 }
 
 enum ProductCategory {
+  UK // @map("Unknown")
   BF // @map("Beauty & Fashion")
   DS // @map("Department Stores")
   EL // @map("Electronics")
@@ -69,7 +70,7 @@ model Product {
   price		Float
   tos		String
   details	String
-  category	ProductCategory	
+  category	ProductCategory	@default(UK)
   
   shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   codes		Code[]

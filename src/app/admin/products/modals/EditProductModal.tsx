@@ -32,7 +32,6 @@ const EditProductModal: React.FC<EditProductProps> = ({
 		data.codes = product.codes;
 		data.price = Number(data.price);
 		await updateProduct(id, data as Product);
-		toast.success("Product created: " + JSON.stringify(data));
 		close();
 		form.reset();
 	});

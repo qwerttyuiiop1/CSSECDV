@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
 	HeaderButton,
 	Card,
@@ -33,6 +33,7 @@ const ProductsCard = () => {
   const handleCreateProduct = () => productModal[1](true)
   const brandModal = useState(false);
   const productModal = useState(false);
+  const { refresh } = useShops();
 
   return (
   	<div className={styles.products_container}>
@@ -53,7 +54,7 @@ const ProductsCard = () => {
 						<OptionsDivider />
 						<span onClick={handleCreateProduct}> Create Product </span>
 					</>}/>
-				<RefreshButton onClick={()=>toast.info("refreshed")}/>
+				<RefreshButton onClick={refresh}/>
 			</HeaderRow>
 		} body= {
 			<div className={styles.table}>

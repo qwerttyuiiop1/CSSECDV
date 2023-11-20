@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Product } from "../../../lib/types/Shop";
 import styles from "./components/products.module.css";
 import { 
@@ -21,7 +21,7 @@ import DeleteCodesModal from "./modals/DeleteCodesModal";
 import EditCodeModal from "./modals/EditCodeModal";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 import UploadCSVModal from "./modals/UploadCSVModal";
-import { useSelectedProduct } from "@/components/Providers/Products/Products";
+import { useSelectedProduct, useShops } from "@/components/Providers/Products/Products";
 
 const Row: React.FC<{
 	isSelected: boolean;
@@ -60,6 +60,8 @@ const ProductDetailsCard = () => {
 	useEffect(() => {
 		setIsSelected(product?.codes.map(() => false) || []);
 	}, [product]);
+	const { refresh } = useShops();
+
 	return (
 		<div className={styles.details_container}>
 			<div className={styles.title_container}>
@@ -88,7 +90,7 @@ const ProductDetailsCard = () => {
 						</>}/>
 					<UploadCSVModal onSubmit={console.log} state={uploadCSVModal} />
 					<CreateCodeModal state={creteCodeModal} />
-					<RefreshButton onClick={()=>toast.info("refreshed")}/>
+					<RefreshButton onClick={refresh}/>
 					{deleteCodes?.length ? (<>
 						<MinusButton onClick={modalHandler(deleteCodesModal)}
 							color="#FF4A4A" style={{borderColor: '#FF4A4A'}}
