@@ -10,7 +10,7 @@ import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { toast } from "react-toastify";
 import { Product } from "../../../../lib/types/Shop";
-import { useSelectedProduct } from "@/components/Providers/Products/Products";
+import { useCode } from "@/components/Providers/Products/Products";
 
 interface DeleteCodesProps extends BaseModalProps {
 	codes: string[];
@@ -20,11 +20,10 @@ interface DeleteCodesProps extends BaseModalProps {
 const DeleteCodesModal: React.FC<DeleteCodesProps> = ({
 	state, codes, product
 }) => {
-	const { deleteCodes } = useSelectedProduct();
+	const { deleteCodes, productId } = useCode();
 	const close = () => state[1](false);
 	const handleSubmit = async () => {
-		await deleteCodes(codes);
-		toast.success("Codes deleted: " + codes.join(", "));
+		await deleteCodes(codes, productId!);
 		close();
 	};
 	if (!state[0]) return null;

@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, {params: { name }}: Params) => {
 	};
 	const shop = await prisma.shop.findUnique(options);
 	if (!shop) 
-		return NextResponse.json({ message: 'Shop not found' }, {status: 404});
+		return NextResponse.json({ error: 'Shop not found' }, {status: 404});
 	return NextResponse.json({ shop });
 }
 

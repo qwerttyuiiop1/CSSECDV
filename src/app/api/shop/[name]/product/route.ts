@@ -17,9 +17,7 @@ export const POST = withAdmin(async (req, {params:{name}}: Params) => {
 	const product = await prisma.product.create({
 		data: {
 			...data,
-			shop: {
-				connect: { name }
-			}
+			shopName: name
 		},
 		...productSelection
 	});

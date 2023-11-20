@@ -21,7 +21,7 @@ import DeleteCodesModal from "./modals/DeleteCodesModal";
 import EditCodeModal from "./modals/EditCodeModal";
 import { Options, OptionsDivider } from "@/components/Dropdown/Options";
 import UploadCSVModal from "./modals/UploadCSVModal";
-import { useSelectedProduct, useShops } from "@/components/Providers/Products/Products";
+import { useCode, useShops } from "@/components/Providers/Products/Products";
 
 const Row: React.FC<{
 	isSelected: boolean;
@@ -44,7 +44,7 @@ const Row: React.FC<{
 }
 
 const ProductDetailsCard = () => {
-	const { product: product } = useSelectedProduct();
+	const { product: product } = useCode();
 	const [ filter, setFilter ] = useState<string>("");
 	const [ isSelected, setIsSelected ] = useState<boolean[]>([]);
 	const deleteCodes =  product?.codes.filter((v, i) => isSelected[i] && v.code.includes(filter));

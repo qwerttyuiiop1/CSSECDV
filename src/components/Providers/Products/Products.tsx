@@ -29,15 +29,15 @@ export interface useProductsReturn {
 	updateProduct: (id: ProductId, p: Product) => Promise<void>;
 	deleteProduct: (id: ProductId) => Promise<void>;
 }
-export interface useSelectedProductReturn {
+export interface useCodeReturn {
   product: Product | undefined;
   productId: ProductId | null;
-  createCode: (code: string) => Promise<void>;
+  createCode: (code: string, productId: ProductId) => Promise<void>;
   findCode: (code: string) => Code | undefined;
   findCodei: (code: string) => number;
-  updateCode: (code: string, newCode: string) => Promise<void>;
-  deleteCode: (code: string) => Promise<void>;
-  deleteCodes: (codes: string[]) => Promise<void>;
+  updateCode: (code: string, newCode: string, productId: ProductId) => Promise<void>;
+  deleteCode: (code: string, productId: ProductId) => Promise<void>;
+  deleteCodes: (codes: string[],productId: ProductId) => Promise<void>;
 }
 
 
@@ -211,7 +211,7 @@ export function useProducts(): useProductsReturn {
   };
 }
 
-export function useSelectedProduct(): useSelectedProductReturn {
+export function useCode(): useCodeReturn {
 	const context = useContext(productsContext);
 	if (context === undefined)
 	  throw new Error('useSelectedProduct must be used within a ProductsProviderProps');
@@ -226,39 +226,84 @@ export function useSelectedProduct(): useSelectedProductReturn {
 		return product?.codes.findIndex(c => c.code === code) ?? -1;
 	}, [product]);
 
-	const createCode = useCallback(async (code: string) => {
-		if (!product) return
-		if (findCode(code)) {
-			toast.error("Code already exists");
-			return;
+	const createCode = useCallback(async (code: string, productId: ProductId) => {
+		const res = await fetch('/api/shop/' + productId[0] + '/code', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ code, productName: productId[1] }),
+		});
+		const json = await res.json()
+		console.log(json)
+		if (!res.ok) {
+			toast.error(json.error);
+			return 
+		} else {
+			const code = json.code as Code;
+			findProduct(productId)!.codes.push(code);
+			toast.success("Created code: " + code.code);
+			updateData([...data]);
 		}
-		product.codes.push({ code, productName: product.name, shopName: product.shopName });
-		updateData([...data]);
-	}, [data, findCode, product, updateData]);
+	}, [data, findProduct, updateData]);
 
-	const updateCode = useCallback(async (code: string, newCode: string) => {
-		if (!product) return
-		const a = findCode(code);
-		if (!a) {
-			toast.error("Unable to find code");
-			return;
+	const updateCode = useCallback(async (code: string, newCode: string, productId: ProductId) => {
+		const res = await fetch('/api/shop/' + productId[0] + '/code/' + code, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ code: newCode }),
+		});
+		const json = await res.json()
+		if (!res.ok) {
+			toast.error(json.error);
+			return 
+		} else {
+			const newCode = json.code as Code;
+			const i = findCodei(code);
+			findProduct(productId)!.codes[i] = newCode;
+			toast.success("Edited code: " + newCode.code);
+			updateData([...data]);
 		}
-		a.code = newCode;
-		updateData([...data]);
-	}, [data, findCode, product, updateData]);
+	}, [data, findCodei, findProduct, updateData]);
 
-	const deleteCode = useCallback(async (code: string) => {
-		if (!product) return
-		const i = findCodei(code);
-		product.codes.splice(i, 1);
-		updateData([...data]);
-	}, [data, findCodei, product, updateData]);
+	const deleteCode = useCallback(async (code: string, productId: ProductId) => {
+		const res = await fetch('/api/shop/' + productId[0] + '/code/' + code, {
+			method: 'DELETE',
+		});
+		const json = await res.json()
+		if (!res.ok) {
+			toast.error(json.error);
+			return 
+		} else {
+			const i = findCodei(code);
+			findProduct(productId)!.codes.splice(i, 1);
+			toast.success("Deleted code: " + code);
+			updateData([...data]);
+		}
+	}, [data, findCodei, findProduct, updateData]);
 
-	const deleteCodes = useCallback(async (codes: string[]) => {
-		if (!product) return
-		product.codes = product.codes.filter(c => !codes.includes(c.code));
-		updateData([...data]);
-	}, [data, product, updateData]);
+	const deleteCodes = useCallback(async (codes: string[], productId: ProductId) => {
+		const res = await fetch('/api/shop/' + productId[0] + '/code', {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ codes }),
+		});
+		const json = await res.json()
+		if (!res.ok) {
+			toast.error(json.error);
+			return 
+		} else {
+			const product = findProduct(productId)!;
+			const newCodes = product.codes.filter(c => !codes.includes(c.code));
+			product.codes = newCodes;
+			toast.success("Deleted codes: " + codes.join(', '));
+			updateData([...data]);
+		}
+	}, [data, findProduct, updateData]);
 
 	return {
 		product,
