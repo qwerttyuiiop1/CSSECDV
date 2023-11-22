@@ -142,8 +142,8 @@ function ProfileComponent({ user }: { user: User | undefined }) {
                     button: styles.profile_button,
                     content: styles.profile_dropdown,
                 }} options={[
-                    {href: "/inventory", label: "Inventory"},
-                    {href: "/profile", label: "Edit Profile"},
+                    {href: "/inventorypage", label: "Inventory"},
+                    {href: "/profile/edit", label: "Edit Profile"},
                     {href: "/", label: "Logout", onClick: signOut}
                 ]}>
                     <img className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
