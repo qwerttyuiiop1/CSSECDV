@@ -1,7 +1,7 @@
 import { DBUser } from "@/lib/types/User";
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
 export type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }
-export type SignupBody = Required<Data> & { email: string; address2?: string; }
+export type SignupBody = Required<Data> & { email: string }
 
 export const validateSignup = (body: any): string | SignupBody => {
 	const { 
@@ -45,7 +45,7 @@ export const validateSignup = (body: any): string | SignupBody => {
 		city,
 		country,
 		mobileno: phone_code + phone,
-		address2
+		address2: address2 || null,
 	};
 }
 

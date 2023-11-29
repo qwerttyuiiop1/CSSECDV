@@ -50,8 +50,8 @@ const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	accept: string;
 	options?: RegisterOptions<FieldValues, string>;
 }> = ({options, ...props}) => {
-	const { register, getValues } = useFormContext();
-	const file = getValues(props.id) as FileList | undefined;
+	const { register, watch } = useFormContext();
+	const file = watch(props.id) as FileList | undefined;
 	if (!props.name) props.name = props.id;
 	return (
 	  <label className={styles.file_input} htmlFor={props.id}>

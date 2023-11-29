@@ -27,7 +27,7 @@ const Page: React.FC<{data: FormValues; id: string}> = ({ data, id }) => {
   const router = useRouter();
   const toast = useFormError(form);
   const onSubmit = form.handleSubmit(async data => {
-	const res = await fetch(`/api/user/${id}`, {
+	const res = await fetch(`/api/profile/${id}`, {
 	  method: "PATCH",
 	  headers: {
 		"Content-Type": "application/json",
@@ -96,7 +96,7 @@ export default function Wrapper() {
   useEffect(() => {
 	if (!session) return;
 	(async () => {
-	  const res = await fetch(`/api/user/${session.user.email}?detail=true`);
+	  const res = await fetch(`/api/profile/${session.user.email}?detail=true`);
 	  if (res.ok) {
 		const data = await res.json();
 		setUser(data);

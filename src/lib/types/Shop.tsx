@@ -38,4 +38,5 @@ export const CategoryMap: Record<ProductCategory, string> = {
 	LS: "Lifestyle",
 	TR: "Travel",
 	OS: "Online Shopping",
+	UK: "Unknown"
 }

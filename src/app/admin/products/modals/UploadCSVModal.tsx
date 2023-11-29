@@ -11,21 +11,18 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
+import { useShops } from "@/components/Providers/Products/Products";
 
-interface UploadCSVProps extends BaseModalProps {
-	onSubmit: (file: File) => Promise<void> | void;
-}
-
-const UploadCSVModal: React.FC<UploadCSVProps> = ({
-	state, onSubmit
+const UploadCSVModal: React.FC<BaseModalProps> = ({
+	state
 }) => {
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
+	const { uploadcsv } = useShops();
 	const handleSubmit = form.handleSubmit(async (data) => {
 		const file = data.file[0] as File;
-		await onSubmit(file);
-		toast.success("File uploaded: " + file.name);
+		await uploadcsv(file);
 		close();
 		form.reset();
 	});

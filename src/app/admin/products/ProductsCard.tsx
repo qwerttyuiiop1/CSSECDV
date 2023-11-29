@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
 	HeaderButton,
 	Card,
@@ -19,21 +19,21 @@ import { toast } from "react-toastify";
 import { useShops, useProducts } from "@/components/Providers/Products/Products";
 
 const ProductsCard = () => {
-  const { data: brands } = useShops();
+  const { data: shops } = useShops();
   const { selectedProduct, setSelectedProduct: onSelectProduct } = useProducts();
-  const [ isExpanded, setIsExpanded ] = useState<boolean[]>(brands.map(() => false))
+  const [ isExpanded, setIsExpanded ] = useState<boolean[]>(shops.map(() => false))
   const handleExpand = (index: number) => {
 	const arr = [...isExpanded]
 	arr[index] = !arr[index]
 	setIsExpanded(arr)
   };
-  const openAll = () => setIsExpanded(brands.map(() => true))
-  const collapseAll = () => setIsExpanded(brands.map(() => false))
-  const log = async (data: any) => console.log(data)
+  const openAll = () => setIsExpanded(shops.map(() => true))
+  const collapseAll = () => setIsExpanded(shops.map(() => false))
   const handleCreateBrand = () => brandModal[1](true)
   const handleCreateProduct = () => productModal[1](true)
   const brandModal = useState(false);
   const productModal = useState(false);
+  const { refresh } = useShops();
 
   return (
   	<div className={styles.products_container}>
@@ -54,7 +54,7 @@ const ProductsCard = () => {
 						<OptionsDivider />
 						<span onClick={handleCreateProduct}> Create Product </span>
 					</>}/>
-				<RefreshButton onClick={()=>toast.info("refreshed")}/>
+				<RefreshButton onClick={refresh}/>
 			</HeaderRow>
 		} body= {
 			<div className={styles.table}>
@@ -66,7 +66,7 @@ const ProductsCard = () => {
 					<span className={styles.actions}>Actions</span>
 				</div>
 				<AnimatePresence>{
-					brands.map((brand, i) => {
+					shops.map((brand, i) => {
 						return (
 							<SlideDown key={i}>
 							<BrandProducts 

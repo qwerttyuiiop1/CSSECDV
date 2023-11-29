@@ -30,7 +30,7 @@ function Page({ id }: { id: string }) {
 		old_password,
 		new_password
 	} = data;
-	const res = await fetch(`/api/user/${id}`, {
+	const res = await fetch(`/api/profile/${id}`, {
 	  method: "PATCH",
 	  headers: {
 		"Content-Type": "application/json",

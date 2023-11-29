@@ -8,7 +8,6 @@ import {
 } from "@/components/CardPage/CardPage";
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
-import { toast } from "react-toastify";
 import { useProducts } from "@/components/Providers/Products/Products";
 import { ProductId } from "@/lib/types/Shop";
 
@@ -24,7 +23,6 @@ const DeleteProductModal: React.FC<DeleteProductProps> = ({
 	const close = () => state[1](false);
 	const handleSubmit = async () => {
 		await deleteProduct(id);
-		toast.success("Product deleted: " + product.name);
 		close();
 	};
 	if (!state[0]) return null;

@@ -10,18 +10,21 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { useSelectedProduct } from "@/components/Providers/Products/Products";
+import { useCode } from "@/components/Providers/Products/Products";
 
 const CreateCodeModal: React.FC<BaseModalProps> = ({
 	state
 }) => {
-	const { createCode } = useSelectedProduct();
+	const { createCode, productId } = useCode();
 	const form = useForm();
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await createCode(data.code);
-		toast.success("Code created: " + data.code);
+		if (!productId) {
+			toast.error("No product selected");
+			return;
+		}
+		await createCode(data.code, productId);
 		close();
 		form.reset();
 	});

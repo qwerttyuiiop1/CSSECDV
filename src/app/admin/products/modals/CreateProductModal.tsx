@@ -24,10 +24,9 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		data.activeCodes = [];
+		data.codes = []
 		data.price = Number(data.price);
-		createProduct(data.shop, data as Product);
-		toast.success("Product created: " + JSON.stringify(data));
+		await createProduct(data.shopName, data as Product);
 		close();
 		form.reset();
 	});
@@ -39,7 +38,7 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 			<Label>
 				Brand Name
 				<Dropdown 
-					id="shop"
+					id="shopName"
 					values={data.map(b => b.name)}/>
 			</Label>
 			<CardRow>

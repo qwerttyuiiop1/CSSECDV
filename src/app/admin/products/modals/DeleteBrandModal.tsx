@@ -23,7 +23,6 @@ const DeleteShopModal: React.FC<DeleteShopProps> = ({
 	const { deleteShop: deleteBrand } = useShops();
 	const handleSubmit = async () => {
 		await deleteBrand(brand.name);
-		toast.success("Brand deleted: " + brand.name);
 		close();
 	};
 	if (!state[0]) return null;
