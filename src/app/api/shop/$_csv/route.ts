@@ -18,17 +18,21 @@ export const POST = withAdmin(async (req) => {
 		.on('data', (data) => res.push(data))
 		.on('end', () => resolve(res))
 		.on('error', reject)
-	}) as any[]
-	
-	await prisma.$transaction(results.map((code) => {
-		return prisma.code.create({
-			data: {
-				code: code.code,
-				productName: code.product,
-				shopName: code.shop,
+	}) as {code: string; product: string; shop: string}[]
+	await prisma.$transaction(results.map(result => prisma.code.create({
+	  data: {
+		code: result.code,
+		product: {
+		  connect: {
+			name_shopName_isActive: {
+			  name: result.product,
+			  shopName: result.shop,
+			  isActive: true,
 			}
-		})
-	}));
+		  }
+		}
+	  }
+	})));
 	
 	return NextResponse.json({ message: "Success" }, { status: 200 })
   } catch (error) {

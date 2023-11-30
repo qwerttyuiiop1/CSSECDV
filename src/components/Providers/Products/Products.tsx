@@ -118,7 +118,7 @@ export function useShops(): useShopsReturn {
   const uploadcsv = useCallback(async (file: File) => {
 	const data = new FormData();
 	data.append('file', file);
-	const res = await fetch('/api/admin/productcsv', {
+	const res = await fetch('/api/shop/$_csv', {
 	  method: 'POST',
 	  body: data,
 	});

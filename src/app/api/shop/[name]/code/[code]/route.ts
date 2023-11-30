@@ -8,35 +8,28 @@ type Params = {
 	}
 }
 
-export const GET = async (_: NextRequest, {params: { name, code }}: Params) => {
-	const a = await prisma.code.findUnique({
-		where: {
-			code_shopName: {
-				code: code,
-				shopName: name
-			},
-		},
-	});
-	if (!a) 
-		return NextResponse.json({ error: 'Code not found' }, {status: 404});
-	return NextResponse.json({ a });
-}
-
 export const PATCH = withAdmin(async (req: NextRequest, {params: { name, code }}: Params) => {
   try {
 	const { code: newCode } = await req.json();
-	const a = await prisma.code.update({
+	/**
+	 * code has primary key of [code, shopId]
+	 * the shopId is in the same row as the shopName = name and isActive = true
+	 */
+	const a = await prisma.code.updateMany({
 		where: {
-			code_shopName: {
-				code: code,
-				shopName: name
-			},
+			code: code,
+			shop: {
+				name: name,
+				isActive: true
+			}
 		},
 		data: {
 			code: newCode
 		}
 	});
-	return NextResponse.json({ code: a });
+	if (a.count !== 1)
+		return NextResponse.json({ error: "Something went wrong" }, {status: 500});
+	return NextResponse.json({ code: newCode });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: "Something went wrong" }, {status: 500});

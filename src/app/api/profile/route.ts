@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/prisma";
 import { withAnyUser } from "@/lib/session/withUser";
 import { userDetailSelection, userSelection } from "@/lib/types/User";
-import { validatePatch, validateSignup } from "./validate";
+import { validatePatch, validateSignup, validUser } from "./validate";
 import bcrypt from 'bcrypt';
+import { UserRole } from "@prisma/client";
 
 
 export const POST = async (req: NextRequest) => {
   try {
     const data = validateSignup(await req.json());
     if (typeof data === 'string')
-	  return new NextResponse(data, { status: 400 });
+	  return NextResponse.json({ error: data }, { status: 400 });
 	data.password = bcrypt.hashSync(data.password!, 10);
-	
+	(data as any).role = UserRole.USER;
 	const detail = req.nextUrl.searchParams.get('detail') === 'true';
   	const user = await prisma.user.create({ 
 		data,
@@ -57,12 +58,18 @@ export const PATCH = withAnyUser(async (req) => {
 		delete data.oldPassword;
 	}
 	
-	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 	const res = await prisma.user.update({
 		where: { email: req.user.email },
 		data: data,
-		select: detail ? userDetailSelection : userSelection
+		select: userDetailSelection
 	});
+	if (res.role === UserRole.UNVERIFIED && validUser(res) === true) {
+		await prisma.user.update({
+			where: { email: req.user.email },
+			data: { role: UserRole.USER }
+		});
+		res.role = UserRole.USER;
+	}
 	return NextResponse.json(res);
   } catch (error) {
 	console.error(error);

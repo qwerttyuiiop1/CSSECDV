@@ -44,15 +44,27 @@ model User {
   @@map(name: "users")
 }
 
+model ShopH {
+  id		String		@default(cuid()) @id
+  name		String
+
+  isActive  Shop?
+  products	ProductH[]
+
+  @@map(name: "shops_h")
+  @@unique([id, name]) // required for relation
+}
 model Shop {
   name		String		@id
-  products	Product[]
-
+  
+  id		String		@unique
+  shop		ShopH		@relation(fields: [id, name], references: [id, name])
+  rel_products	Product[]
   @@map(name: "shops")
+  @@unique([id, name]) // required for relation
 }
 
 enum ProductCategory {
-  UK // @map("Unknown")
   BF // @map("Beauty & Fashion")
   DS // @map("Department Stores")
   EL // @map("Electronics")
@@ -64,32 +76,70 @@ enum ProductCategory {
   OS // @map("Online Shopping")
 }
 
-model Product {
-  shopName	String			@map(name: "shop_name")
-  name		String
-  price		Float
-  tos		String
-  details	String
-  category	ProductCategory	@default(UK)
+model ProductH {
+  id			String			@default(cuid()) @id
+  shopId		String
+  shopName		String			@map(name: "shop_name")
+  name			String
+  isActive		Product?
+
+  price			Float
+  tos			String
+  details		String
+  category		ProductCategory?	// TODO: fix this
   
-  shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
-  codes		Code[]
+  shop			ShopH			@relation(fields: [shopId, shopName], references: [id, name])
+  codes			Code[]
+  purchasedCodes	CodeH[]
 
-  transactionItems      TransactionItem[]
-
-  @@map(name: "products")
-  @@id([name, shopName])
+  @@map(name: "products_h")
+  @@unique([id, name, shopId, shopName]) // required for relation
 }
+model Product {
+	name		String
+	shopName	String
+	id			String
+	shopId		String
 
+	rel_shop	Shop		@relation(fields: [shopName], references: [name], onDelete: Cascade)
+	product		ProductH	@relation(fields: [id, name, shopId, shopName], references: [id, name, shopId, shopName])
+	rel_codes	Code[]
+	@@id([shopName, name])
+	@@unique([id, name, shopId, shopName]) // required for relation
+}
+model CodeH {
+	code			String
+	shopName		String
+	productName		String
+	
+	shopId			String
+	productId		String
+	
+	userEmail		String
+	transactionDate	DateTime
+	itemId			Int
+	transactionItem	TransactionItem	@relation(fields: [userEmail, transactionDate, itemId], references: [userEmail, transactionDate, itemId])
+
+	rel_code		Code?
+	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName])
+	@@id([code, shopId])
+	@@unique([userEmail, transactionDate, itemId]) // required for relation
+}
 model Code {
   code			String
-
-  productName	String		@map(name: "product_name")
   shopName		String		@map(name: "shop_name")
-  product		Product		@relation(fields: [productName, shopName], references: [name, shopName], onDelete: Cascade, onUpdate: Cascade)
+  productName	String		@map(name: "product_name")
+  
+  shopId		String
+  productId		String
+  
+  isUsed		CodeH?		@relation(fields: [code, shopId], references: [code, shopId])
+  rel_productH	ProductH	@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName])
+  rel_product	Product		@relation(fields: [shopName, productName], references: [shopName, name])
 
   @@id([code, shopName])
   @@map(name: "codes")
+  @@unique([code, shopId]) // required for relation
 }
 
 model Transaction {
@@ -107,15 +157,13 @@ model Transaction {
 }
 
 model TransactionItem {
-  productName String
-  shopName String
-  product Product @relation(fields: [productName, shopName], references: [name, shopName])
-
+  code CodeH? // all transaction items are currently codes
   userEmail String
   transactionDate DateTime
-  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date])
+  itemId Int
+  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date]  )
 
-  @@id([productName, shopName, userEmail, transactionDate])
+  @@id([userEmail, transactionDate, itemId])
 }
 
 enum TransactionType {
