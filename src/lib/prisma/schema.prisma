@@ -94,6 +94,7 @@ model Product {
 	codes		Code[]
 	@@id([name, shopName])
 	@@unique([id, version, name, shopId, shopName])
+	@@unique([id, name, shopId, shopName])
 }
 model ProductH {
   id			Int
@@ -110,8 +111,7 @@ model ProductH {
   
   isActive		Product?
   shop			ShopH		@relation(fields: [shopId, shopName], references: [id, name])
-  codes			Code[]
-  purchasedCodes	CodeH[]	
+  purchasedCodes	CodeH[]
   @@id([id, version])
   @@map(name: "products_h")
   @@unique([id, version, name, shopId, shopName])
@@ -119,21 +119,21 @@ model ProductH {
 
 // current active codes is tied to the most recent product
 // only purchased codes are tied to a specific version
+// purchased codes also should not be visible to the user
+// only here for unique constraints
 model Code {
   shopId		Int
   productId		Int
-  productVersion	Int
 
   code			String
   shopName		String		@map(name: "shop_name")
   productName	String		@map(name: "product_name")
   
   isUsed		CodeH?		@relation(fields: [code, shopId], references: [code, shopId])
-  product		Product		@relation(fields: [productId, productVersion, productName, shopId, shopName], references: [id, version, name, shopId, shopName], onDelete: Cascade)
-  rel_productH	ProductH	@relation(fields: [productId, productVersion], references: [id, version])
+  product		Product		@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName], onDelete: Cascade)
 
-  @@id([code, shopId])
-  @@unique([code, shopName])
+  @@unique([code, shopId])
+  @@id([code, shopName])
   @@map(name: "codes")
 }
 model CodeH {
@@ -148,13 +148,11 @@ model CodeH {
 	
 	userEmail		String
 	transactionDate	DateTime
-	itemId			Int
-	transactionItem	TransactionItem	@relation(fields: [userEmail, transactionDate, itemId], references: [userEmail, transactionDate, itemId])
+	transactionItem	Transaction	@relation(fields: [userEmail, transactionDate], references: [userEmail, date])
 
 	rel_code		Code?
 	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName, productVersion], references: [id, name, shopId, shopName, version])
 	@@id([code, shopId])
-	@@unique([userEmail, transactionDate, itemId])
 }
 
 model Transaction {
@@ -166,19 +164,9 @@ model Transaction {
   total         Float
   pointsBalance Int
 
-  items      TransactionItem[]
+  items      	CodeH[]
 
   @@id([userEmail, date])
-}
-
-model TransactionItem {
-  code CodeH? // all transaction items are currently codes
-  userEmail String
-  transactionDate DateTime
-  itemId Int
-  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date])
-
-  @@id([userEmail, transactionDate, itemId])
 }
 
 enum TransactionType {
