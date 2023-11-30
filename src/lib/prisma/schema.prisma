@@ -44,24 +44,29 @@ model User {
   @@map(name: "users")
 }
 
-model ShopH {
-  id		String		@default(cuid()) @id
-  name		String
-
-  isActive  Shop?
-  products	ProductH[]
-
-  @@map(name: "shops_h")
-  @@unique([id, name]) // required for relation
-}
+// shop having a version doesn't make sense
+// so it just points to the current active shop
 model Shop {
+  id		Int			@default(autoincrement()) @unique
+
   name		String		@id
-  
-  id		String		@unique
+
   shop		ShopH		@relation(fields: [id, name], references: [id, name])
-  rel_products	Product[]
+  products	Product[]
   @@map(name: "shops")
-  @@unique([id, name]) // required for relation
+  @@unique([id, name])
+}
+model ShopH {
+  id			Int			@id
+  createdAt		DateTime	@default(now())
+  updatedAt		DateTime	@updatedAt
+
+  name			String
+
+  isActive  	Shop?
+  products		ProductH[]
+  @@map(name: "shops_h")
+  @@unique([id, name])
 }
 
 enum ProductCategory {
@@ -76,44 +81,70 @@ enum ProductCategory {
   OS // @map("Online Shopping")
 }
 
-model ProductH {
-  id			String			@default(cuid()) @id
-  shopId		String
-  shopName		String			@map(name: "shop_name")
-  name			String
-  isActive		Product?
+model Product {
+	id			Int			@default(autoincrement()) @unique
+	version		Int
+	shopId		Int
 
+	name		String
+	shopName	String
+
+	shop		Shop		@relation(fields: [shopId], references: [id], onDelete: Cascade)
+	product		ProductH	@relation(fields: [id, version, name, shopId, shopName], references: [id, version, name, shopId, shopName])
+	codes		Code[]
+	@@id([name, shopName])
+	@@unique([id, version, name, shopId, shopName])
+}
+model ProductH {
+  id			Int
+  version		Int			@default(0)
+  dateCreated	DateTime	@default(now())
+  shopId		Int
+
+  shopName		String
+  name			String
   price			Float
   tos			String
   details		String
   category		ProductCategory?	// TODO: fix this
   
-  shop			ShopH			@relation(fields: [shopId, shopName], references: [id, name])
+  isActive		Product?
+  shop			ShopH		@relation(fields: [shopId, shopName], references: [id, name])
   codes			Code[]
-  purchasedCodes	CodeH[]
-
+  purchasedCodes	CodeH[]	
+  @@id([id, version])
   @@map(name: "products_h")
-  @@unique([id, name, shopId, shopName]) // required for relation
+  @@unique([id, version, name, shopId, shopName])
 }
-model Product {
-	name		String
-	shopName	String
-	id			String
-	shopId		String
 
-	rel_shop	Shop		@relation(fields: [shopName], references: [name], onDelete: Cascade)
-	product		ProductH	@relation(fields: [id, name, shopId, shopName], references: [id, name, shopId, shopName])
-	rel_codes	Code[]
-	@@id([shopName, name])
-	@@unique([id, name, shopId, shopName]) // required for relation
+// current active codes is tied to the most recent product
+// only purchased codes are tied to a specific version
+model Code {
+  shopId		Int
+  productId		Int
+  productVersion	Int
+
+  code			String
+  shopName		String		@map(name: "shop_name")
+  productName	String		@map(name: "product_name")
+  
+  isUsed		CodeH?		@relation(fields: [code, shopId], references: [code, shopId])
+  product		Product		@relation(fields: [productId, productVersion, productName, shopId, shopName], references: [id, version, name, shopId, shopName], onDelete: Cascade)
+  rel_productH	ProductH	@relation(fields: [productId, productVersion], references: [id, version])
+
+  @@id([code, shopId])
+  @@unique([code, shopName])
+  @@map(name: "codes")
 }
 model CodeH {
+	shopId			Int
+	productId		Int
+	productVersion	Int
+	dateCreated		DateTime	@updatedAt
+
 	code			String
 	shopName		String
 	productName		String
-	
-	shopId			String
-	productId		String
 	
 	userEmail		String
 	transactionDate	DateTime
@@ -121,25 +152,9 @@ model CodeH {
 	transactionItem	TransactionItem	@relation(fields: [userEmail, transactionDate, itemId], references: [userEmail, transactionDate, itemId])
 
 	rel_code		Code?
-	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName])
+	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName, productVersion], references: [id, name, shopId, shopName, version])
 	@@id([code, shopId])
-	@@unique([userEmail, transactionDate, itemId]) // required for relation
-}
-model Code {
-  code			String
-  shopName		String		@map(name: "shop_name")
-  productName	String		@map(name: "product_name")
-  
-  shopId		String
-  productId		String
-  
-  isUsed		CodeH?		@relation(fields: [code, shopId], references: [code, shopId])
-  rel_productH	ProductH	@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName])
-  rel_product	Product		@relation(fields: [shopName, productName], references: [shopName, name])
-
-  @@id([code, shopName])
-  @@map(name: "codes")
-  @@unique([code, shopId]) // required for relation
+	@@unique([userEmail, transactionDate, itemId])
 }
 
 model Transaction {
@@ -161,7 +176,7 @@ model TransactionItem {
   userEmail String
   transactionDate DateTime
   itemId Int
-  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date]  )
+  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date])
 
   @@id([userEmail, transactionDate, itemId])
 }
