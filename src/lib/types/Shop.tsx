@@ -1,32 +1,81 @@
-import { Shop as _Shop, Product as _Product, Code as _Code, ProductCategory } from '@prisma/client';
+import { 
+	Shop as _Shop, 
+	ProductH as _Product, 
+	Code as _Code, 
+	ProductCategory 
+} from '@prisma/client';
 
-export type DBShop = _Shop
-export type DBProduct = _Product
-export type DBCode = _Code
-
-export const shopSelection = {
-	include: {
-		products: {
-			include: {
-				codes: true
-			}
-		}
-	}
+export const codeSelection = {
+  select: {
+	productName: true,
+	shopName: true,
+	code: true
+  }
 }
-export type Shop = _Shop & {
-	products: Product[]
-}
-export const productSelection = {
-	include: {
-		codes: true
-	}
-}
+export type CodeId = [shopName: string, codeName: string];
+export type Code = Pick<_Code, "productName" | "shopName" | "code">
 
 export type ProductId = [shopName: string, productName: string];
-export type Product = _Product & {
-	codes: Code[]
+export type Product = Pick<_Product, "name" | "shopName" | "price" | "tos" | "details" | "category"> & {
+	stock: number,
+	sales: number,
 }
-export type Code = _Code
+type DBProduct = {
+  product: Omit<Product, 'stock' | 'sales'> & {
+	_count: { purchasedCodes: number }
+  }
+  _count: { codes: number }
+}
+export const mapProduct = (product: DBProduct): Product => ({
+	...product.product,
+	stock: product._count.codes,
+	sales: product.product._count.purchasedCodes,
+})
+export const productSelection = {
+  select: {
+	product: {
+	  select: {
+		name: true,
+		shopName: true,
+		price: true,
+		tos: true,
+		details: true,
+		category: true,
+		_count: {
+		  select: {
+			purchasedCodes: true
+		  }
+		}
+	  },
+	},
+	_count: {
+	  select: {
+		codes: {
+		  where: {
+			isUsed: null
+		  }
+		}
+	  }
+	}
+  }
+}
+export const shopSelection = {
+  select: {
+	name: true,
+	products: productSelection
+  }
+}
+export type Shop = Pick<_Shop, "name"> & {
+	products: Product[]
+}
+type DBShop = {
+	name: string,
+	products: DBProduct[]
+}
+export const mapShop = (shop: DBShop): Shop => ({
+	name: shop.name,
+	products: shop.products?.map(mapProduct)
+})
 
 export const CategoryMap: Record<ProductCategory, string> = {
 	BF: "Beauty & Fashion",
@@ -38,5 +87,4 @@ export const CategoryMap: Record<ProductCategory, string> = {
 	LS: "Lifestyle",
 	TR: "Travel",
 	OS: "Online Shopping",
-	UK: "Unknown"
 }

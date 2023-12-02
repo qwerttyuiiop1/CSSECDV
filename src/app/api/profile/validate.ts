@@ -1,7 +1,13 @@
-import { DBUser } from "@/lib/types/User";
+import { DBUser, UserDetail } from "@/lib/types/User";
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
 export type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }
 export type SignupBody = Required<Data> & { email: string }
+
+export const validUser = (user: UserDetail): boolean => {
+	if (user.address1 === null || user.city === null || user.country === null || user.mobileno === null)
+		return false;
+	return true;
+}
 
 export const validateSignup = (body: any): string | SignupBody => {
 	const { 

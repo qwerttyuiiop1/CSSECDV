@@ -7,8 +7,24 @@ type UserRequest = NextRequest & {
 	user: User
 	token: JWT
 }
+type OptionalRequest = NextRequest & {
+	user?: User
+	token?: JWT
+	isAdmin?: boolean
+}
 export type UserHandler<T> = (req: UserRequest, params: T) => NextResponse | Promise<NextResponse>;
-
+export type OptionalHandler<T> = (req: OptionalRequest, params: T) => NextResponse | Promise<NextResponse>;
+const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
+	async (req: NextRequest, t: T) => {
+		const token = await getToken({ req, secret: process.env.SECRET });
+		const ureq = req as OptionalRequest;
+		if (token) {
+			ureq.user = token.user as User;
+			ureq.token = token;
+			ureq.isAdmin = ureq.user.role === UserRole.ADMIN || ureq.user.role === UserRole.SUPERADMIN;
+		}
+		return handler(ureq, t);
+	}
 const withAnyUser = <T=undefined>(handler: UserHandler<T>) => 
 	async (req: NextRequest, t: T) => {
 		const token = await getToken({ req, secret: process.env.SECRET });
@@ -38,6 +54,7 @@ const withSuperAdmin = <T=undefined>(handler: UserHandler<T>) =>
 		return handler(req, t);
 	});
 export {
+	withOptionalUser,
 	withAnyUser,
 	withUser,
 	withAdmin,

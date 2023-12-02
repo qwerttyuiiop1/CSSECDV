@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma/prisma';
 import { withAdmin } from '@/lib/session/withUser';
+import { adminCodeSelection } from '@/lib/types/AdminShop';
 import { NextRequest, NextResponse } from 'next/server';
 type Params = {
 	params: {
@@ -17,9 +18,16 @@ export const POST = withAdmin(async (req: NextRequest, {params: { name: shopName
 	const newCode = await prisma.code.create({
 		data: {
 			code,
-			productName,
-			shopName
-		}
+			product: {
+				connect: {
+					name_shopName: {
+						name: productName,
+						shopName
+					}
+				}
+			},
+		},
+		select: adminCodeSelection.select
 	});
 	return NextResponse.json({ code: newCode }, { status: 201 });
   } catch (error) {

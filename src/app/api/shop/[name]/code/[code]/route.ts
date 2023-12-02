@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma/prisma';
 import { withAdmin } from '@/lib/session/withUser';
+import { adminCodeSelection } from '@/lib/types/AdminShop';
 import { NextRequest, NextResponse } from 'next/server';
 type Params = {
 	params: {
@@ -8,33 +9,20 @@ type Params = {
 	}
 }
 
-export const GET = async (_: NextRequest, {params: { name, code }}: Params) => {
-	const a = await prisma.code.findUnique({
-		where: {
-			code_shopName: {
-				code: code,
-				shopName: name
-			},
-		},
-	});
-	if (!a) 
-		return NextResponse.json({ error: 'Code not found' }, {status: 404});
-	return NextResponse.json({ a });
-}
-
 export const PATCH = withAdmin(async (req: NextRequest, {params: { name, code }}: Params) => {
   try {
 	const { code: newCode } = await req.json();
 	const a = await prisma.code.update({
 		where: {
 			code_shopName: {
-				code: code,
+				code,
 				shopName: name
 			},
 		},
 		data: {
 			code: newCode
-		}
+		},
+		select: adminCodeSelection.select
 	});
 	return NextResponse.json({ code: a });
   } catch (error) {
@@ -52,6 +40,7 @@ export const DELETE = withAdmin(async (_: NextRequest, {params: { name, code }}:
 				shopName: name
 			},
 		},
+		select: adminCodeSelection.select
 	});
 	return NextResponse.json({ code: a });
   } catch (error) {

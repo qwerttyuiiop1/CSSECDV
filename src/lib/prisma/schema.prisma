@@ -44,15 +44,32 @@ model User {
   @@map(name: "users")
 }
 
+// shop having a version doesn't make sense
+// so it just points to the current active shop
 model Shop {
-  name		String		@id
-  products	Product[]
+  id		Int			@unique
 
+  name		String		@id
+
+  shop		ShopH		@relation(fields: [id, name], references: [id, name])
+  products	Product[]
   @@map(name: "shops")
+  @@unique([id, name])
+}
+model ShopH {
+  id			Int			@default(autoincrement()) @id
+  createdAt		DateTime	@default(now())
+  updatedAt		DateTime	@updatedAt
+
+  name			String
+
+  isActive  	Shop?
+  products		ProductH[]
+  @@map(name: "shops_h")
+  @@unique([id, name])
 }
 
 enum ProductCategory {
-  UK // @map("Unknown")
   BF // @map("Beauty & Fashion")
   DS // @map("Department Stores")
   EL // @map("Electronics")
@@ -65,31 +82,77 @@ enum ProductCategory {
 }
 
 model Product {
-  shopName	String			@map(name: "shop_name")
-  name		String
-  price		Float
-  tos		String
-  details	String
-  category	ProductCategory	@default(UK)
+	id			Int		@unique
+	version		Int
+	shopId		Int
+
+	name		String
+	shopName	String
+
+	shop		Shop		@relation(fields: [shopId], references: [id], onDelete: Cascade)
+	product		ProductH	@relation(fields: [id, version, name, shopId, shopName], references: [id, version, name, shopId, shopName])
+	codes		Code[]
+	@@id([name, shopName])
+	@@unique([id, version, name, shopId, shopName])
+}
+model ProductH {
+  id			Int			@default(autoincrement())
+  version		Int			@default(0)
+  dateCreated	DateTime	@default(now())
+  shopId		Int
+
+  shopName		String
+  name			String
+  price			Float
+  tos			String
+  details		String
+  category		ProductCategory?	// TODO: fix this
   
-  shop		Shop			@relation(fields: [shopName], references: [name], onDelete: Cascade, onUpdate: Cascade)
-  codes		Code[]
-
-  transactionItems      TransactionItem[]
-
-  @@map(name: "products")
-  @@id([name, shopName])
+  isActive		Product?
+  shop			ShopH		@relation(fields: [shopId, shopName], references: [id, name])
+  purchasedCodes	CodeH[]
+  @@id([id, version])
+  @@map(name: "products_h")
+  @@unique([id, version, name, shopId, shopName])
 }
 
+// current active codes is tied to the most recent product
+// only purchased codes are tied to a specific version
+// purchased codes also should not be visible to the user
+// only here for unique constraints
 model Code {
+  shopId		Int
+  productId		Int
+  productVersion	Int
+
   code			String
-
-  productName	String		@map(name: "product_name")
   shopName		String		@map(name: "shop_name")
-  product		Product		@relation(fields: [productName, shopName], references: [name, shopName], onDelete: Cascade, onUpdate: Cascade)
+  productName	String		@map(name: "product_name")
+  
+  isUsed		CodeH?
+  product		Product		@relation(fields: [productId, productVersion, productName, shopId, shopName], references: [id, version, name, shopId, shopName], onDelete: Cascade)
 
+  @@unique([code, shopId])
   @@id([code, shopName])
   @@map(name: "codes")
+}
+model CodeH {
+	shopId			Int
+	productId		Int
+	productVersion	Int
+	dateCreated		DateTime	@updatedAt
+
+	code			String
+	shopName		String
+	productName		String
+	
+	userEmail		String
+	transactionDate	DateTime
+	transactionItem	Transaction	@relation(fields: [userEmail, transactionDate], references: [userEmail, date])
+
+	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
+	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName, productVersion], references: [id, name, shopId, shopName, version])
+	@@id([code, shopId])
 }
 
 model Transaction {
@@ -101,21 +164,9 @@ model Transaction {
   total         Float
   pointsBalance Int
 
-  items      TransactionItem[]
+  items      	CodeH[]
 
   @@id([userEmail, date])
-}
-
-model TransactionItem {
-  productName String
-  shopName String
-  product Product @relation(fields: [productName, shopName], references: [name, shopName])
-
-  userEmail String
-  transactionDate DateTime
-  transaction Transaction @relation(fields: [userEmail, transactionDate], references: [userEmail, date])
-
-  @@id([productName, shopName, userEmail, transactionDate])
 }
 
 enum TransactionType {

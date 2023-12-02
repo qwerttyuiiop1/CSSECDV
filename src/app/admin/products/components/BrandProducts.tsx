@@ -5,7 +5,7 @@ import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { EditButton, DeleteButton } from "./Components";
 import { AnimatePresence, motion } from "framer-motion";
-import { Shop, Product } from "../../../../lib/types/Shop";
+import { AdminShop, AdminProduct } from "@/lib/types/AdminShop";
 import EditBrandModal from "../modals/EditBrandModal";
 import DeleteShopModal from "../modals/DeleteBrandModal";
 import EditProductModal from "../modals/EditProductModal";
@@ -14,14 +14,14 @@ import { modalHandler } from "@/components/Modal/BaseModal";
 import { ProductId } from "@/lib/types/Shop";
 
 export interface ShopProductsProps {
-	shop: Shop;
+	shop: AdminShop;
 	selectedProduct: ProductId | null;
 	isExpanded: boolean;
 	onSelectProduct: (a: ProductId) => void;
 	onToggle: () => void;
 }
 const Subrow: React.FC<{
-	product: Product,
+	product: AdminProduct,
 	id: ProductId,
 	onSelect: () => void,
 	selected: boolean,

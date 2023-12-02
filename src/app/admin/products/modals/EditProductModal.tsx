@@ -12,7 +12,7 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../../../../lib/types/Shop";
+import { AdminProduct } from '@/lib/types/AdminShop';
 import { useProducts } from "@/components/Providers/Products/Products";
 import { ProductId } from "@/lib/types/Shop";
 
@@ -25,15 +25,15 @@ const EditProductModal: React.FC<EditProductProps> = ({
 }) => {
 	const { findProduct, updateProduct } = useProducts();
 	const product = findProduct(id)!;
-	const form = useForm( { defaultValues: {...product} } );
+	const form = useForm( { values: {...product} } );
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		data.codes = product.codes;
 		data.price = Number(data.price);
-		await updateProduct(id, data as Product);
-		close();
+		await updateProduct(id, data as AdminProduct);
 		form.reset();
+		close();
 	});
 	if (!state[0]) return null;
 	return (
