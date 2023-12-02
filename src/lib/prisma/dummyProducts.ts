@@ -88,29 +88,34 @@ const dummy = [
 	}
 ]
 export const uploadDummyProducts = async () => {
+	await prisma.shop.deleteMany()
 	for (const shop of dummy) {
-		const dbShop = await prisma.shop.create({
+		console.log('shop', shop)
+		const dbShop = await prisma.shopH.create({
 			data: {
-				name: shop.name
+				name: shop.name,
+				isActive: { create: {} }
 			}
 		})
 		for (const product of shop.products) {
-			await prisma.product.create({
+			console.log('product', product)
+			await prisma.productH.create({
 				data: {
-					shopName: dbShop.name,
+					shop: {
+						connect: { id: dbShop.id }
+					},
 					name: product.name,
 					price: product.price,
-					tos: product.tos,
 					details: product.details,
-					category: ProductCategory.BF,
+					tos: product.tos,
+					isActive: { 
+						create: {
+							codes: {
+								create: product.activeCodes.map(code => ({ code }))
+							}
+						}
+					}
 				}
-			})
-			await prisma.code.createMany({
-				data: product.activeCodes.map(code => ({
-					code,
-					productName: product.name,
-					shopName: dbShop.name
-				}))
 			})
 		}
 	}

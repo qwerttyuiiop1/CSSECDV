@@ -19,20 +19,22 @@ export const POST = withAdmin(async (req) => {
 		.on('end', () => resolve(res))
 		.on('error', reject)
 	}) as {code: string; product: string; shop: string}[]
-	await prisma.$transaction(results.map(result => prisma.code.create({
-	  data: {
-		code: result.code,
-		product: {
-		  connect: {
-			name_shopName_isActive: {
-			  name: result.product,
-			  shopName: result.shop,
-			  isActive: true,
+	
+	await prisma.$transaction(results.map(res => 
+	  prisma.code.create({
+		data: {
+		  code: res.code,
+		  product: {
+			connect: {
+			  name_shopName: {
+				name: res.product,
+				shopName: res.shop
+			  }
 			}
 		  }
 		}
-	  }
-	})));
+	  })
+	))
 	
 	return NextResponse.json({ message: "Success" }, { status: 200 })
   } catch (error) {

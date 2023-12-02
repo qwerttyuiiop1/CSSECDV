@@ -1,10 +1,11 @@
 import React, { createContext, useContext, ReactNode, useState, useCallback, use, useEffect } from 'react';
-import { Product, Shop, ProductId, Code } from '../../../lib/types/Shop';
+import { AdminCode, AdminProduct, AdminShop } from '@/lib/types/AdminShop';
+import { ProductId } from '@/lib/types/Shop';
 import { toast } from 'react-toastify';
 
 interface ProductsContext {
-  data: Shop[];
-  setData: (data: Shop[]) => void;
+  data: AdminShop[];
+  setData: (data: AdminShop[]) => void;
   selectedProduct: ProductId | null;
   setSelectedProduct: (data: ProductId) => void;
   refresh: () => Promise<void>;
@@ -12,9 +13,9 @@ interface ProductsContext {
 const productsContext = createContext<ProductsContext | undefined>(undefined);
 
 export interface useShopsReturn {
-  data: Shop[];
+  data: AdminShop[];
   createShop: (name: string) => Promise<void>;
-  findShop: (name: string) => Shop | undefined;
+  findShop: (name: string) => AdminShop | undefined;
   findShopi: (name: string) => number;
   updateShop: (name: string, newName: string) => Promise<void>;
   deleteShop: (name: string) => Promise<void>;
@@ -24,17 +25,17 @@ export interface useShopsReturn {
 export interface useProductsReturn {
 	setSelectedProduct: (data: ProductId) => void;
 	selectedProduct: ProductId | null;
-	createProduct: (shop: string, p: Product) => Promise<void>;
-	findProduct: (id: ProductId) => Product | undefined;
+	createProduct: (shop: string, p: AdminProduct) => Promise<void>;
+	findProduct: (id: ProductId) => AdminProduct | undefined;
 	findProducti: (id: ProductId) => [number, number];
-	updateProduct: (id: ProductId, p: Product) => Promise<void>;
+	updateProduct: (id: ProductId, p: AdminProduct) => Promise<void>;
 	deleteProduct: (id: ProductId) => Promise<void>;
 }
 export interface useCodeReturn {
-  product: Product | undefined;
+  product: AdminProduct | undefined;
   productId: ProductId | null;
   createCode: (code: string, productId: ProductId) => Promise<void>;
-  findCode: (code: string) => Code | undefined;
+  findCode: (code: string) => AdminCode | undefined;
   findCodei: (code: string) => number;
   updateCode: (code: string, newCode: string, productId: ProductId) => Promise<void>;
   deleteCode: (code: string, productId: ProductId) => Promise<void>;
@@ -160,7 +161,7 @@ export function useProducts(): useProductsReturn {
 	return findShop(id[0])?.products.find(p => p.name === id[1]);
   }, [findShop]);
 
-  const createProduct = useCallback(async (shopName: string, p: Product) => {
+  const createProduct = useCallback(async (shopName: string, p: AdminProduct) => {
 	const res = await fetch('/api/shop/' + shopName + '/product', {
 	  method: 'POST',
 	  headers: {
@@ -173,14 +174,14 @@ export function useProducts(): useProductsReturn {
 	  toast.error(json.error);
 	  return 
 	} else {
-		const prod = json.product as Product;
+		const prod = json.product as AdminProduct;
 		const shop = findShop(prod.shopName)!;
 		shop.products.push(prod);
 		toast.success("Created product: " + prod.name);
 	}
   }, [findShop]);
 
-  const updateProduct = useCallback(async (id: ProductId, p: Product) => {
+  const updateProduct = useCallback(async (id: ProductId, p: AdminProduct) => {
 	const res = await fetch('/api/shop/' + id[0] + '/product/' + id[1], {
 	  method: 'PATCH',
 	  headers: {
@@ -193,7 +194,7 @@ export function useProducts(): useProductsReturn {
 	  toast.error(json.error);
 	  return 
 	} else {
-		const prod = json.product as Product;
+		const prod = json.product as AdminProduct;
 		const [shopI, prodI] = findProducti(id);
 		data[shopI].products[prodI] = prod;
 		toast.success("Edited product: " + prod.name);
@@ -258,7 +259,7 @@ export function useCode(): useCodeReturn {
 			toast.error(json.error);
 			return 
 		} else {
-			const code = json.code as Code;
+			const code = json.code as AdminCode;
 			findProduct(productId)!.codes.push(code);
 			toast.success("Created code: " + code.code);
 			updateData([...data]);
@@ -278,7 +279,7 @@ export function useCode(): useCodeReturn {
 			toast.error(json.error);
 			return 
 		} else {
-			const newCode = json.code as Code;
+			const newCode = json.code as AdminCode;
 			const i = findCodei(code);
 			findProduct(productId)!.codes[i] = newCode;
 			toast.success("Edited code: " + newCode.code);
@@ -339,7 +340,7 @@ interface ProductsProviderProps {
   children: ReactNode;
 }
 export function ProductsProvider({ children }: ProductsProviderProps) {
-  const [brands, setData] = useState<Shop[]>([]);
+  const [brands, setData] = useState<AdminShop[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
   const refresh = useCallback(async () => {
 	const res = await fetch('/api/shop?full=true')

@@ -1,7 +1,8 @@
 // api/shop/[id]/route.ts
 import prisma from '@/lib/prisma/prisma';
-import { withAdmin } from '@/lib/session/withUser';
-import { shopSelection } from '@/lib/types/Shop';
+import { withAdmin, withOptionalUser } from '@/lib/session/withUser';
+import { mapAdminShop, adminShopSelection } from '@/lib/types/AdminShop';
+import { mapShop, shopSelection } from '@/lib/types/Shop';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = {
@@ -9,19 +10,25 @@ type Params = {
 		name: string
 	}
 }
-export const GET = async (req: NextRequest, {params: { name }}: Params) => {
-	const all = req.nextUrl.searchParams.get('full') === 'true';
-	const options = all ? {
-		where: { name },
-		...shopSelection
-	} : {
-		where: { name },
-	};
-	const shop = await prisma.shop.findUnique(options);
-	if (!shop) 
+export const GET = withOptionalUser(async (req, {params: { name }}: Params) => {
+	try {
+		if (req.isAdmin === true) {
+			const shop = await prisma.shop.findUniqueOrThrow({
+				where: { name },
+				...adminShopSelection
+			});
+			return NextResponse.json({ shop: mapAdminShop(shop) });
+		}
+		const shop = await prisma.shop.findUniqueOrThrow({
+			where: { name },
+			...shopSelection
+		});
+		return NextResponse.json({ shop: mapShop(shop) });
+	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ error: 'Shop not found' }, {status: 404});
-	return NextResponse.json({ shop });
-}
+	}
+})
 
 export const PATCH = withAdmin(async (req: NextRequest, {params: { name }}: Params) => {
   try {
@@ -31,19 +38,23 @@ export const PATCH = withAdmin(async (req: NextRequest, {params: { name }}: Para
 	}
 	const shop = await prisma.shop.update({
 		where: { name },
-		data: { name: newName }
+		data: { name: newName },
+		...adminShopSelection
 	});
-	return NextResponse.json({ shop });
+	return NextResponse.json({ shop: mapAdminShop(shop) });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 })
 
-export const DELETE = withAdmin(async (_: NextRequest, {params: { name }}: Params) => {
+export const DELETE = withAdmin(async (req: NextRequest, {params: { name }}: Params) => {
   try {
-	const shop = await prisma.shop.delete({ where: { name } });
-	return NextResponse.json({ shop });
+	const shop = await prisma.shop.delete({
+		where: { name },
+		...adminShopSelection
+	});
+	return NextResponse.json({ shop: mapAdminShop(shop) });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });

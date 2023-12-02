@@ -12,7 +12,7 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Product } from "../../../../lib/types/Shop";
+import { AdminProduct } from "../../../../lib/types/AdminShop";
 import { useShops, useProducts } from "@/components/Providers/Products/Products";
 
 const CreateProductModal: React.FC<BaseModalProps> = ({
@@ -26,7 +26,7 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 	const handleSubmit = form.handleSubmit(async (data) => {
 		data.codes = []
 		data.price = Number(data.price);
-		await createProduct(data.shopName, data as Product);
+		await createProduct(data.shopName, data as AdminProduct);
 		close();
 		form.reset();
 	});

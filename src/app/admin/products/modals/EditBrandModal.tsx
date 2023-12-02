@@ -10,11 +10,11 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { Shop } from "../../../../lib/types/Shop";
+import { AdminShop } from "../../../../lib/types/AdminShop";
 import { useShops } from "@/components/Providers/Products/Products";
 
 interface EditShopProps extends BaseModalProps {
-	shop: Shop;
+	shop: AdminShop;
 }
 
 const EditBrandModal: React.FC<EditShopProps> = ({

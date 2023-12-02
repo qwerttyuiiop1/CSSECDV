@@ -1,6 +1,6 @@
 import { 
 	Transaction as _Transaction, 
-	TransactionItem as _TransactionItem, 
+	CodeH as _TransactionItem, 
 	TransactionType as _TransactionType 
 } from '@prisma/client';
 

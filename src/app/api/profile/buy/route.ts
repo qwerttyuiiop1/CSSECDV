@@ -24,33 +24,6 @@ export const POST = withUser(async (req) => {
 		})
 		if (user.points < 0)
 			throw new Error("Not enough points");
-		const transactions = [
-			prisma.transaction.create({
-				data: {
-					userEmail: req.user.email,
-					type: TransactionType.PURCHASE,
-					pointsBalance: user.points,
-					total: transaction.total,
-					items: {
-						create: transaction.items.map(item => ({
-							productName: item.productName,
-							shopName: item.shopName,
-							code: item.code,
-							shopId: item.shopId,
-							productId: item.productId,
-						}))
-					}
-				},
-			}),
-			prisma.code.deleteMany({
-				where: {
-					code: {
-						in: transaction.items.map(item => item.code)
-					}
-				}
-			}),
-		]
-		await Promise.all(transactions);
 	}, {
 		isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted
 	})

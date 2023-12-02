@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Product } from "../../../lib/types/Shop";
+import { AdminProduct } from "../../../lib/types/AdminShop";
 import styles from "./components/products.module.css";
 import { 
 	AddButton, 

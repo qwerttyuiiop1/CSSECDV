@@ -47,7 +47,7 @@ model User {
 // shop having a version doesn't make sense
 // so it just points to the current active shop
 model Shop {
-  id		Int			@default(autoincrement()) @unique
+  id		Int			@unique
 
   name		String		@id
 
@@ -57,7 +57,7 @@ model Shop {
   @@unique([id, name])
 }
 model ShopH {
-  id			Int			@id
+  id			Int			@default(autoincrement()) @id
   createdAt		DateTime	@default(now())
   updatedAt		DateTime	@updatedAt
 
@@ -82,7 +82,7 @@ enum ProductCategory {
 }
 
 model Product {
-	id			Int			@default(autoincrement()) @unique
+	id			Int		@unique
 	version		Int
 	shopId		Int
 
@@ -94,10 +94,9 @@ model Product {
 	codes		Code[]
 	@@id([name, shopName])
 	@@unique([id, version, name, shopId, shopName])
-	@@unique([id, name, shopId, shopName])
 }
 model ProductH {
-  id			Int
+  id			Int			@default(autoincrement())
   version		Int			@default(0)
   dateCreated	DateTime	@default(now())
   shopId		Int
@@ -124,13 +123,14 @@ model ProductH {
 model Code {
   shopId		Int
   productId		Int
+  productVersion	Int
 
   code			String
   shopName		String		@map(name: "shop_name")
   productName	String		@map(name: "product_name")
   
-  isUsed		CodeH?		@relation(fields: [code, shopId], references: [code, shopId])
-  product		Product		@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName], onDelete: Cascade)
+  isUsed		CodeH?
+  product		Product		@relation(fields: [productId, productVersion, productName, shopId, shopName], references: [id, version, name, shopId, shopName], onDelete: Cascade)
 
   @@unique([code, shopId])
   @@id([code, shopName])
@@ -150,7 +150,7 @@ model CodeH {
 	transactionDate	DateTime
 	transactionItem	Transaction	@relation(fields: [userEmail, transactionDate], references: [userEmail, date])
 
-	rel_code		Code?
+	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
 	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName, productVersion], references: [id, name, shopId, shopName, version])
 	@@id([code, shopId])
 }

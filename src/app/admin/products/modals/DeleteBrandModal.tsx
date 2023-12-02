@@ -8,12 +8,12 @@ import {
 } from "@/components/CardPage/CardPage";
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
-import { Shop } from "../../../../lib/types/Shop";
+import { AdminShop } from "../../../../lib/types/AdminShop";
 import { toast } from "react-toastify";
 import { useShops } from "@/components/Providers/Products/Products";
 
 interface DeleteShopProps extends BaseModalProps {
-	shop: Shop;
+	shop: AdminShop;
 }
 
 const DeleteShopModal: React.FC<DeleteShopProps> = ({
