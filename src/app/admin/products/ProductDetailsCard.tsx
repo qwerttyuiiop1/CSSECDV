@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AdminProduct } from "../../../lib/types/AdminShop";
+import { AdminCode, AdminProduct } from "../../../lib/types/AdminShop";
 import styles from "./components/products.module.css";
 import { 
 	AddButton, 
@@ -26,19 +26,21 @@ import { useCode, useShops } from "@/components/Providers/Products/Products";
 const Row: React.FC<{
 	isSelected: boolean;
 	onSelect: () => void;
-	code: string;
+	code: AdminCode;
 }> = ({ isSelected, onSelect, code }) => {
 	const editCodeModal = useState(false);
 	return (
 		<div className={`${styles.row} ${isSelected ? styles.delete : ''}`}>
-			{isSelected ? (
+			{code.isUsed ? (
+				<div className={ComponentStyles.delete_icon}/>
+			) : ( isSelected ? (
 				<DeleteButton onClick={onSelect} />
 			) : (
 				<div className={ComponentStyles.delete_icon} onClick={onSelect}/>
-			)}
-			<span className={styles.code}>{code}</span>
+			))}
+			<span className={`${styles.code} ${code.isUsed ? styles.strike : ''}`}>{code.code}</span>
 			<EditButton onClick={modalHandler(editCodeModal)}/>
-			<EditCodeModal state={editCodeModal} code={code} />
+			<EditCodeModal state={editCodeModal} code={code.code} />
 		</div>
 	)
 }
@@ -59,7 +61,7 @@ const ProductDetailsCard = () => {
 
 	useEffect(() => {
 		setIsSelected(product?.codes.map(() => false) || []);
-	}, [product]);
+	}, [product, product?.codes.length]);
 	const { refresh } = useShops();
 
 	return (
@@ -67,7 +69,7 @@ const ProductDetailsCard = () => {
 			<div className={styles.title_container}>
 				{product && <>
 					<span className={styles.title_product}> {product.name} </span>
-					<span className={styles.title_stock}> {'Stock: ' + product.codes.length} </span>
+					<span className={styles.title_stock}> {'Stock: ' + product.stock} </span>
 				</>}
 			</div>
 			<Card header={
@@ -116,7 +118,7 @@ const ProductDetailsCard = () => {
 							code.code.includes(filter) && (
 								<SlideDown key={i}>
 									<Row
-										code={code.code}
+										code={code}
 										onSelect={() => handleSelect(i)}
 										isSelected={isSelected[i]}
 									/>

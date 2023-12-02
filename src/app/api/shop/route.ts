@@ -9,7 +9,11 @@ export const GET = withOptionalUser(async (req) => {
 	if (all) {
 		if (req.isAdmin === true) {
 			const shops = await prisma.shop.findMany(adminShopSelection);
-			return NextResponse.json({ shops: shops.map(mapAdminShop) });
+			const test = shops.map(mapAdminShop);
+			test[0].products[0].codes[0].isUsed = {
+				userEmail: "aljenslknflke"
+			}
+			return NextResponse.json({ shops: test });
 		}
 		const shops = await prisma.shop.findMany(shopSelection);
 		return NextResponse.json({ shops: shops.map(mapShop) });
