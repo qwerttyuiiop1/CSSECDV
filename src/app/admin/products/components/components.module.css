@@ -47,19 +47,19 @@
 	padding: 0.2rem;
 }
 .edit_icon {
-	border: 3px solid green;
+	border: 3px solid #61dd41;
 	padding: 2px;
 	width: 2rem;
 	height: 2rem;
-	color: green;
+	color: #61dd41;
 	border-radius: 20%;
 }
 .delete_icon {
-	border: 3px solid red;
+	border: 3px solid #ff4a4a;
 	padding: 2px;
 	width: 2rem;
 	height: 2rem;
-	color: red;
+	color: #ff4a4a;
 	border-radius: 20%;
 
 	margin-right: auto;

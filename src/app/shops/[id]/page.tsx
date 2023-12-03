@@ -146,7 +146,7 @@ export default function Page({
               
             />
             <h1 className={styles.reward_points}>
-              {rewardPoints} reward points
+              {rewardPoints} Reward Points
             </h1>
           </div>
 

@@ -28,7 +28,7 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   color: #fff;
   padding: 0.5rem;
   visibility: hidden;
@@ -51,7 +51,7 @@
 }
 
 .shop_name {
-  font-weight: 520;
+  font-weight: bold;
 }
 
 .divider {

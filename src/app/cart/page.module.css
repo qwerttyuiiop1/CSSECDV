@@ -158,10 +158,11 @@
   margin-bottom: 1rem;
   padding: 1rem 2rem;
   font-size: 1.5rem;
+  font-weight: bold;
   border-radius: 0.8rem;
-  background-color: green;
+  background-color: #34B440;
   border: 0;
-  box-shadow: inset 0 0 10px 0 #00000050;
+  box-shadow: 0 0 10px 0 #2da06050;
   color: white;
 }
 
@@ -169,11 +170,12 @@
   margin: 2rem 0rem 1rem;
   padding: 1rem 2rem;
   font-size: 1.5rem;
+  font-weight: bold;
   border-radius: 0.8rem;
-  background-color: red;
+  background-color: #ff2626;
   color: white;
   border: 0;
-  box-shadow: inset 0 0 10px 0 #00000050;
+  box-shadow: 0 0 10px 0 #a02d2d50;
 }
 
 .remove_button {
