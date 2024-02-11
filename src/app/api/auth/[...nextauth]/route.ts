@@ -12,7 +12,8 @@ export const authOptions: NextAuthOptions = {
    id: 'credentials',
    credentials: {
 	email: { label: "Email", type: "email" },
-	password: { label: "Password", type: "password" }
+	password: { label: "Password", type: "password" },
+	recaptchaToken: { label: "CaptchaToken", type: "text" },
    },
    async authorize(credentials) {
 	if (!credentials) return null;
@@ -20,8 +21,16 @@ export const authOptions: NextAuthOptions = {
 		where: { email: credentials.email },
 		select: { ...userSelection, password: true },
 	});
+
 	if (user?.password && 
 		await bcrypt.compare(credentials.password, user.password)) {
+		const response = await fetch('https://www.google.com/recaptcha/api/siteverify' + 
+			`?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${credentials.recaptchaToken}`, {
+			method: 'POST'
+		});
+		if (!response.ok) return null;
+		const { success } = await response.json();
+		if (success !== true) return null;
 		return { ...user, id: user.email, password: undefined };
 	} else {
 		return null;

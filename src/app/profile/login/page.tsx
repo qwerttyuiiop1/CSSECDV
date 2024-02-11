@@ -1,6 +1,6 @@
 "use client"
 import styles from "../login.module.css";
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { 
 	CardPage, 
@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { email, password } from '../validations'
 import { ErrorContainer, FormContainer, useFormError } from "@/components/Providers/Forms";
 import { useRouter } from "next/navigation";
-
+import ReCaptcha from "react-google-recaptcha";
 
 // TODO: lottie animation for loading
 
@@ -27,10 +27,21 @@ export default function Page() {
   const form = useForm();
   const router = useRouter();
   const toast = useFormError(form);
+  const recaptchaRef = React.useRef<ReCaptcha>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+
+  const onCaptchaChange = (token: string | null) => {
+	setRecaptchaToken(token);
+  }
   const onSubmit = form.handleSubmit(async data => {
+	if (!recaptchaToken) {
+	  toast.error('Please complete the captcha');
+	  return;
+	}
 	const res = await signIn("credentials", {
 	  email: data.email,
 	  password: data.password,
+	  recaptchaToken,
 	  redirect: false
 	});
 	if (res?.error)
@@ -48,10 +59,13 @@ export default function Page() {
 			options={email}/>
 		<Password placeholder="Password" id="password"
 			options={password}/>
-		<BigButton onClick={onSubmit}> 
-		  <div className={styles.login_button_text}>
-			Login 
-		  </div>
+		<ReCaptcha
+		  ref={recaptchaRef}
+		  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+		  onChange={onCaptchaChange}
+		/>
+		<BigButton onClick={onSubmit} className={styles.login_button_text}> 
+		  Login 
 		</BigButton>
 		<Separator text="OR"/>
 		<BigButton onClick={()=>signIn('google')}>
