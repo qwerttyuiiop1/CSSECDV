@@ -21,7 +21,7 @@ const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 		if (token) {
 			ureq.user = token.user as User;
 			ureq.token = token;
-			ureq.isAdmin = ureq.user.role === UserRole.ADMIN || ureq.user.role === UserRole.SUPERADMIN;
+			ureq.isAdmin = ureq.user.role === UserRole.ADMIN;
 		}
 		return handler(ureq, t);
 	}
@@ -43,20 +43,13 @@ const withUser = <T=undefined>(handler: UserHandler<T>) =>
 	});
 const withAdmin = <T=undefined>(handler: UserHandler<T>) =>
 	withAnyUser((req, t: T) => {
-		if (req.user.role !== UserRole.ADMIN && req.user.role !== UserRole.SUPERADMIN)
+		if (req.user.role !== UserRole.ADMIN)
 			return NextResponse.json({ error: "User not admin" }, { status: 401 });
-		return handler(req, t);
-	});
-const withSuperAdmin = <T=undefined>(handler: UserHandler<T>) =>
-	withAnyUser((req, t: T) => {
-		if (req.user.role !== UserRole.SUPERADMIN)
-			return NextResponse.json({ error: "User not superadmin" }, { status: 401 });
 		return handler(req, t);
 	});
 export {
 	withOptionalUser,
 	withAnyUser,
 	withUser,
-	withAdmin,
-	withSuperAdmin,
+	withAdmin
 }
