@@ -20,13 +20,13 @@ import { email, password } from '../validations'
 import { ErrorContainer, FormContainer, useFormError } from "@/components/Providers/Forms";
 import { useRouter } from "next/navigation";
 import ReCaptcha from "react-google-recaptcha";
+import { toast } from "react-toastify";
 
 // TODO: lottie animation for loading
 
 export default function Page() {
   const form = useForm();
   const router = useRouter();
-  const toast = useFormError(form);
   const recaptchaRef = React.useRef<ReCaptcha>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 

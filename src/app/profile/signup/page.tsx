@@ -18,7 +18,7 @@ export default function SignupPage() {
 	const handleSubmit = async (data: UserCardOutput & DetailsCardOutput & PfpCardOutput) => {
 		const formData = new FormData();
 		for (const key in data) {
-			if (key === "confirmPassword" || key === "recaptcha") continue;
+			if (key === "confirmPassword") continue;
 			if (key === "pfp") {
 				formData.append(key, data[key][0]);
 				continue;
@@ -31,16 +31,8 @@ export default function SignupPage() {
 		})
 		const json = await res.json();
 		if (res.ok) {
-			const res = await signIn("credentials", {
-				email: data.email,
-				password: data.password,
-				recaptchaToken: data.recaptcha,
-				redirect: false
-			  });
-			if (res?.error)
-				toast.error(res.error);
-			else
-				router.push('/');
+			toast.success('Account created, please login to continue');
+			router.push('/profile/login');
 		} else {
 			toast.error(json.error)
 		}

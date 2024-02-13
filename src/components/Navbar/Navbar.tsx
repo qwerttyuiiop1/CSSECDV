@@ -144,7 +144,7 @@ function ProfileComponent({ user }: { user: User | undefined }) {
                     {href: "/profile/edit", label: "Edit Profile"},
                     {href: "/", label: "Logout", onClick: signOut}
                 ]}>
-                    <img className={styles.profile_icon} src="/profile.svg" alt=""/> {/* fix alt */}
+                    <img className={styles.profile_icon} src={user.image || "/profile.svg"} alt=""/> {/* fix alt */}
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
                             <h4>{user.name}</h4>

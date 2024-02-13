@@ -9,7 +9,19 @@ import { UserRole } from "@prisma/client";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const res = await validateSignup(await req.formData());
+	const form = await req.formData();
+	const recaptcha = form.get('recaptcha');
+	if (!recaptcha) 
+		return NextResponse.json({ error: 'No captcha token provided' }, { status: 400 });
+	const response = await fetch('https://www.google.com/recaptcha/api/siteverify' + 
+		`?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptcha}`, {
+		method: 'POST'
+	});
+	const { success } = await response.json();
+	if (!response.ok || success !== true) 
+		return NextResponse.json({ error: 'Failed to verify captcha' }, { status: 400 });
+
+    const res = await validateSignup(form);
     if (typeof res === 'string')
 	  return NextResponse.json({ error: res }, { status: 400 });
 	res.password = bcrypt.hashSync(res.password!, 10);
@@ -64,9 +76,7 @@ export const PATCH = withAnyUser(async (req) => {
 	if (!user)
 		return NextResponse.json({ error: 'User not found' }, { status: 400 });
 	if (user.password) {
-		if (data.oldPassword === undefined)
-			return NextResponse.json({ error: 'Old password is required' }, { status: 400 });
-		if (bcrypt.compareSync(data.oldPassword, user.password) === false)
+		if (bcrypt.compareSync(data.oldPassword!, user.password) === false)
 			return NextResponse.json({ error: 'Old password is incorrect' }, { status: 400 });
 		if (bcrypt.compareSync(data.password!, user.password) === true)
 			return NextResponse.json({ error: 'New password must be different from old password' }, { status: 400 });

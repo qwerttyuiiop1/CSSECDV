@@ -70,7 +70,8 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 	};
 }
 
-export const validatePatch = (body: PatchBody): string | PatchBody => {
+// TODO: patch for image
+export const validatePatch = (body: any): string | PatchBody => {
 	const ret = {} as PatchBody;
 	const { name, password, oldPassword, address1, address2, city, country, mobileno, image } = body;
 
@@ -83,8 +84,9 @@ export const validatePatch = (body: PatchBody): string | PatchBody => {
 		if (typeof password !== 'string' || password.length < 8)
 			return 'Password must be at least 8 characters long';
 		ret.password = password
-		if (oldPassword)
-			ret.oldPassword = oldPassword;
+		if (!oldPassword)
+			return 'Old password is required';
+		ret.oldPassword = oldPassword;
 	}
 	if (address1) {
 		if (typeof address1 !== 'string' || address1.length < 5 || address1.length > 100)
