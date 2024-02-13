@@ -254,7 +254,6 @@ export function useCode(): useCodeReturn {
 			body: JSON.stringify({ code, productName: productId[1] }),
 		});
 		const json = await res.json()
-		console.log(json)
 		if (!res.ok) {
 			toast.error(json.error);
 			return 
@@ -343,7 +342,7 @@ export function ProductsProvider({ children }: ProductsProviderProps) {
   const [brands, setData] = useState<AdminShop[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductId | null>(null);
   const refresh = useCallback(async () => {
-	const res = await fetch('/api/shop?full=true')
+	const res = await fetch('/api/shop')
 	if (res.status !== 200) {
 	  console.error(res);
 	  return;

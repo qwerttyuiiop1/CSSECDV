@@ -19,8 +19,6 @@ export default function Navbar() {
 	const { data: session } = useSession();
 	const user = session?.user;
 
-    console.log(user);
-
     return (
 		<>
         <nav className={styles.navbar}>

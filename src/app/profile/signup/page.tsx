@@ -18,8 +18,12 @@ export default function SignupPage() {
 	const handleSubmit = async (data: UserCardOutput & DetailsCardOutput & PfpCardOutput) => {
 		const formData = new FormData();
 		for (const key in data) {
-			if (key === "confirmPassword") continue;
-			formData.append(key, data[key] as any);
+			if (key === "confirmPassword" || key === "recaptcha") continue;
+			if (key === "pfp") {
+				formData.append(key, data[key][0]);
+				continue;
+			}
+			formData.append(key, data[key]);
 		}
 		const res = await fetch('/api/profile', {
 			method: 'POST',
@@ -30,6 +34,7 @@ export default function SignupPage() {
 			const res = await signIn("credentials", {
 				email: data.email,
 				password: data.password,
+				recaptchaToken: data.recaptcha,
 				redirect: false
 			  });
 			if (res?.error)
@@ -37,7 +42,7 @@ export default function SignupPage() {
 			else
 				router.push('/');
 		} else {
-			toast.error(json.message)
+			toast.error(json.error)
 		}
 	}
 

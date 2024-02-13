@@ -5,7 +5,7 @@ import { Shop, mapShop, shopSelection } from '@/lib/types/Shop';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = withOptionalUser(async (req) => {
-	const all = req.nextUrl.searchParams.get('full') !== 'false';
+	const all = req.nextUrl.searchParams.get('names') !== 'true';
 	if (all) {
 		if (req.isAdmin === true) {
 			const shops = await prisma.shop.findMany(adminShopSelection);

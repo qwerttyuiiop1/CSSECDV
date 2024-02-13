@@ -1,7 +1,8 @@
 import { DBUser, UserDetail } from "@/lib/types/User";
+import { validateBufferMIMEType } from 'validate-image-type';
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
 export type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }
-export type SignupBody = Required<Data> & { email: string }
+export type SignupBody = Required<Data> & { email: string; pfp: Buffer; }
 
 export const validUser = (user: UserDetail): boolean => {
 	if (user.address1 === null || user.city === null || user.country === null || user.mobileno === null)
@@ -9,27 +10,25 @@ export const validUser = (user: UserDetail): boolean => {
 	return true;
 }
 
-export const validateSignup = (body: any): string | SignupBody => {
-	const { 
-		name,
-		email,
-		password,
-	
-		address1,
-		city,
-		country,
-		phone_code,
-		phone,
-	
-		address2,
-	} = body;
+export const validateSignup = async (body: FormData): Promise<string | SignupBody> => {
+	const name = body.get('name');
+	const email = body.get('email');
+	const password = body.get('password');
+	const address1 = body.get('address1');
+	const city = body.get('city');
+	const country = body.get('country');
+	const phone_code = body.get('phone_code');
+	const phone = body.get('phone');
+	const address2 = body.get('address2');
+	const pfp = body.get('pfp') as File;
+
 	if (!(name && email && password && 
 		address1 && city && country && phone_code && phone))
 		return 'Missing required fields';
 
 	if (typeof name !== 'string' || name.length < 5 || name.length > 20)
 		return 'Username must be between 5 and 20 characters';
-	if (/\S+@\S+\.\S+/i.test(email) === false)
+	if (typeof email !== 'string' || /\S+@\S+\.\S+/i.test(email) === false)
 		return 'Invalid email';
 	if (typeof password !== 'string' || password.length < 8)
 		return 'Password must be at least 8 characters long';
@@ -42,7 +41,22 @@ export const validateSignup = (body: any): string | SignupBody => {
 	if (address2 && (typeof address2 !== 'string' || address2.length < 5 || address2.length > 100))
 		return 'Address must be between 5 and 100 characters';
 
+
+	if (!pfp)
+		return 'Profile picture is required';
+	if (pfp.size > 10 * 1024 * 1024)
+		return 'Profile picture must be less than 10mb';
+
+	const buffer = Buffer.from(await pfp.arrayBuffer());
+	const res = await validateBufferMIMEType(buffer, {
+		allowMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
+	});
+	if (!res.ok)
+		return 'Invalid profile picture';
+
 	// TODO: validate phone
+	if (typeof phone_code !== 'string' || typeof phone !== 'string')
+		return 'Invalid phone number';
 	return {
 		name,
 		email,
@@ -52,6 +66,7 @@ export const validateSignup = (body: any): string | SignupBody => {
 		country,
 		mobileno: phone_code + phone,
 		address2: address2 || null,
+		pfp: buffer
 	};
 }
 

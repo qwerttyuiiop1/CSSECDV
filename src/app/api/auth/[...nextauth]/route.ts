@@ -3,7 +3,7 @@ import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import prisma from '@/lib/prisma/prisma'
 import bcrypt from 'bcrypt';
-import { userSelection } from '@/lib/types/User';
+import { mapUser, userSelection } from '@/lib/types/User';
 
 export const authOptions: NextAuthOptions = {
  providers: [
@@ -31,7 +31,8 @@ export const authOptions: NextAuthOptions = {
 		if (!response.ok) return null;
 		const { success } = await response.json();
 		if (success !== true) return null;
-		return { ...user, id: user.email, password: undefined };
+		const res = mapUser(user);
+		return { ...res, id: user.email, password: undefined };
 	} else {
 		return null;
 	}
@@ -55,8 +56,7 @@ export const authOptions: NextAuthOptions = {
 			data: {
 				googleId: user.id,
 				email: profile.email,
-				name: profile.name,
-				image: profile.image,
+				name: profile.name
 			},
 		});
 	}
@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
 			where: { email: token.user.email },
 			select: userSelection,
 		});
-		if (user) token.user = user;
+		if (user) token.user = mapUser(user);
 	}
 	return token;
   },
