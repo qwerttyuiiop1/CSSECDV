@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import styles from "./card.module.css";
 import { BsFillEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
@@ -48,23 +48,49 @@ const Input: React.FC<InputProps> = ({ options, type, className, ...props }) => 
 const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	id: string;
 	accept: string;
+	image?: boolean;
 	options?: RegisterOptions<FieldValues, string>;
-}> = ({options, ...props}) => {
+}> = ({options, image, ...props}) => {
 	const { register, watch } = useFormContext();
 	const file = watch(props.id) as FileList | undefined;
+	const [fileUrl, setFile] = React.useState<string | null>(null);
+	const [fileName, setFileName] = React.useState<string | null>(null);
+	useEffect(() => {
+		if (file && file.length) {
+			const url = URL.createObjectURL(file[0]);
+			setFile(url);
+			setFileName(file[0].name);
+			return () => URL.revokeObjectURL(url)
+		} else {
+			setFile(null);
+			setFileName(null);
+		}
+	}, [file, file?.length]);
+
 	if (!props.name) props.name = props.id;
-	return (
+	const input = (<input 
+		{...props} 
+		type="file" 
+		style={{display: "none"}}
+		{...register(props.id, options)}/>)
+	if (!image) return (
 	  <label className={styles.file_input} htmlFor={props.id}>
 		<div className={styles.file_input_button}> Upload </div>
-		<span className={styles.file_input_name}>{file && file.length ? file[0].name : "No file selected"}</span>
-
-		<input 
-			{...props} 
-			type="file" 
-			style={{display: "none"}}
-			{...register(props.id, options)}/>
+		<span className={styles.file_input_name}>{fileName || "No file selected"}</span>
+		{input}
 	  </label>
 	);
+	return (
+	  <label className={`${styles.input} ${styles.input_image_container}`} htmlFor={props.id}>
+		{ fileUrl ? (
+		  // eslint-disable-next-line @next/next/no-img-element
+		  <img src={fileUrl} alt="profile picture"/>
+		) : (
+		  <span> No Image Selected </span>
+		)}
+		{input}
+	  </label>
+	)
 }
 const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	id: string;

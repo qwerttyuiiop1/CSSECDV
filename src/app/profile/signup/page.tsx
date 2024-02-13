@@ -7,21 +7,23 @@ import { useRouter } from "next/navigation"
 import { DefaultToastContainer } from "@/components/Providers/Forms";
 import { toast } from "react-toastify";
 import { signIn } from "next-auth/react";
+import PfpCard, { PfpCardOutput } from "./PfpCard";
 
 export default function SignupPage() {
 	const [ data1, setData1 ] = React.useState<UserCardOutput | null>(null);
 	const [ data2, setData2 ] = React.useState<DetailsCardOutput | null>(null);
+	const [ data3, setData3 ] = React.useState<PfpCardOutput | null>(null);
 	const [ step, setStep ] = React.useState(0);
 
-	const handleSubmit = async (data: UserCardOutput & DetailsCardOutput) => {
-		const rest = data as any;
-		delete rest.confirmPassword;
+	const handleSubmit = async (data: UserCardOutput & DetailsCardOutput & PfpCardOutput) => {
+		const formData = new FormData();
+		for (const key in data) {
+			if (key === "confirmPassword") continue;
+			formData.append(key, data[key] as any);
+		}
 		const res = await fetch('/api/profile', {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(rest),
+			body: formData
 		})
 		const json = await res.json();
 		if (res.ok) {
@@ -54,13 +56,24 @@ export default function SignupPage() {
 			{step == 1 && <DetailsCard 
 				onSubmit={(out) => {
 					setData2(out);
-					handleSubmit({...data1!, ...out});
+					setStep(2);
 				}}
 				onBack={(out) => {
 					setData2(out);
 					setStep(0)
 				}}
 				data={data2}
+			/>}
+			{step == 2 && <PfpCard 
+				onSubmit={(out) => {
+					setData3(out);
+					handleSubmit({...data1!, ...data2!, ...out});
+				}}
+				onBack={(out) => {
+					setData3(out);
+					setStep(1);
+				}}
+				data={data3}
 			/>}
 		</CardPage>
 		</>

@@ -10,7 +10,7 @@ import {
 	SideButton,
 	Dropdown
 } from "@/components/CardPage/CardPage";
-import { LuArrowLeft } from "react-icons/lu"
+import { LuArrowLeft, LuArrowRight } from "react-icons/lu"
 import { useForm } from "react-hook-form";
 import { address, phone_code, phone_number, city } from '../validations'
 import {
@@ -28,13 +28,13 @@ export interface DetailsCardOutput {
 	phone_code: string;
 	phone: string;
 }
-export interface UserCardProps {
+export interface DetailsCardProps {
 	onBack: (output: DetailsCardOutput) => void;
 	onSubmit: (output: DetailsCardOutput) => void;
 	data: DetailsCardOutput | null;
 }
 
-export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
+export default function UserCard({ onSubmit, onBack, data }: DetailsCardProps) {
 	const form = useForm({ values: data || undefined });
 	const handleSubmit = form.handleSubmit(onSubmit)
 	const handleBack = () => onBack(form.getValues());
@@ -65,8 +65,11 @@ export default function UserCard({ onSubmit, onBack, data }: UserCardProps) {
 						<span className={styles.back_text}>Back</span>
 					</CardRow>
 				</SmallButton>
-				<SideButton color="blue" onClick={handleSubmit} side="right">
-					Create Account
+				<SideButton onClick={handleSubmit} color="blue" side="right">
+					<CardRow>
+						Proceed
+						<LuArrowRight className={styles.arrow}/>
+					</CardRow>
 				</SideButton>
 			</CardRow>
 		</Card>
