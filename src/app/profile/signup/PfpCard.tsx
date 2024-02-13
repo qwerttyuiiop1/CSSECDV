@@ -4,25 +4,22 @@ import React from "react";
 import { 
 	Card, 
 	Title,
-	Input,
 	CardRow,
 	SmallButton,
 	SideButton,
-	Dropdown,
 	FileInput
 } from "@/components/CardPage/CardPage";
 import { LuArrowLeft } from "react-icons/lu"
 import { useForm } from "react-hook-form";
-import { address, phone_code, phone_number, city } from '../validations'
 import {
 	FormContainer,
-	ErrorContainer,
 	useFormError
 } from "@/components/Providers/Forms";
-import countryList from "@/assets/data/countries";
+import ReCaptcha from "react-google-recaptcha";
 
 export interface PfpCardOutput {
 	pfp: FileList;
+	recaptcha: string;
 }
 export interface PfpCardProps {
 	onBack: (output: PfpCardOutput) => void;
@@ -32,7 +29,15 @@ export interface PfpCardProps {
 
 export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
 	const form = useForm({ defaultValues: data || undefined });
-	const handleSubmit = form.handleSubmit(onSubmit)
+	const [ recaptcha, setRecaptcha ] = React.useState<string | null>(null);
+	const recaptchaRef = React.useRef<ReCaptcha>(null);
+
+	const handleSubmit = form.handleSubmit((v) => {
+		if (!recaptcha) 
+			form.setError('recaptcha', { type: 'manual', message: 'recaptcha is required' });
+		else
+			onSubmit({ ...v, recaptcha });
+	})
 	const handleBack = () => onBack(form.getValues());
 	useFormError(form);
 	return (
@@ -40,6 +45,11 @@ export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
 		<Card>
 			<Title>Sign-up</Title>
 			<FileInput image id="pfp" accept="image/*" options={{ required: "Please upload a profile picture" }}/>
+			<ReCaptcha
+				ref={recaptchaRef}
+				sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+				onChange={setRecaptcha}
+				/>
 			<CardRow className={styles.width}>
 				<SmallButton onClick={handleBack}>
 					<CardRow>

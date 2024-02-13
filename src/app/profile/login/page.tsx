@@ -30,9 +30,6 @@ export default function Page() {
   const recaptchaRef = React.useRef<ReCaptcha>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
-  const onCaptchaChange = (token: string | null) => {
-	setRecaptchaToken(token);
-  }
   const onSubmit = form.handleSubmit(async data => {
 	if (!recaptchaToken) {
 	  toast.error('Please complete the captcha');
@@ -62,7 +59,7 @@ export default function Page() {
 		<ReCaptcha
 		  ref={recaptchaRef}
 		  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-		  onChange={onCaptchaChange}
+		  onChange={setRecaptchaToken}
 		/>
 		<BigButton onClick={onSubmit} className={styles.login_button_text}> 
 		  Login 

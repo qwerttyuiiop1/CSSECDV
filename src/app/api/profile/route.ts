@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/prisma";
 import { withAnyUser } from "@/lib/session/withUser";
-import { userDetailSelection, userSelection } from "@/lib/types/User";
+import { mapUser, userDetailSelection, userSelection } from "@/lib/types/User";
 import { validatePatch, validateSignup, validUser } from "./validate";
 import bcrypt from 'bcrypt';
 import { UserRole } from "@prisma/client";
@@ -9,17 +9,31 @@ import { UserRole } from "@prisma/client";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const data = validateSignup(await req.json());
-    if (typeof data === 'string')
-	  return NextResponse.json({ error: data }, { status: 400 });
-	data.password = bcrypt.hashSync(data.password!, 10);
-	(data as any).role = UserRole.USER;
+    const res = await validateSignup(await req.formData());
+    if (typeof res === 'string')
+	  return NextResponse.json({ error: res }, { status: 400 });
+	res.password = bcrypt.hashSync(res.password!, 10);
 	const detail = req.nextUrl.searchParams.get('detail') === 'true';
-  	const user = await prisma.user.create({ 
-		data,
+
+	const data = { 
+		...res, 
+		pfp: undefined, 
+		role: UserRole.USER
+	};
+	const user = await prisma.user.create({ 
+		data: {
+			...data,
+			rel_image: {
+				create: { file: res.pfp }
+			}
+		},
 		select: detail ? userDetailSelection : userSelection
 	});
-	return NextResponse.json(user);
+	await prisma.image.update({
+		where: { id: user.imageid! },
+		data: { ownerEmail: user.email }
+	});
+	return NextResponse.json({ user: mapUser(user)});
   } catch (error) {
 	console.error(error);
   	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
@@ -32,7 +46,9 @@ export const GET = withAnyUser(async (req) => {
 		where: { email: req.user.email },
 		select: detail ? userDetailSelection : userSelection
 	});
-	return NextResponse.json(res);
+	if (!res)
+		return NextResponse.json({ error: 'User not found' }, { status: 400 });
+	return NextResponse.json(mapUser(res));
 })
 
 
@@ -58,11 +74,11 @@ export const PATCH = withAnyUser(async (req) => {
 		delete data.oldPassword;
 	}
 	
-	const res = await prisma.user.update({
+	const res = mapUser(await prisma.user.update({
 		where: { email: req.user.email },
 		data: data,
 		select: userDetailSelection
-	});
+	}));
 	if (res.role === UserRole.UNVERIFIED && validUser(res) === true) {
 		await prisma.user.update({
 			where: { email: req.user.email },

@@ -38,7 +38,7 @@ export const POST = withAdmin(async (req) => {
 	
 	return NextResponse.json({ message: "Success" }, { status: 200 })
   } catch (error) {
-	console.log(error);
+	console.error(error);
 	return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
   }
 });

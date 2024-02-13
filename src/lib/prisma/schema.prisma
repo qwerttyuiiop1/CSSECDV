@@ -10,6 +10,17 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+model Image {
+  id			String		@default(cuid()) @id
+  createdAt		DateTime	@default(now())
+  ownerEmail	String?
+  owner			User?		@relation("UserImages", fields: [ownerEmail], references: [email])
+  isPfp			User?		@relation("PfpImage")
+  isPublic		Boolean		@default(false) @map(name: "is_public")
+  file			Bytes
+  @@map(name: "images")
+}
+
 enum UserRole {
 	UNVERIFIED
 	ADMIN
@@ -17,7 +28,7 @@ enum UserRole {
 }
 model User {
   name          	String
-  image				String?
+  imageid			String?		@unique
   email         	String		@id
   role				UserRole	@default(UNVERIFIED)
 
@@ -38,7 +49,9 @@ model User {
   createdAt     	DateTime	@default(now()) @map(name: "created_at")
   updatedAt     	DateTime	@updatedAt @map(name: "updated_at")
 
-  transactions    Transaction[] 
+  transactions		Transaction[]
+  rel_image			Image?		@relation("PfpImage", fields: [imageid], references: [id])
+  images			Image[]		@relation("UserImages")
   
   @@map(name: "users")
 }
