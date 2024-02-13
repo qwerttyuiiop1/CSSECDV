@@ -20,9 +20,6 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
     state[1](false);
     form.reset();
   };
-  const clear = () => {
-    form.reset();
-  };
   const { uploadcsv } = useShops();
   const handleSubmit = form.handleSubmit(async (data) => {
     const file = data.file[0] as File;
