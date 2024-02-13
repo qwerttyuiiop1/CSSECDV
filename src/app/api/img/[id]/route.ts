@@ -10,9 +10,11 @@ type Params = {
 export const GET = withOptionalUser(async (req, { params: { id } }: Params) => {
   const res = await prisma.image.findUnique({
 	where: { id },
-	select: { file: true }
+	select: { file: true, ownerEmail: true, isPublic: true }
   });
   if (!res)
+  	return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+  if (!res.isPublic && res.ownerEmail !== req.user?.email)
   	return NextResponse.json({ error: 'Image not found' }, { status: 404 });
   return new NextResponse(res.file)
 });
