@@ -18,7 +18,7 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
   const toast = useFormError(form);
   const close = () => {
     state[1](false);
-    form.reset;
+    form.reset();
   };
   const { uploadcsv } = useShops();
   const handleSubmit = form.handleSubmit(async (data) => {
