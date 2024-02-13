@@ -26,6 +26,7 @@ function wrapButton(className: string): React.FC<ButtonProps> {
   
 const CardPage = wrapDiv(`${styles.main_container} ${styles.background}`);
 const Card = wrapDiv(styles.card);
+const Upload = wrapDiv(styles.Upload);
 const Title = wrapDiv(styles.title);
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>{
@@ -171,6 +172,7 @@ const Label: React.FC<
 );
 const BigButton = wrapButton(styles.big_button);
 const SmallButton = wrapButton(styles.small_button);
+const XButton = wrapButton(styles.X_button);
 const SideButton: React.FC<ButtonProps & {
 	color?: "main" | "gray" | "green" | "blue" | "red";
 	side?: "left" | "right";
@@ -200,10 +202,12 @@ export {
 	TextArea,
 	Password,
 	BigButton,
+	XButton,
 	Separator,
 	CardRow,
 	SmallButton,
 	Dropdown,
 	Label,
-	SideButton
+	SideButton,
+	Upload
 };

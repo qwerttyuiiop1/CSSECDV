@@ -44,7 +44,7 @@ const CreateCodeModal: React.FC<BaseModalProps> = ({
 					Cancel
 				</SideButton>
 				<SideButton onClick={handleSubmit} color="blue">
-					Create
+					Add
 				</SideButton>
 			</CardRow>
 		</Card>

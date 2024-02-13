@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   Title,
-  Input,
-  Label,
   CardRow,
   SideButton,
   FileInput,
+  XButton,
+  Upload,
 } from "@/components/CardPage/CardPage";
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,9 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
     state[1](false);
     form.reset();
   };
+  const clear = () => {
+    form.reset();
+  };
   const { uploadcsv } = useShops();
   const handleSubmit = form.handleSubmit(async (data) => {
     const file = data.file[0] as File;
@@ -27,30 +30,52 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
     close();
     form.reset();
   });
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const modal = document.querySelector(".modal-container");
+      if (modal && !modal.contains(event.target as Node)) {
+        form.reset();
+        close();
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   if (!state[0]) return null;
   return (
     <BaseModal state={state}>
       <FormContainer form={form}>
-        <Card>
+        <Card className="modal-container">
           <Title>Upload .CSV FIle</Title>
-          <FileInput
-            id="file"
-            accept=".csv"
-            options={{
-              required: "File is required",
-              validate: {
-                maxSize: (file) =>
-                  file[0]?.size <= 50 * 1024 * 1024 ||
-                  "File should have maximum size of 50MB",
-              },
-            }}
-          />
+          <Upload>
+            <FileInput
+              id="file"
+              accept=".csv"
+              options={{
+                required: "File is required",
+                validate: {
+                  isCSV: (file) =>
+                    file[0]?.type === "text/csv" || "Please upload a .csv file",
+                  maxSize: (file) =>
+                    file[0]?.size <= 50 * 1024 * 1024 ||
+                    "File should have maximum size of 50MB",
+                },
+              }}
+            />
+            <XButton onClick={() => form.reset()}>
+              X
+            </XButton>
+          </Upload>
           <CardRow>
             <SideButton onClick={close} color="gray">
               Cancel
             </SideButton>
             <SideButton onClick={handleSubmit} color="blue">
-              Create
+              Upload
             </SideButton>
           </CardRow>
         </Card>

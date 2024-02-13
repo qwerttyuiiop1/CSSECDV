@@ -279,3 +279,28 @@
 	background: rgba(97, 221, 65, 0.00);
 	border-color: #C9C9C9;
 }
+
+.X_button {
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 50%;
+	cursor: pointer;
+	padding: 5px;
+	color: white;
+	font-size: 16px;
+	width: 22px;
+	height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 20px;
+}
+
+  .Upload{
+	display: flex;
+ 	align-items: center;
+	justify-content: center;
+  }
+
+  
+  
