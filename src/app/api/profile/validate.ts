@@ -55,7 +55,9 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 		return 'Please upload a .jpeg, .png or .webp file.';
 
 	// TODO: validate phone
-	if (typeof phone_code !== 'string' || typeof phone !== 'string')
+	if (typeof phone_code !== 'string' || !/^\+?\d{1,3}$/.test(phone_code))
+		return 'Phone Country Code is invalid.';
+	if (typeof phone !== 'string' || !/^\d{10}$/.test(phone))
 		return 'Phone Number is invalid.';
 	return {
 		name,

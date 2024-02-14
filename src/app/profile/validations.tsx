@@ -35,25 +35,29 @@ const password: RegisterOptions<FieldValues, string> = {
 	}
 }
 const address: RegisterOptions<FieldValues, string> = {
-	required: "Address Line 1 is required."
+	required: "Address Line 1 is required.",
+	minLength: {
+		value: 5,
+		message: "Address Line 1 must be at least 5 characters."
+	},
+	maxLength: {
+		value: 100,
+		message: "Address Line 1 can only be at most 100 characters."
+	},
 }
 const phone_code: RegisterOptions<FieldValues, string> = {
 	required: "Phone Country Code is required.",
-	min: {
-		value: 1,
+	pattern: {
+		value: /^\+?\d{1,3}$/,
 		message: "Please enter a valid Phone Country Code."
 	},
 }
 const phone_number: RegisterOptions<FieldValues, string> = {
 	required: "Phone Number is required.",
-	min: {
-		value: 1000000000,
+	pattern: {
+		value: /^\d{10}$/,
 		message: "Please enter a valid Phone Number."
 	},
-	max: {
-		value: 9999999999,
-		message: "Please enter a valid Phone Number."
-	}
 }
 // format: (+XX) XXXXXXXXX
 const phone: RegisterOptions<FieldValues, string> = {
