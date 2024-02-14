@@ -33,7 +33,7 @@ export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
     if (!recaptcha)
       form.setError("recaptcha", {
         type: "manual",
-        message: "recaptcha is required",
+        message: "CAPTCHA is required.",
       });
     else onSubmit({ ...v, recaptcha });
   });
@@ -48,7 +48,7 @@ export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
           id="pfp"
           accept="image/jpeg, image/png, image/webp"
           options={{
-            required: "Profile picture is required",
+            required: "Profile Picture is required.",
             validate: {
               isImage: (file) =>
                 file[0]?.type === "image/jpeg" ||

@@ -30,10 +30,10 @@ const address: RegisterOptions<FieldValues, string> = {
 	required: "Address Line 1 is required."
 }
 const phone_code: RegisterOptions<FieldValues, string> = {
-	required: "Country Code is required.",
+	required: "Phone Country Code is required.",
 	min: {
 		value: 1,
-		message: "Please enter a valid Country Code."
+		message: "Please enter a valid Phone Country Code."
 	},
 }
 const phone_number: RegisterOptions<FieldValues, string> = {

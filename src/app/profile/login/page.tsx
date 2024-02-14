@@ -32,7 +32,7 @@ export default function Page() {
 
   const onSubmit = form.handleSubmit(async data => {
 	if (!recaptchaToken) {
-	  toast.error('Please complete the Captcha.');
+	  toast.error('Please complete the CAPTCHA.');
 	  return;
 	}
 	const res = await signIn("credentials", {
