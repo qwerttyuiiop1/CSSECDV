@@ -15,8 +15,8 @@ const username: RegisterOptions<FieldValues, string> = {
 const email: RegisterOptions<FieldValues, string> = {
 	required: "Email is required.",
 	pattern: {
-		value: /\S+@\S+\.\S+/,
-		message: "Email is invalid."
+		value: /^(\([^\n]+\))?([a-zA-Z\d]+([!#$%&'*+\-/=?^_'{|}~.][a-zA-Z\d]+)*|\"([^\"\\\n]|\\\\|\\\")+\")(\([^\n]+\))?@[a-zA-Z\d]+([-.][a-zA-Z\d]+)*\.[a-zA-Z]{2,}$/,
+		message: "Please enter a valid Email."
 	}
 }
 const password: RegisterOptions<FieldValues, string> = {
@@ -30,21 +30,21 @@ const address: RegisterOptions<FieldValues, string> = {
 	required: "Address Line 1 is required."
 }
 const phone_code: RegisterOptions<FieldValues, string> = {
-	required: "Phone Code is required.",
+	required: "Country Code is required.",
 	min: {
 		value: 1,
-		message: "Phone Code is invalid."
+		message: "Please enter a valid Country Code."
 	},
 }
 const phone_number: RegisterOptions<FieldValues, string> = {
-	required: "Phone is required.",
+	required: "Phone number is required.",
 	min: {
 		value: 1000000000,
-		message: "Phone is invalid."
+		message: "Please enter a valid Phone Number."
 	},
 	max: {
 		value: 9999999999,
-		message: "Phone is invalid."
+		message: "Please enter a valid Phone Number."
 	}
 }
 // format: (+XX) XXXXXXXXX

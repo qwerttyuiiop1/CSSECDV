@@ -32,7 +32,7 @@ export default function Page() {
 
   const onSubmit = form.handleSubmit(async data => {
 	if (!recaptchaToken) {
-	  toast.error('Please complete the captcha');
+	  toast.error('Please complete the Captcha.');
 	  return;
 	}
 	const res = await signIn("credentials", {
@@ -42,7 +42,7 @@ export default function Page() {
 	  redirect: false
 	});
 	if (res?.error)
-	  toast.error('Invalid email or password');
+	  toast.error('Incorrect Email or Password.');
 	else
 	  router.push('/');
   });
