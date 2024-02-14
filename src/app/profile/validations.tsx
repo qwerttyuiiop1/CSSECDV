@@ -21,9 +21,9 @@ const email: RegisterOptions<FieldValues, string> = {
 }
 const password: RegisterOptions<FieldValues, string> = {
 	required: "Password is required.",
-	minLength: {
-		value: 8,
-		message: "Password must be at least 8 characters."
+	pattern: {
+		value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{12,}$/,
+		message: "Password must be at least 12 characters, and contain at least 1 digit, 1 upper case, 1 lower case, and 1 special character."
 	}
 }
 const address: RegisterOptions<FieldValues, string> = {
@@ -37,7 +37,7 @@ const phone_code: RegisterOptions<FieldValues, string> = {
 	},
 }
 const phone_number: RegisterOptions<FieldValues, string> = {
-	required: "Phone number is required.",
+	required: "Phone Number is required.",
 	min: {
 		value: 1000000000,
 		message: "Please enter a valid Phone Number."

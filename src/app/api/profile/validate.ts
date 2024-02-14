@@ -30,8 +30,8 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 		return 'Username must be between 5 and 20 characters.';
 	if (typeof email !== 'string' || !/^(\([^\n]+\))?([a-zA-Z\d]+([!#$%&'*+\-/=?^_'{|}~.][a-zA-Z\d]+)*|\"([^\"\\\n]|\\\\|\\\")+\")(\([^\n]+\))?@[a-zA-Z\d]+([-.][a-zA-Z\d]+)*\.[a-zA-Z]{2,}$/.test(email))
 		return 'Email is invalid.';
-	if (typeof password !== 'string' || password.length < 8)
-		return 'Password must be at least 8 characters long.';
+	if (typeof password !== 'string' || !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{12,}$/.test(password))
+		return 'Password must be at least 12 characters, and contain at least 1 digit, 1 upper case, 1 lower case, and 1 special character.';
 	if (typeof address1 !== 'string' || address1.length < 5 || address1.length > 100)
 		return 'Address must be between 5 and 100 characters.';
 	if (typeof city !== 'string' || city.length < 3 || city.length > 100)
