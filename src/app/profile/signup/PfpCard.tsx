@@ -48,16 +48,16 @@ export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
           id="pfp"
           accept="image/jpeg, image/png, image/webp"
           options={{
-            required: "Please upload a profile picture",
+            required: "Profile picture is required",
             validate: {
               isImage: (file) =>
                 file[0]?.type === "image/jpeg" ||
                 file[0]?.type === "image/png" ||
                 file[0]?.type === "image/webp" ||
-                "Please upload an image file",
+                "Please upload a .jpeg, .png or .webp file.",
               maxSize: (file) =>
                 file[0]?.size <= 10 * 1024 * 1024 ||
-                "File should have maximum size of 10MB",
+                "File size exceeds the maximum allowed limit (10MB).",
             },
           }}
         />

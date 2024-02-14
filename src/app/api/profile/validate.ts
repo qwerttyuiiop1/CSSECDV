@@ -45,14 +45,14 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 	if (!pfp)
 		return 'Profile picture is required';
 	if (pfp.size > 10 * 1024 * 1024)
-		return 'Profile picture must be less than 10mb';
+		return 'File size exceeds the maximum allowed limit (10MB).';
 
 	const buffer = Buffer.from(await pfp.arrayBuffer());
 	const res = await validateBufferMIMEType(buffer, {
 		allowMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
 	});
 	if (!res.ok)
-		return 'Invalid profile picture';
+		return 'Please upload a .jpeg, .png or .webp file.';
 
 	// TODO: validate phone
 	if (typeof phone_code !== 'string' || typeof phone !== 'string')

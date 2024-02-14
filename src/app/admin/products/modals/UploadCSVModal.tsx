@@ -23,9 +23,11 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
   const { uploadcsv } = useShops();
   const handleSubmit = form.handleSubmit(async (data) => {
     const file = data.file[0] as File;
-    await uploadcsv(file);
-    close();
-    form.reset();
+    const isValid = await uploadcsv(file);
+    if (isValid !== undefined && isValid) {
+      close();
+      form.reset();
+    }
   });
 
   useEffect(() => {
@@ -53,19 +55,17 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
               id="file"
               accept=".csv"
               options={{
-                required: "File is required",
+                required: "CSV File is required",
                 validate: {
                   isCSV: (file) =>
                     file[0]?.type === "text/csv" || "Please upload a .csv file",
                   maxSize: (file) =>
                     file[0]?.size <= 50 * 1024 * 1024 ||
-                    "File should have maximum size of 50MB",
+                    "File size exceeds the maximum allowed limit (50MB).",
                 },
               }}
             />
-            <XButton onClick={() => form.reset()}>
-              X
-            </XButton>
+            <XButton onClick={() => form.reset()}>X</XButton>
           </Upload>
           <CardRow>
             <SideButton onClick={close} color="gray">
