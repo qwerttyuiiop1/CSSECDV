@@ -8,7 +8,7 @@ const username: RegisterOptions<FieldValues, string> = {
 	},
 	maxLength: {
 		value: 20,
-		message: "Username must be at most 20 characters."
+		message: "Username can only be at most 20 characters."
 	},
 }
 
@@ -21,9 +21,17 @@ const email: RegisterOptions<FieldValues, string> = {
 }
 const password: RegisterOptions<FieldValues, string> = {
 	required: "Password is required.",
+	minLength: {
+		value: 12,
+		message: "Password must be at least 12 characters."
+	},
+	maxLength: {
+		value: 64,
+		message: "Password can only be at most 64 characters."
+	},
 	pattern: {
-		value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{12,}$/,
-		message: "Password must be at least 12 characters, and contain at least 1 digit, 1 upper case, 1 lower case, and 1 special character."
+		value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{12,64}$/,
+		message: "Password must contain at least 1 digit, 1 upper case, 1 lower case, and 1 special character."
 	}
 }
 const address: RegisterOptions<FieldValues, string> = {
