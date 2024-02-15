@@ -48,7 +48,7 @@ const address: RegisterOptions<FieldValues, string> = {
 const phone_code: RegisterOptions<FieldValues, string> = {
 	required: "Phone Country Code is required.",
 	pattern: {
-		value: /^\+?\d{2}$/,
+		value: /^\+?\d{1,3}$/,
 		message: "Please enter a valid Phone Country Code."
 	},
 }
@@ -63,7 +63,7 @@ const phone_number: RegisterOptions<FieldValues, string> = {
 const phone: RegisterOptions<FieldValues, string> = {
 	required: "Phone Number is required.",
 	pattern: {
-		value: /^\+?\d{2}\d{10}$/,
+		value: /^\(\+?\d{1,3}\) \d{10}$/,
 		message: "Phone is invalid."
 	}
 }

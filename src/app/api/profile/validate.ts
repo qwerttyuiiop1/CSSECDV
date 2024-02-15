@@ -66,7 +66,7 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 		address1,
 		city,
 		country,
-		mobileno: phone_code + phone,
+		mobileno: "(" + phone_code + ") " + phone,
 		address2: address2 || null,
 		pfp: buffer
 	};
