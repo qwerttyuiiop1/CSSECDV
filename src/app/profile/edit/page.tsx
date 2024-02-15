@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import User404, { UserLoading } from "@/app/profile/404";
 import { UserDetail } from "@/lib/types/User";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 type FormValues = Pick<UserDetail, "name" | "mobileno" | "country" | "city" | "address1">;
 // TODO: lottie animation for loading
@@ -24,8 +25,6 @@ const Page: React.FC<{data: FormValues; id: string}> = ({ data, id }) => {
   const form = useForm({
 	values: data,
   });
-  const router = useRouter();
-  const toast = useFormError(form);
   const onSubmit = form.handleSubmit(async data => {
 	const res = await fetch(`/api/profile`, {
 	  method: "PATCH",
