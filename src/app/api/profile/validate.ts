@@ -117,9 +117,7 @@ export const validatePatch = (body: any): string | PatchBody => {
 		ret.mobileno = mobileno;
 	}
 	// TODO: validate phone
-
-	console.log('\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n');
-	console.log(ret);
+	// TODO: validate image
 
 	return ret;
 }
