@@ -116,11 +116,10 @@ export const validatePatch = (body: any): string | PatchBody => {
 			return 'Phone must be a string.';
 		ret.mobileno = mobileno;
 	}
-	if (image) {
-		if (typeof image !== 'string')
-			return 'Image must be a string.';
-		ret.image = image;
-	}
 	// TODO: validate phone
+
+	console.log('\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n');
+	console.log(ret);
+
 	return ret;
 }

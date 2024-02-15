@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 
 type FormValues = Pick<UserDetail, "name" | "mobileno" | "country" | "city" | "address1">;
 // TODO: lottie animation for loading
-const Page: React.FC<{data: FormValues; id: string}> = ({ data, id }) => {
+const Page: React.FC<{data: FormValues}> = ({ data }) => {
   const form = useForm({
 	values: data,
   });
@@ -37,7 +37,7 @@ const Page: React.FC<{data: FormValues; id: string}> = ({ data, id }) => {
 	if (res.ok) {
 	  toast.success("Profile updated");
 	} else {
-	  toast.error(json.message);
+	  toast.error(json.error);
 	}
   });
 
@@ -105,5 +105,5 @@ export default function Wrapper() {
 
   if (status === "loading" || !user) return <UserLoading/>;
   if (!session) return <User404/>;
-  return <Page data={user} id={user.email}/>;
+  return <Page data={user}/>;
 }

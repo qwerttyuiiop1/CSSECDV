@@ -69,13 +69,14 @@ export const PATCH = withAnyUser(async (req) => {
 	const data = validatePatch(await req.json());
 	if (typeof data === 'string')
 		return NextResponse.json({ error: data }, { status: 400 });
-	const user = await prisma.user.findUnique({
-		where: { email: req.user.email },
-		select: { password: true }
-	});
-	if (!user)
-		return NextResponse.json({ error: 'User not found' }, { status: 400 });
-	if (user.password) {
+	if (data.password) {
+		const user = await prisma.user.findUnique({
+			where: { email: req.user.email },
+			select: { password: true }
+		});
+		if (!user || !user.password)
+			return NextResponse.json({ error: 'User or password not found' }, { status: 400 })
+
 		if (bcrypt.compareSync(data.oldPassword!, user.password) === false)
 			return NextResponse.json({ error: 'Old password is incorrect' }, { status: 400 });
 		if (bcrypt.compareSync(data.password!, user.password) === true)
