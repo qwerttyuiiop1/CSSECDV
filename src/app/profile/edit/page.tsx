@@ -79,8 +79,8 @@ const Page: React.FC<{data: FormValues}> = ({ data }) => {
 			<SideButton color="green" onClick={onSubmit}>
 				Save
 			</SideButton>
-			<SideButton color="gray">
-				Cancel {/* where does this lead to? */}
+			<SideButton color="gray" onClick={() => window.history.back()}>
+				Cancel
 			</SideButton>
 		</CardRow>
 	  </Card>
