@@ -41,18 +41,37 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 	if (address2 && (typeof address2 !== 'string' || address2.length < 5 || address2.length > 100))
 		return 'Address must be between 5 and 100 characters.';
 
-
+	//image file validation
 	if (!pfp)
 		return 'Profile picture is required.';
 	if (pfp.size > 10 * 1024 * 1024)
 		return 'File size exceeds the maximum allowed limit (10MB).';
 
 	const buffer = Buffer.from(await pfp.arrayBuffer());
+
+	const fileSignature = buffer.toString('hex', 0, 8).toUpperCase();
+
+	// signatures
+	const jpegSignature = 'FFD8FF';
+	const pngSignature = '89504E470D0A1A0A';
+	const webpSignature = '52494646';
+		
+	if (
+		!(
+			fileSignature.startsWith(jpegSignature) ||
+			fileSignature.startsWith(pngSignature) ||
+			fileSignature.startsWith(webpSignature)
+		)
+	) {
+		return 'Please upload a valid .jpeg, .png or .webp file';
+	}
+
 	const res = await validateBufferMIMEType(buffer, {
 		allowMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
 	});
 	if (!res.ok)
 		return 'Please upload a .jpeg, .png or .webp file.';
+		
 
 	// TODO: validate phone
 	if (typeof phone_code !== 'string' || !/^\+?\d{1,3}$/.test(phone_code))
