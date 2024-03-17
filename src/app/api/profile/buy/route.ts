@@ -1,7 +1,7 @@
-import prisma from "@/lib/prisma/prisma";
+import prisma from "@prisma";
 import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
-import { Transaction, transactionSelection } from "@/lib/types/Transaction";
+import { Transaction, transactionSelection } from "@type/Transaction";
 import { Prisma, TransactionType } from "@prisma/client";
 
 const validateTransaction = (transaction: any): Transaction | string => {

@@ -1,6 +1,6 @@
-import prisma from '@/lib/prisma/prisma';
+import prisma from '@prisma';
 import { withAdmin } from '@/lib/session/withUser';
-import { adminCodeSelection } from '@/lib/types/AdminShop';
+import { AdminCode, adminCodeSelection } from '@type/AdminShop';
 import { NextRequest, NextResponse } from 'next/server';
 type Params = {
 	params: {
@@ -12,7 +12,7 @@ type Params = {
 export const PATCH = withAdmin(async (req: NextRequest, {params: { name, code }}: Params) => {
   try {
 	const { code: newCode } = await req.json();
-	const a = await prisma.code.update({
+	const a: AdminCode = await prisma.code.update({
 		where: {
 			code_shopName: {
 				code,
@@ -33,7 +33,7 @@ export const PATCH = withAdmin(async (req: NextRequest, {params: { name, code }}
 
 export const DELETE = withAdmin(async (_: NextRequest, {params: { name, code }}: Params) => {
   try {
-	const a = await prisma.code.delete({
+	const a: AdminCode = await prisma.code.delete({
 		where: {
 			code_shopName: {
 				code: code,

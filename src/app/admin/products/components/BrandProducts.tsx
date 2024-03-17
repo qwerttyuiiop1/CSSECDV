@@ -5,13 +5,13 @@ import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { EditButton, DeleteButton } from "./Components";
 import { AnimatePresence, motion } from "framer-motion";
-import { AdminShop, AdminProduct } from "@/lib/types/AdminShop";
+import { AdminShop, AdminProduct } from "@type/AdminShop";
 import EditBrandModal from "../modals/EditBrandModal";
 import DeleteShopModal from "../modals/DeleteBrandModal";
 import EditProductModal from "../modals/EditProductModal";
 import DeleteProductModal from "../modals/DeleteProductModal";
 import { modalHandler } from "@/components/Modal/BaseModal";
-import { ProductId } from "@/lib/types/Shop";
+import { ProductId } from "@type/Shop";
 
 export interface ShopProductsProps {
 	shop: AdminShop;

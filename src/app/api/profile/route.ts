@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma/prisma";
+import prisma from "@prisma";
 import { withAnyUser } from "@/lib/session/withUser";
-import { mapUser, userDetailSelection, userSelection } from "@/lib/types/User";
+import { User, UserDetail, mapUser, userDetailSelection, userSelection } from "@type/User";
 import { validatePatch, validateSignup, validUser } from "./validate";
 import bcrypt from 'bcrypt';
 import { UserRole } from "@prisma/client";
@@ -10,6 +10,9 @@ import { UserRole } from "@prisma/client";
 export const POST = async (req: NextRequest) => {
   try {
 	const form = await req.formData();
+	const res = await validateSignup(form);
+    if (typeof res === 'string')
+	  return NextResponse.json({ error: res }, { status: 400 });
 	const recaptcha = form.get('recaptcha');
 	if (!recaptcha) 
 		return NextResponse.json({ error: 'No captcha token provided' }, { status: 400 });
@@ -20,12 +23,8 @@ export const POST = async (req: NextRequest) => {
 	const { success } = await response.json();
 	if (!response.ok || success !== true) 
 		return NextResponse.json({ error: 'Failed to verify captcha' }, { status: 400 });
-
-    const res = await validateSignup(form);
-    if (typeof res === 'string')
-	  return NextResponse.json({ error: res }, { status: 400 });
+    
 	res.password = bcrypt.hashSync(res.password!, 10);
-	const detail = req.nextUrl.searchParams.get('detail') === 'true';
 
 	const data = { 
 		...res, 
@@ -39,13 +38,14 @@ export const POST = async (req: NextRequest) => {
 				create: { file: res.pfp }
 			}
 		},
-		select: detail ? userDetailSelection : userSelection
+		select: userDetailSelection
 	});
 	await prisma.image.update({
 		where: { id: user.imageid! },
 		data: { ownerEmail: user.email }
 	});
-	return NextResponse.json({ user: mapUser(user)});
+	const ret: UserDetail = mapUser(user);
+	return NextResponse.json({ user: ret });
   } catch (error) {
 	console.error(error);
   	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
@@ -60,7 +60,8 @@ export const GET = withAnyUser(async (req) => {
 	});
 	if (!res)
 		return NextResponse.json({ error: 'User not found' }, { status: 400 });
-	return NextResponse.json(mapUser(res));
+	const user: User | UserDetail = mapUser(res);
+	return NextResponse.json({ user });
 })
 
 
@@ -85,7 +86,7 @@ export const PATCH = withAnyUser(async (req) => {
 		delete data.oldPassword;
 	}
 	
-	const res = mapUser(await prisma.user.update({
+	const res: UserDetail = mapUser(await prisma.user.update({
 		where: { email: req.user.email },
 		data: data,
 		select: userDetailSelection
@@ -97,7 +98,7 @@ export const PATCH = withAnyUser(async (req) => {
 		});
 		res.role = UserRole.USER;
 	}
-	return NextResponse.json(res);
+	return NextResponse.json({ user: res });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

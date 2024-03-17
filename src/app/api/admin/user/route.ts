@@ -1,11 +1,12 @@
-import prisma from "@/lib/prisma/prisma";
+import prisma from "@prisma";
 import { withAdmin } from "@/lib/session/withUser";
-import { userDetailSelection } from "@/lib/types/User";
+import { UserDetail, mapUser, userDetailSelection } from "@type/User";
 import { NextResponse } from "next/server";
 
-export const GET = withAdmin(async (req) => {
-	const users = await prisma.user.findMany({
+export const GET = withAdmin(async () => {
+	const res = await prisma.user.findMany({
 		select: userDetailSelection
 	})
+	const users: UserDetail[] = res.map(mapUser)
 	return NextResponse.json(users, { status: 200 });
 });

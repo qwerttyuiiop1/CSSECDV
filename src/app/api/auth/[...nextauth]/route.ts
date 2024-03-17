@@ -1,9 +1,9 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import prisma from '@/lib/prisma/prisma'
+import prisma from '@prisma'
 import bcrypt from 'bcrypt';
-import { mapUser, userSelection } from '@/lib/types/User';
+import { User, mapUser, userSelection } from '@type/User';
 
 export const authOptions: NextAuthOptions = {
  providers: [
@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
 		if (!response.ok) return null;
 		const { success } = await response.json();
 		if (success !== true) return null;
-		const res = mapUser(user);
+		const res: User = mapUser(user);
 		return { ...res, id: user.email, password: undefined };
 	} else {
 		return null;

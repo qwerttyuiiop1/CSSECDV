@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma/prisma";
+import prisma from "@prisma";
 import { withAdmin } from "@/lib/session/withUser";
 import { NextResponse } from "next/server";
 import csv from "csv-parser";
@@ -36,7 +36,10 @@ export const POST = withAdmin(async (req) => {
                 shopName: res.shop
               }
             }
-          }
+          },
+		  shop: {
+			connect: { name: res.shop }
+		  }
         }
       })
     ));

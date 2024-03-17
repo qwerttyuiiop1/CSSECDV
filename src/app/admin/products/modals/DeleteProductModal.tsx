@@ -9,7 +9,7 @@ import {
 import styles from "./modal.module.css"
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useProducts } from "@/components/Providers/Products/Products";
-import { ProductId } from "@/lib/types/Shop";
+import { ProductId } from "@type/Shop";
 
 interface DeleteProductProps extends BaseModalProps {
 	id: ProductId;

@@ -15,7 +15,7 @@ import { ErrorContainer, FormContainer, useFormError } from "@/components/Provid
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import User404, { UserLoading } from "@/app/profile/404";
-import { UserDetail } from "@/lib/types/User";
+import { UserDetail } from "@type/User";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
@@ -98,7 +98,7 @@ export default function Wrapper() {
 	  const res = await fetch(`/api/profile/?detail=true`);
 	  if (res.ok) {
 		const data = await res.json();
-		setUser(data);
+		setUser(data.user);
 	  }
 	})();
   }, [session]);

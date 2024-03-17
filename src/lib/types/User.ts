@@ -1,5 +1,5 @@
 import { User as _DBUser } from '@prisma/client'
-import prisma from '@/lib/prisma/prisma'
+import prisma from '@prisma'
 
 export type DBUser = _DBUser
 const a: DBUser = {} as any

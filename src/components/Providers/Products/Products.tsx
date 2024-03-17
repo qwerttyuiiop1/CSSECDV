@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode, useState, useCallback, use, useEffect } from 'react';
-import { AdminCode, AdminProduct, AdminShop } from '@/lib/types/AdminShop';
-import { ProductId } from '@/lib/types/Shop';
+import { AdminCode, AdminProduct, AdminShop } from '@type/AdminShop';
+import { ProductId } from '@type/Shop';
 import { toast } from 'react-toastify';
 
 interface ProductsContext {

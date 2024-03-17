@@ -1,4 +1,4 @@
-import { DBUser, UserDetail } from "@/lib/types/User";
+import { DBUser, UserDetail } from "@type/User";
 import { validateBufferMIMEType } from 'validate-image-type';
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
 export type PatchBody = Partial<Data> & { image?: string; oldPassword?: string; }

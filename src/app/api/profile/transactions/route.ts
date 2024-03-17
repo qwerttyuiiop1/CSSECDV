@@ -1,7 +1,7 @@
-import prisma from "@/lib/prisma/prisma";
+import prisma from "@prisma";
 import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
-import { transactionSelection } from "@/lib/types/Transaction";
+import { transactionSelection } from "@type/Transaction";
 
 export const GET = withUser(async (req) => {
   try {

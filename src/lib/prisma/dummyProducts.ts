@@ -110,13 +110,32 @@ export const uploadDummyProducts = async () => {
 					tos: product.tos,
 					isActive: { 
 						create: {
-							codes: {
-								create: product.activeCodes.map(code => ({ code }))
+							shop: {
+								connect: { id: dbShop.id }
 							}
 						}
 					}
 				}
 			})
+			for (const code of product.activeCodes) {
+				console.log('code', code)
+				await prisma.code.create({
+					data: {
+						code,
+						product: {
+							connect: {
+								name_shopName: {
+									name: product.name,
+									shopName: shop.name
+								}
+							}
+						},
+						shop: {
+							connect: { id: dbShop.id }
+						}
+					}
+				})
+			}
 		}
 	}
 }

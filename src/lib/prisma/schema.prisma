@@ -65,6 +65,7 @@ model Shop {
 
   shop		ShopH		@relation(fields: [id, name], references: [id, name])
   products	Product[]
+  codes		Code[]
   @@map(name: "shops")
   @@unique([id, name])
 }
@@ -94,18 +95,21 @@ enum ProductCategory {
 }
 
 model Product {
-	id			Int		@unique
-	version		Int
-	shopId		Int
+  id			Int		@unique
+  version		Int
+	
+  name		String
+  shopId		Int
+  shopName	String
 
-	name		String
-	shopName	String
+  product		ProductH	@relation(fields: [id, version, name, shopId], references: [id, version, name, shopId])
+  shop		Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
+  codes		Code[]
 
-	shop		Shop		@relation(fields: [shopId], references: [id], onDelete: Cascade)
-	product		ProductH	@relation(fields: [id, version, name, shopId, shopName], references: [id, version, name, shopId, shopName])
-	codes		Code[]
-	@@id([name, shopName])
-	@@unique([id, version, name, shopId, shopName])
+  @@id([name, shopName])
+  @@map(name: "products")
+  @@unique([id, version, name, shopId])
+  @@unique([id, name, shopId])
 }
 model ProductH {
   id			Int			@default(autoincrement())
@@ -113,7 +117,6 @@ model ProductH {
   dateCreated	DateTime	@default(now())
   shopId		Int
 
-  shopName		String
   name			String
   price			Float
   tos			String
@@ -121,28 +124,30 @@ model ProductH {
   category		ProductCategory?	// TODO: fix this
   
   isActive		Product?
-  shop			ShopH		@relation(fields: [shopId, shopName], references: [id, name])
+  shop			ShopH		@relation(fields: [shopId], references: [id])
   purchasedCodes	CodeH[]
+
   @@id([id, version])
   @@map(name: "products_h")
-  @@unique([id, version, name, shopId, shopName])
+  @@unique([id, version, name, shopId])
+  @@unique([id, version, shopId])
 }
 
-// current active codes is tied to the most recent product
+// unpurchased codes use the current version
 // only purchased codes are tied to a specific version
 // purchased codes also should not be visible to the user
 // only here for unique constraints
 model Code {
   shopId		Int
   productId		Int
-  productVersion	Int
+  productName	String
 
   code			String
   shopName		String		@map(name: "shop_name")
-  productName	String		@map(name: "product_name")
   
   isUsed		CodeH?
-  product		Product		@relation(fields: [productId, productVersion, productName, shopId, shopName], references: [id, version, name, shopId, shopName], onDelete: Cascade)
+  shop			Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
+  product		Product		@relation(fields: [productId, productName, shopId], references: [id, name, shopId])
 
   @@unique([code, shopId])
   @@id([code, shopName])
@@ -152,33 +157,27 @@ model CodeH {
 	shopId			Int
 	productId		Int
 	productVersion	Int
-	dateCreated		DateTime	@updatedAt
-
+	transactionId	String
 	code			String
-	shopName		String
-	productName		String
-	
-	userEmail		String
-	transactionDate	DateTime
-	transactionItem	Transaction	@relation(fields: [userEmail, transactionDate], references: [userEmail, date])
 
+	transactionItem	Transaction	@relation(fields: [transactionId], references: [id])
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
-	rel_product		ProductH	@relation(fields: [productId, productName, shopId, shopName, productVersion], references: [id, name, shopId, shopName, version])
+	rel_product		ProductH	@relation(fields: [productId, productVersion, shopId], references: [id, version, shopId])
 	@@id([code, shopId])
 }
 
 model Transaction {
-  date          DateTime @default(now())
+  id			String		@default(cuid()) @id
+  date          DateTime	@default(now())
   userEmail     String
-  user          User      @relation(fields: [userEmail], references: [email])
+  user          User		@relation(fields: [userEmail], references: [email])
 
   type          TransactionType
   total         Float
   pointsBalance Int
 
   items      	CodeH[]
-
-  @@id([userEmail, date])
+  @@map(name: "transactions")
 }
 
 enum TransactionType {

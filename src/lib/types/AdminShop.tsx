@@ -1,39 +1,27 @@
-import { Code, Product, Shop } from "./Shop"
+import { Code, Product, Shop, mapProduct, mapShop } from "./Shop"
+
 
 export const adminCodeSelection = {
   select: {
 	productName: true,
 	shopName: true,
 	code: true,
-	isUsed: {
-	  select: {
-		userEmail: true
-	  }
-	},
+	isUsed: { select: {} },
   }
 }
 export type AdminCode = Code & {
-	isUsed: {
-	  userEmail: string
-	} | null
+	isUsed: {} | null
 }
 export type AdminProduct = Product & {
 	codes: AdminCode[]
 }
-type DBAdminProduct = {
+export type _DBAdminProduct = {
 	product: Omit<Product, 'stock' | 'sales'> & {
 		_count: { purchasedCodes: number }
 	}
 	_count: { codes: number }
 	codes: AdminCode[]
 }
-
-export const mapAdminProduct = (product: DBAdminProduct): AdminProduct => ({
-	...product.product,
-	codes: product.codes,
-	stock: product._count.codes,
-	sales: product.product._count.purchasedCodes,
-})
 
 export const adminProductSelection = {
   select: {
@@ -74,11 +62,11 @@ export const adminShopSelection = {
 export type AdminShop = Omit<Shop, 'products'> & {
 	products: AdminProduct[]
 }
-type AdminDBShop = {
+export type _DBAdminShop = {
 	name: string,
-	products: DBAdminProduct[]
+	products: _DBAdminProduct[]
 }
-export const mapAdminShop = (shop: AdminDBShop): AdminShop => ({
-	name: shop.name,
-	products: shop.products?.map(mapAdminProduct)
-})
+export {
+  mapProduct,
+  mapShop
+}

@@ -1,6 +1,6 @@
-import prisma from '@/lib/prisma/prisma';
+import prisma from '@prisma';
 import { withAdmin } from '@/lib/session/withUser';
-import { adminCodeSelection } from '@/lib/types/AdminShop';
+import { AdminCode, adminCodeSelection } from '@type/AdminShop';
 import { NextRequest, NextResponse } from 'next/server';
 type Params = {
 	params: {
@@ -15,7 +15,7 @@ export const POST = withAdmin(async (req: NextRequest, {params: { name: shopName
 		return NextResponse.json({ error: 'Invalid code' }, { status: 400 });
 	if (!productName || typeof productName !== 'string')
 		return NextResponse.json({ error: 'Invalid product name' }, { status: 400 });
-	const newCode = await prisma.code.create({
+	const newCode: AdminCode = await prisma.code.create({
 		data: {
 			code,
 			product: {
@@ -26,6 +26,9 @@ export const POST = withAdmin(async (req: NextRequest, {params: { name: shopName
 					}
 				}
 			},
+			shop: {
+				connect: { name: shopName }
+			}
 		},
 		select: adminCodeSelection.select
 	});

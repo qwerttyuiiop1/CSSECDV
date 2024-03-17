@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useRef, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { User } from "@/lib/types/User";
+import { User } from "@type/User";
 import { UserRole } from "@prisma/client";
 
 let defaultUser: any = {

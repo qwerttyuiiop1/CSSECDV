@@ -12,9 +12,9 @@ import {
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
 import { FormContainer, useFormError } from "@/components/Providers/Forms";
-import { AdminProduct } from '@/lib/types/AdminShop';
+import { AdminProduct } from '@type/AdminShop';
 import { useProducts } from "@/components/Providers/Products/Products";
-import { ProductId } from "@/lib/types/Shop";
+import { ProductId } from "@type/Shop";
 
 interface EditProductProps extends BaseModalProps {
 	id: ProductId;

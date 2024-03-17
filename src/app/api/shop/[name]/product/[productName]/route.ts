@@ -1,9 +1,9 @@
-import prisma from '@/lib/prisma/prisma';
+import prisma from '@prisma';
 import { withAdmin, withOptionalUser } from '@/lib/session/withUser';
-import { mapAdminProduct, adminProductSelection } from '@/lib/types/AdminShop';
+import { AdminProduct, adminProductSelection } from '@type/AdminShop';
 import { NextRequest, NextResponse } from 'next/server';
 import { validate } from '../validate';
-import { mapProduct, productSelection } from '@/lib/types/Shop';
+import { Product, mapProduct, productSelection } from '@type/Shop';
 type Params = {
 	params: {
 		name: string;
@@ -13,28 +13,17 @@ type Params = {
 
 export const GET = withOptionalUser(async (req, {params: { name, productName }}: Params) => {
 	try {
-		const options = {
+		const select = req.isAdmin ? adminProductSelection : productSelection;
+		const res = await prisma.product.findUniqueOrThrow({
 			where: {
 				name_shopName: {
 					name: productName,
 					shopName: name
 				},
-			}
-		};
-		let product = null;
-		if (req.isAdmin === true) {
-			product = await prisma.product.findUniqueOrThrow({
-				...options,
-				...adminProductSelection
-			});
-			product = mapAdminProduct(product);
-		} else {
-			product = await prisma.product.findUniqueOrThrow({
-				...options,
-				...productSelection
-			});
-			product = mapProduct(product);
-		}
+			},
+			...select
+		});
+		const product: AdminProduct | Product = mapProduct(res);
 		return NextResponse.json({ product });
 	} catch (error) {
 		console.error(error);
@@ -86,11 +75,12 @@ export const PATCH = withAdmin(async (req, {params: { name: shopName, productNam
 	});
 	// update returns null for some reason
 	// query again to get the updated product
-	const product = await prisma.product.findUniqueOrThrow({
+	const res = await prisma.product.findUniqueOrThrow({
 		where: { id: prod.id },
 		...adminProductSelection
 	});
-	return NextResponse.json({ product: mapAdminProduct(product) });
+	const product: AdminProduct = mapProduct(res);
+	return NextResponse.json({ product });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
@@ -99,7 +89,7 @@ export const PATCH = withAdmin(async (req, {params: { name: shopName, productNam
 
 export const DELETE = withAdmin(async (_: NextRequest, {params: { name, productName }}: Params) => {
   try {
-	const product = await prisma.product.delete({
+	const res = await prisma.product.delete({
 		where: {
 			name_shopName: {
 				name: productName,
@@ -108,7 +98,8 @@ export const DELETE = withAdmin(async (_: NextRequest, {params: { name, productN
 		},
 		...adminProductSelection
 	});
-	return NextResponse.json({ product: mapAdminProduct(product) });
+	const product: AdminProduct = mapProduct(res);
+	return NextResponse.json({ product });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
