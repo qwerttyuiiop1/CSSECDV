@@ -37,7 +37,10 @@ export default function UserCard({ onSubmit, onBack, data }: PfpCardProps) {
       });
     else onSubmit({ ...v, recaptcha });
   });
-  const handleBack = () => onBack(form.getValues());
+  const handleBack = () => {
+    form.setValue("pfp", [] as unknown as FileList);
+    onBack(form.getValues());
+  };
   useFormError(form);
   return (
     <FormContainer form={form}>
