@@ -32,7 +32,6 @@ model User {
   email         	String		@id
   role				UserRole	@default(UNVERIFIED)
 
-  walletConnected	Boolean		@default(false) @map(name: "wallet_connected")
   points			Float		@default(0.0)
 
   phoneVerified		Boolean		@default(false) @map(name: "phone_verified")

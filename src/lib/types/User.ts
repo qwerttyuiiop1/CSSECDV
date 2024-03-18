@@ -5,13 +5,12 @@ export type DBUser = _DBUser
 const a: DBUser = {} as any
 
 export type User = Pick<DBUser, 
-	'name' | 'email' | 'email' | 'role' | 'walletConnected' | 'points' | 'cartId'> & { image: string; }
+	'name' | 'email' | 'email' | 'role' | 'points' | 'cartId'> & { image: string; }
 type UserSelect = Omit<User, 'image'> & { imageid: string | null; }
 export const userSelection: Record<keyof UserSelect, true> = {
 	name: true,
 	email: true,
 	role: true,
-	walletConnected: true,
 	points: true,
 	imageid: true,
 	cartId: true,
@@ -30,7 +29,6 @@ export const userDetailSelection: Record<keyof UserDetailSelect, true> = {
     country: true,
     mobileno: true,
     role: true,
-	walletConnected: true,
 	points: true,
 	imageid: true,
 	cartId: true,

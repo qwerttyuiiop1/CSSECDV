@@ -8,12 +8,6 @@ import { signOut, useSession } from "next-auth/react";
 import { User } from "@type/User";
 import { UserRole } from "@prisma/client";
 
-let defaultUser: any = {
-    name: "BrOdin",
-    points: 25.1234,
-    isAdmin: true,
-    walletConnected: true
-};
 
 export default function Navbar() {
 	const { data: session } = useSession();
@@ -28,7 +22,6 @@ export default function Navbar() {
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
             <ProfileComponent user={user} />
-            <WalletConnectBox isConnected={Boolean(user?.walletConnected) || false} />
             <NavLink href="/cart"><img src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
             <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
@@ -51,34 +44,6 @@ const NavLink: React.FC<{
 
     return (
         <Link href={href} className={className}>{children}</Link>
-    );
-}
-
-function WalletConnectBox({ isConnected = false }) { //TODO: fix types
-    let connect_style = null;
-    let connect_text = null;
-    let connect_src = null;
-
-    if (isConnected) {
-        connect_style = styles.connected;
-        connect_text = "Connected";
-        connect_src = "/wallet_connected.svg"
-    } else {
-        connect_style = styles.not_connected;
-        connect_text = "Not Connected";
-        connect_src = "/wallet_notconnected.svg"
-    }
-
-    return (
-        <NavLink href="/wallet/connect" className={`${styles.navlink} ${styles.connect_container}`} enableHighlight={false}>
-            <div className={`${styles.connect} ${connect_style}`}>
-                {connect_text}
-                {/* TODO: there is a few pixels gap between the img and the border, fix 
-				also fix alt
-				*/}
-                <img className={styles.connect_icon} src={connect_src} alt=""/>
-            </div>
-        </NavLink>
     );
 }
 
