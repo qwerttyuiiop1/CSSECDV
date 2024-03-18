@@ -53,7 +53,27 @@ model User {
   rel_image			Image?		@relation("PfpImage", fields: [imageid], references: [id])
   images			Image[]		@relation("UserImages")
   
+  cartId			String		@unique @map(name: "cart_id")
+  cart				Cart		@relation(fields: [cartId], references: [id])
+  
   @@map(name: "users")
+}
+model Cart {
+  id		String		@id	@default(cuid())
+  items		CartItem[]
+  owner		User?
+  @@map(name: "carts")
+}
+model CartItem {
+  cartId		String
+  productId		Int
+  quantity		Int
+  updatedAt		DateTime	@updatedAt
+
+  product		Product		@relation(fields: [productId], references: [id])
+  cart			Cart		@relation(fields: [cartId], references: [id])
+  @@map(name: "cart_items")
+  @@id([cartId, productId])
 }
 
 // shop having a version doesn't make sense
@@ -105,6 +125,7 @@ model Product {
   product		ProductH	@relation(fields: [id, version, name, shopId], references: [id, version, name, shopId])
   shop		Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
   codes		Code[]
+  rel_cart	CartItem[]
 
   @@id([name, shopName])
   @@map(name: "products")

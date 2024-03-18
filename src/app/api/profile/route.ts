@@ -36,7 +36,8 @@ export const POST = async (req: NextRequest) => {
 			...data,
 			rel_image: {
 				create: { file: res.pfp }
-			}
+			},
+			cart: { create: {} }
 		},
 		select: userDetailSelection
 	});
