@@ -59,6 +59,38 @@ export const POST = withUser(async (req) => {
 			error = "Insufficient points";
 			throw new Error(error);
 		}
+		const res_codes = (await Promise.all(
+			cart.items.map(async item => {
+			  return await prisma.code.findMany({
+				where: {
+				  productId: item.product.product.id,
+				  isUsed: null
+				},
+				take: item.quantity,
+				select: {
+				  code: true,
+				  productId: true
+				}
+			  })
+			})
+		));
+		const codes = res_codes.map(codes => {
+			if (codes.length === 0)
+				return [];
+			const product = cart.items.find(item => 
+				item.product.product.id === codes[0].productId)
+				?.product.product;
+			if (!product) {
+				error = "Product not found";
+				throw new Error(error);
+			}
+			return codes.map(code => ({
+				shopId: product.shopId,
+				productId: product.id,
+				productVersion: product.version,
+				code: code.code
+			}))
+		}).flat();
 		const transaction = await prisma.transaction.create({
 			data: {
 			  type: TransactionType.PURCHASE,
@@ -69,52 +101,48 @@ export const POST = withUser(async (req) => {
 				}
 			  },
 			  pointsBalance: user.points,
-			}
-		})
-		const codes = (await Promise.all(
-			cart.items.map(async item => {
-			  return await prisma.code.findMany({
-				where: {
-				  productId: item.product.product.id,
-				  isUsed: null
-				},
-				take: item.quantity
-			  })
-			})
-		)).flat();
-		if (codes.length === 0) {
-			error = "No codes available";
-			throw new Error(error);
-		}
-		const test = codes[0];
-		await prisma.codeH.create({
-		  data: {
-			transactionItem: {
-			  connect: { id: transaction.id }
-			},
-			rel_code: {
-			  connect: {
-				code_shopId: {
-				  code: test.code,
-				  shopId: test.shopId
+			  items: {
+				createMany: {
+				  data: codes
 				}
 			  }
 			},
-			rel_product: {
-			  connect: {
-				id_version: {
-				  id: test.productId,
-				  version: 1
+			include: {
+				items: true
+			}
+		});
+		await prisma.cartItem.deleteMany({
+			where: {
+			  cartId: req.user.cartId
+			}
+		});
+		const items = cart.items.map(item => {
+			const count = transaction.items.filter(code => 
+			  code.productId === item.product.product.id).length;
+			return {
+				quantity: item.quantity - count,
+				productId: item.product.product.id,
+			}
+		}).filter(item => item.quantity > 0)
+		await prisma.cart.update({
+			where: {
+			  id: req.user.cartId
+			},
+			data: {
+			  items: {
+				createMany: {
+				  data: items.map((item, i) => ({
+					...item,
+					cartItemNo: i
+				  }))
 				}
 			  }
 			}
-		  }
-		})
+		});
 	}, {
 		isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead
 	})
-	//return NextResponse.json(transaction);
-	return NextResponse.json({ error: error || "Success" }, { status: 200 });
+	return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (error) {
 	console.error(error);
 	return NextResponse.json({ error: error || "Something went wrong" }, { status: 500 });
