@@ -56,7 +56,8 @@ export const authOptions: NextAuthOptions = {
 			data: {
 				googleId: user.id,
 				email: profile.email,
-				name: profile.name
+				name: profile.name,
+				cart: { create: {} }
 			},
 		});
 	}

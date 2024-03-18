@@ -5,7 +5,7 @@ export type DBUser = _DBUser
 const a: DBUser = {} as any
 
 export type User = Pick<DBUser, 
-	'name' | 'email' | 'email' | 'role' | 'walletConnected' | 'points'> & { image: string; }
+	'name' | 'email' | 'email' | 'role' | 'walletConnected' | 'points' | 'cartId'> & { image: string; }
 type UserSelect = Omit<User, 'image'> & { imageid: string | null; }
 export const userSelection: Record<keyof UserSelect, true> = {
 	name: true,
@@ -14,6 +14,7 @@ export const userSelection: Record<keyof UserSelect, true> = {
 	walletConnected: true,
 	points: true,
 	imageid: true,
+	cartId: true,
 }
 
 export type UserDetail = Omit<DBUser, 'password' | 'createdAt' | 'updatedAt' | 'googleId' | 'imageid'> & { image: string; }
@@ -32,6 +33,7 @@ export const userDetailSelection: Record<keyof UserDetailSelect, true> = {
 	walletConnected: true,
 	points: true,
 	imageid: true,
+	cartId: true,
 }
 
 type UserMapInput = UserSelect | UserDetailSelect
