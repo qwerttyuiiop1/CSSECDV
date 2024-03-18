@@ -36,28 +36,12 @@ export const POST = withUser(async (req) => {
 			error = "Cart not found";
 			throw new Error(error);
 		}
-		if (cart.items.length === 0)
+		cart.items = cart.items.filter(item => item.quantity > 0);
+		if (cart.items.length === 0) {
 			error = "Cart is empty";
-		if (cart.items.some(item => item.quantity < 1))
-			error = "Invalid quantity";
-		if (error)
-			throw new Error(error);
-		const total = cart.items.reduce((acc, item) => acc + item.product.product.price * item.quantity, 0);
-		const user = await prisma.user.update({
-			where: { email: req.user.email },
-			data: {
-			  points: {
-				decrement: total
-			  }
-			},
-			select: {
-			  points: true
-			}
-		})
-		if (user.points < 0) {
-			error = "Insufficient points";
 			throw new Error(error);
 		}
+		
 		const res_codes = (await Promise.all(
 			cart.items.map(item => {
 			  return prisma.code.findMany({
@@ -73,6 +57,7 @@ export const POST = withUser(async (req) => {
 			  })
 			})
 		));
+		let total = 0;
 		const codes = res_codes.map(codes => {
 			if (codes.length === 0)
 				return [];
@@ -83,6 +68,7 @@ export const POST = withUser(async (req) => {
 				error = "Product not found";
 				throw new Error(error);
 			}
+			total += product.price * codes.length;
 			return codes.map(code => ({
 				shopId: product.shopId,
 				productId: product.id,
@@ -90,6 +76,25 @@ export const POST = withUser(async (req) => {
 				code: code.code
 			}))
 		}).flat();
+		if (codes.length === 0) {
+			error = "No codes found";
+			throw new Error(error);
+		}
+		const user = await prisma.user.update({
+			where: { email: req.user.email },
+			data: {
+			  points: {
+				decrement: total
+			  }
+			},
+			select: {
+			  points: true
+			}
+		})
+		if (user.points < 0) {
+			error = "Insufficient points";
+			throw new Error(error);
+		}
 		const transaction = await prisma.transaction.create({
 			data: {
 			  type: TransactionType.PURCHASE,
@@ -138,7 +143,8 @@ export const POST = withUser(async (req) => {
 			}
 		});
 	}, {
-		isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead
+		isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+		timeout: 10 * 1000
 	})
 	return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (error) {

@@ -95,6 +95,7 @@ model ShopH {
   updatedAt		DateTime	@updatedAt
 
   name			String
+  img_src		String		@default("")
 
   isActive  	Shop?
   products		ProductH[]
