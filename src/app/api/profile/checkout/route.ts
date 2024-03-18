@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma/prisma";
 import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
-import { Transaction, transactionSelection } from "@/lib/types/Transaction";
 import { Prisma, TransactionType } from "@prisma/client";
 
 export const POST = withUser(async (req) => {

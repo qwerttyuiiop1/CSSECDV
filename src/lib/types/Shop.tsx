@@ -22,7 +22,7 @@ export type Product = Pick<_Product, "name" | "price" | "tos" | "details" | "cat
 	sales: number,
 	shopName: string
 }
-type DBProduct = {
+export type _DBProduct = {
   product: Omit<Product, 'stock' | 'sales'> & {
 	_count: { purchasedCodes: number }
   }
@@ -67,10 +67,10 @@ export type Shop = Pick<_Shop, "name"> & {
 }
 type DBShop = {
 	name: string,
-	products: DBProduct[]
+	products: _DBProduct[]
 }
 
-type mapProductInput = DBProduct | _DBAdminProduct
+type mapProductInput = _DBProduct | _DBAdminProduct
 type mapProductOutput<T extends mapProductInput> = T extends _DBAdminProduct ? AdminProduct : Product
 export const mapProduct = <T extends mapProductInput>(product: T): mapProductOutput<T> => {
 	if ('codes' in product)
