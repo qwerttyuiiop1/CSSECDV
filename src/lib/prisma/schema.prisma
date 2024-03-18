@@ -66,7 +66,6 @@ model Cart {
 }
 model CartItem {
   cartId		String
-  cartItemNo	Int
   productId		Int
   quantity		Int
   updatedAt		DateTime	@updatedAt
@@ -74,7 +73,7 @@ model CartItem {
   product		Product		@relation(fields: [productId], references: [id])
   cart			Cart		@relation(fields: [cartId], references: [id])
   @@map(name: "cart_items")
-  @@id([cartId, cartItemNo])
+  @@id([cartId, productId])
 }
 
 // shop having a version doesn't make sense

@@ -59,8 +59,8 @@ export const POST = withUser(async (req) => {
 			throw new Error(error);
 		}
 		const res_codes = (await Promise.all(
-			cart.items.map(async item => {
-			  return await prisma.code.findMany({
+			cart.items.map(item => {
+			  return prisma.code.findMany({
 				where: {
 				  productId: item.product.product.id,
 				  isUsed: null
@@ -115,15 +115,16 @@ export const POST = withUser(async (req) => {
 			  cartId: req.user.cartId
 			}
 		});
-		const items = cart.items.map((item, i) => {
+		const items = cart.items.map(item => {
 			const count = transaction.items.filter(code => 
 			  code.productId === item.product.product.id).length;
 			return {
 				quantity: item.quantity - count,
 				productId: item.product.product.id,
-				cartItemNo: i
 			}
 		}).filter(item => item.quantity > 0)
+		if (items.length === 0)
+			return;
 		await prisma.cart.update({
 			where: {
 			  id: req.user.cartId
