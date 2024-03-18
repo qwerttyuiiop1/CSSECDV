@@ -116,12 +116,13 @@ export const POST = withUser(async (req) => {
 			  cartId: req.user.cartId
 			}
 		});
-		const items = cart.items.map(item => {
+		const items = cart.items.map((item, i) => {
 			const count = transaction.items.filter(code => 
 			  code.productId === item.product.product.id).length;
 			return {
 				quantity: item.quantity - count,
 				productId: item.product.product.id,
+				cartItemNo: i
 			}
 		}).filter(item => item.quantity > 0)
 		await prisma.cart.update({
@@ -131,10 +132,7 @@ export const POST = withUser(async (req) => {
 			data: {
 			  items: {
 				createMany: {
-				  data: items.map((item, i) => ({
-					...item,
-					cartItemNo: i
-				  }))
+				  data: items
 				}
 			  }
 			}
