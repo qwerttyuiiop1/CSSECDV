@@ -8,6 +8,7 @@ const getDummy = (numShops = 4, productsPerShop = 4, codesPerProduct = 4): Admin
 			name: `Brand ${i + 1}`,
 			products: [],
 			// ignored
+			img_src: '',
 			id: -1
 		}
 		for (let j = 0; j < productsPerShop; j++) {

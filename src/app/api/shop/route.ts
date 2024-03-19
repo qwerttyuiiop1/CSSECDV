@@ -17,18 +17,24 @@ export const GET = withOptionalUser(async (req) => {
 
 export const POST = withAdmin(async (req: NextRequest) => {
   try {
-	const { name } = await req.json()
+	const { name, img_src } = await req.json()
 	if (!name || name.length < 3) {
 		return NextResponse.json({ error: 'Name must be at least 3 characters long' }, { status: 400 });
 	}
 	const res = await prisma.shopH.create({
 	  data: {
 		name,
-		isActive: { create: {} }
+		isActive: { create: {} },
+		img_src
 	  },
-	  select: { name: true, id: true }
+	  select: { name: true, id: true, img_src: true }
 	});
-	const shop: Shop = { name: res.name, id: res.id, products: [] };
+	const shop: Shop = { 
+		name: res.name, 
+		id: res.id, 
+		products: [], 
+		img_src: res.img_src 
+	};
 	return NextResponse.json({ shop });
   } catch (error) {
 	console.error(error);
