@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { withOptionalUser } from "@/lib/session/withUser";
-
+import prisma from '@prisma'
 export const GET = withOptionalUser(async (req) =>{
 	try {
 		// scripts here

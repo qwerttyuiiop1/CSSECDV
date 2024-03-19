@@ -131,7 +131,6 @@ model Product {
   @@map(name: "products")
   @@unique([id, version, name, shopId])
   @@unique([id, name, shopId, shopName])
-  @@unique([id, shopId])
 }
 model ProductH {
   id			Int			@default(autoincrement())
@@ -182,11 +181,12 @@ model CodeH {
 	code			String
 	isRedeemed		Boolean		@default(false)
 
-	transactionItem	Transaction	@relation(fields: [transactionId], references: [id])
+	transaction		Transaction	@relation(fields: [transactionId], references: [id])
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
-	rel_purchases	Product?	@relation(fields: [productId, shopId], references: [id, shopId])
+	rel_purchases	Product?	@relation(fields: [productId], references: [id])
 	rel_product		ProductH	@relation(fields: [productId, productVersion, shopId], references: [id, version, shopId])
 	@@id([code, shopId])
+	@@unique([code, productId])
 }
 
 model Transaction {

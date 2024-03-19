@@ -10,7 +10,7 @@ export const GET = withUser(async (req) => {
 	  ...transactionSelection
     });
 	const transactions: Transaction[] = res.map(mapTransaction);
-    return NextResponse.json(transactions);
+    return NextResponse.json({ transactions });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
