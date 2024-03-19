@@ -46,16 +46,15 @@ export default function Shops() {
   };
 
   const getCategories = (shop: Shop) => {
-    const categories: Category[] = [];
+    const categories: string[] = [];
     shop.products.forEach((product) => {
       if (product.category) {
-        categories.push(product.category.toString() as Category);
+        categories.push(product.category.toString());
       }
     });
     return categories;
   };
 
-  //return an array of all the prices of a shop's products
   const getPrices = (shop: Shop) => {
     const prices: number[] = [];
     shop.products.forEach((product) => {
@@ -71,22 +70,23 @@ export default function Shops() {
       try {
         const response = await fetch("/api/shop?names=false");
         const data = await response.json();
-        console.log(data.shops);
         setShops(data.shops);
+        setFilteredShops(data.shops);
       } catch (error) {
         console.error("Error fetching shops:", error);
       }
     };
-
     fetchShops();
   }, []);
 
   useEffect(() => {
-    console.log(selectedSortFilter);
+    console.log(categoryCheckedItems);
     const newFilteredShops = shops.filter((shop) => {
       const categoryPasses =
         Object.keys(categoryCheckedItems).length === 0 ||
-        categoryCheckedItems[getCategories(shop)[0]];
+        categoryCheckedItems[
+          Category[getCategories(shop)[0] as keyof typeof Category]
+        ];
       const shopPasses =
         Object.keys(shopCheckedItems).length === 0 ||
         shopCheckedItems[shop.name];
@@ -109,7 +109,7 @@ export default function Shops() {
           <h1>Search Filter</h1>
           <h4 className={styles.header_text}>Categories</h4>
           <div className={styles.categories_container}>
-            {Object.values(CategoryMap).map((item, index) => (
+            {Object.values(Category).map((item, index) => (
               <label className={styles.checkbox_label} key={index}>
                 <input
                   type="checkbox"
@@ -162,7 +162,7 @@ export default function Shops() {
           </div>
 
           <div className={styles.shops_container}>
-            {shops.map((shop, index) => (
+            {filteredShops.map((shop, index) => (
               <ShopCard
                 key={index}
                 id={shop.id}
