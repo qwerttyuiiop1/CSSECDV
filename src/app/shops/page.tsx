@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import ShopCard, { Category, Shop } from "@/components/ShopCard/ShopCard";
+import ShopCard, { Category } from "@/components/ShopCard/ShopCard";
 import Dropdown, { DropdownItem } from "@/components/Dropdown/Dropdown";
-import { shops } from "@/assets/data/shops";
+import { Shop } from "@/lib/types/Shop";
+import { CategoryMap } from "@/lib/types/Shop";
 
 const dropdownOptions: DropdownItem[] = [
   { id: 0, label: "Recommended" },
@@ -13,6 +14,7 @@ const dropdownOptions: DropdownItem[] = [
 ];
 
 export default function Shops() {
+  const [shops, setShops] = useState<Shop[]>([]);
   const [categoryCheckedItems, setCategoryCheckedItems] = useState<{
     [key: string]: boolean;
   }>({});
@@ -43,18 +45,53 @@ export default function Shops() {
     setSelectedSortFilter(item);
   };
 
+  const getCategories = (shop: Shop) => {
+    const categories: Category[] = [];
+    shop.products.forEach((product) => {
+      if (product.category) {
+        categories.push(product.category.toString() as Category);
+      }
+    });
+    return categories;
+  };
+
+  //return an array of all the prices of a shop's products
+  const getPrices = (shop: Shop) => {
+    const prices: number[] = [];
+    shop.products.forEach((product) => {
+      if (product.price) {
+        prices.push(product.price);
+      }
+    });
+    return prices;
+  };
+
+  useEffect(() => {
+    const fetchShops = async () => {
+      try {
+        const response = await fetch("/api/shop?names=false");
+        const data = await response.json();
+        console.log(data.shops);
+        setShops(data.shops);
+      } catch (error) {
+        console.error("Error fetching shops:", error);
+      }
+    };
+
+    fetchShops();
+  }, []);
+
   useEffect(() => {
     console.log(selectedSortFilter);
     const newFilteredShops = shops.filter((shop) => {
       const categoryPasses =
         Object.keys(categoryCheckedItems).length === 0 ||
-        categoryCheckedItems[shop.category];
+        categoryCheckedItems[getCategories(shop)[0]];
       const shopPasses =
         Object.keys(shopCheckedItems).length === 0 ||
-        shopCheckedItems[shop.shopName];
+        shopCheckedItems[shop.name];
       return categoryPasses && shopPasses;
     });
-
     if (
       Object.values(categoryCheckedItems).every((checked) => !checked) &&
       Object.values(shopCheckedItems).every((checked) => !checked)
@@ -72,7 +109,7 @@ export default function Shops() {
           <h1>Search Filter</h1>
           <h4 className={styles.header_text}>Categories</h4>
           <div className={styles.categories_container}>
-            {Object.values(Category).map((item, index) => (
+            {Object.values(CategoryMap).map((item, index) => (
               <label className={styles.checkbox_label} key={index}>
                 <input
                   type="checkbox"
@@ -92,10 +129,10 @@ export default function Shops() {
                 <input
                   type="checkbox"
                   className={styles.checkbox}
-                  onChange={() => handleShopCheckboxChange(shop.shopName)}
-                  checked={shopCheckedItems[shop.shopName] || false}
+                  onChange={() => handleShopCheckboxChange(shop.name)}
+                  checked={shopCheckedItems[shop.name] || false}
                 />
-                <h4 className={styles.filter_item_name}>{shop.shopName}</h4>
+                <h4 className={styles.filter_item_name}>{shop.name}</h4>
               </label>
             ))}
           </div>
@@ -125,14 +162,14 @@ export default function Shops() {
           </div>
 
           <div className={styles.shops_container}>
-            {filteredShops.map((shop, index) => (
+            {shops.map((shop, index) => (
               <ShopCard
-				key={index}
+                key={index}
                 id={shop.id}
-                src={shop.src}
-                shopName={shop.shopName}
-                availableVouchers={shop.availableVouchers}
-                category={shop.category}
+                src={shop.img_src}
+                shopName={shop.name}
+                availableVouchers={getPrices(shop)}
+                category={getCategories(shop)[0]}
               />
             ))}
           </div>
