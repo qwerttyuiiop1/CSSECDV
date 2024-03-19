@@ -214,9 +214,10 @@ function Page({cart, setCart, onRefresh}: {
             <p> {totalPrice} RP</p>
           </div>
           <div className={styles.redeem_code}>
+			<h3>Promo Code:</h3>
             <input
               type="text"
-              placeholder="Redeem Code"
+              placeholder="Type Promo Code..."
               value={redeemCode || ""}
               onChange={(e) => setRedeemCode(e.target.value)}
             />
