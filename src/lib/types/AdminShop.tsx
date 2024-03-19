@@ -1,4 +1,4 @@
-import { Code, Product, Shop, mapProduct, mapShop } from "./Shop"
+import { Code, Product, Shop, mapProduct, mapShop, productSelection } from "./Shop"
 import prisma from "@prisma"
 
 async function errors() {
@@ -41,39 +41,20 @@ export type _DBAdminProduct = {
 
 export const adminProductSelection = {
   select: {
-	shopName: true,
-	product: {
-	  select: {
-		name: true,
-		price: true,
-		tos: true,
-		details: true,
-		category: true,
-		id: true,
-		_count: {
-		  select: {
-			purchasedCodes: true
-		  }
-		}
-	  },
-	},
 	codes: adminCodeSelection,
-	_count: {
-	  select: {
-		codes: {
-		  where: {
-			isUsed: null
-		  }
-		}
-	  }
-	}
+	...productSelection.select
   }
 }
 export const adminShopSelection = {
   select: {
 	name: true,
 	products: adminProductSelection,
-	id: true
+	id: true,
+	shop: {
+	  select: {
+		img_src: true
+	  }
+	}
   }
 }
 
@@ -82,7 +63,10 @@ export type AdminShop = Omit<Shop, 'products'> & {
 }
 export type _DBAdminShop = {
 	name: string,
-	products: _DBAdminProduct[]
+	products: _DBAdminProduct[],
+	shop: {
+		img_src: string
+	}
 }
 export {
   mapProduct,

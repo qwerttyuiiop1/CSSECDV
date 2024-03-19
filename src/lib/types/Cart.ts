@@ -3,6 +3,18 @@ import {
 	CartItem as _CartItem,
 } from "@prisma/client";
 import { Product, _DBProduct, mapProduct, productSelection } from "./Shop";
+import prisma from '@prisma';
+async function errors() {
+	const res1: DBCart = await prisma.cart.findFirstOrThrow({
+		...cartSelection,
+	})
+	const cart: Cart = mapCart(res1)
+
+	const res2: DBCartItem = await prisma.cartItem.findFirstOrThrow({
+		...cartItemSelection,
+	})
+	const cartItem: CartItem = mapCartItem(res2)
+}
 
 export const cartItemSelection = {
   select: {

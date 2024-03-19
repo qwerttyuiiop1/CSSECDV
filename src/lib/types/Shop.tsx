@@ -78,15 +78,24 @@ export const shopSelection = {
   select: {
 	name: true,
 	id: true,
-	products: productSelection
+	products: productSelection,
+	shop: {
+	  select: {
+		img_src: true
+	  }
+	}
   }
 }
 export type Shop = Pick<_Shop, "name" | "id"> & {
-	products: Product[]
+	products: Product[],
+	img_src: string
 }
 type DBShop = {
 	name: string,
-	products: _DBProduct[]
+	products: _DBProduct[],
+	shop: {
+	  img_src: string
+	}
 }
 
 type mapProductInput = _DBProduct | _DBAdminProduct
@@ -113,7 +122,8 @@ type mapShopOutput<T extends mapShopInput> = T extends _DBAdminShop ? AdminShop 
 export const mapShop = <T extends mapShopInput>(shop: T): mapShopOutput<T> => {
 	return {
 		name: shop.name,
-		products: shop.products.map(mapProduct)
+		products: shop.products.map(mapProduct),
+		img_src: shop.shop.img_src
 	} as mapShopOutput<T>
 }
 
