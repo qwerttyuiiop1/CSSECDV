@@ -147,8 +147,10 @@ export const POST = withUser(async (req) => {
 		timeout: 10 * 1000
 	})
 	return NextResponse.json({ message: "Success" }, { status: 200 });
-  } catch (error) {
-	console.error(error);
-	return NextResponse.json({ error: error || "Something went wrong" }, { status: 500 });
+  } catch (_error) {
+	console.error(_error);
+	if (error)
+		return NextResponse.json({ error }, { status: 400 });
+	return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 });

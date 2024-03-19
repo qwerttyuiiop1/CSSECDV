@@ -4,6 +4,8 @@ import styles from "./page.module.css";
 import coinAnimation from "../../assets/lottie/animation_coin.json";
 import Lottie from "lottie-react";
 import { CartItem, Cart } from "@type/Cart";
+import { DefaultToastContainer } from "@/components/Providers/Forms";
+import { toast } from "react-toastify";
 
 type GroupedItem = {
 	shopName: string;
@@ -31,7 +33,6 @@ function Page({cart, setCart, refresh}: {
   }
 
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]);
-  const [selectedItemDescription, setSelectedItemDescription] = useState<string | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [groupedItems, setGroupedItems] = useState<GroupedItem[]>([]);
   const [redeemCode, setRedeemCode] = useState<string | null>(null); 
@@ -40,10 +41,10 @@ function Page({cart, setCart, refresh}: {
 	setGroupedItems(groupItems(cart));
   }, [cart, cart.items, cart.items.length]);
   useEffect(() => {
-	setSelectedItems(new Array(cart?.items.length || 0).fill(false));
-  }, [isSelecting, cart])
+	setSelectedItems(new Array(cart.items.length || 0).fill(false));
+  }, [isSelecting, cart.items.length]);
 
-  const handleToggleSelect = (i: number) => {
+  const handleItemSelect = (i: number) => {
     setSelectedItems((prevSelected) => {
 	  const a = [...prevSelected];
 	  a[i] = !a[i];
@@ -55,31 +56,20 @@ function Page({cart, setCart, refresh}: {
 	const toDelete = cart.items.filter((_, i) => selectedItems[i]);
 	if (toDelete.length === 0)
 	  return;
-
 	const res = await Promise.all(toDelete.map(item => 
-	  fetch('/api/cart/' + item.product.id, {
+	  fetch('/api/profile/cart/' + item.product.id, {
 		method: 'DELETE',
 	  })
 	));
+	if (res.some(r => !r.ok))
+	  toast.error('Failed to remove items');
+	else
+	  toast.success('Items removed');
     await refresh();
   };
-  
-  
-  const handleItemClick = (i: number) => {
-    if (isSelecting) {
-      handleToggleSelect(i);
-    } else {
-      setSelectedItemDescription(cart.items[i].product.details);
-    }
-  };
 
-  const handleStartSelection = () => {
-    setIsSelecting(true);
-  };
-
-  const handleCancelSelection = () => {
-    setIsSelecting(false);
-  };
+  const handleStartSelection = () => setIsSelecting(true);
+  const handleCancelSelection = () => setIsSelecting(false);
 
   function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -97,8 +87,11 @@ function Page({cart, setCart, refresh}: {
 	  method: 'POST',
 	  body: JSON.stringify({ quantity: qty, productId: productId }),
 	});
-	if (!res.ok) return;
 	const data = await res.json();
+	if (!res.ok) {
+		toast.error(data.error || 'Failed to update quantity');
+		return;
+	}
 	setCart((cart) => {
 	  if (!cart) return null;
 	  const newCart = { ...cart };
@@ -136,11 +129,15 @@ function Page({cart, setCart, refresh}: {
 
   const handleCheckout = async () => {
     setIsSelecting(false);
-	const res = await fetch('/api/cart/checkout', {
+	const res = await fetch('/api/profile/checkout', {
 	  method: 'POST',
 	  body: JSON.stringify({ redeemCode }),
 	});
-	if (!res.ok) return;
+	const json = await res.json();
+	if (!res.ok)
+	  toast.error(json.error);
+	else
+	  toast.success('Checkout successful');
 	await refresh();
   };
 
@@ -163,7 +160,7 @@ function Page({cart, setCart, refresh}: {
                   <input
                     type="checkbox"
                     checked={selectedItems[id] || false}
-                    onChange={() => handleToggleSelect(id)}
+                    onChange={() => handleItemSelect(id)}
                   />
                 )}
                 <div className={styles.item_info}>
@@ -265,5 +262,8 @@ export default function PageWrapper() {
 	setCart(data.cart);
   }
 
-  return cart ? <Page cart={cart} setCart={setCart} refresh={handleRefresh}/> : null;
+  return <div>
+	<DefaultToastContainer/>
+	{cart ? <Page cart={cart} setCart={setCart} refresh={handleRefresh}/> : null}
+  </div>;
 }
