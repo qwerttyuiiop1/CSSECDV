@@ -36,10 +36,7 @@ export const POST = withAdmin(async (req) => {
                 shopName: res.shop
               }
             }
-          },
-		  shop: {
-			connect: { name: res.shop }
-		  }
+          }
         }
       })
     ));

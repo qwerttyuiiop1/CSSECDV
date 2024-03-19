@@ -84,7 +84,6 @@ model Shop {
 
   shop		ShopH		@relation(fields: [id, name], references: [id, name])
   products	Product[]
-  codes		Code[]
   @@map(name: "shops")
   @@unique([id, name])
 }
@@ -115,22 +114,24 @@ enum ProductCategory {
 }
 
 model Product {
-  id			Int		@unique
-  version		Int
+  id				Int		@unique
+  version			Int
 	
-  name		String
-  shopId		Int
-  shopName	String
+  name				String
+  shopId			Int
+  shopName			String
 
-  product		ProductH	@relation(fields: [id, version, name, shopId], references: [id, version, name, shopId])
-  shop		Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
-  codes		Code[]
-  rel_cart	CartItem[]
+  product			ProductH	@relation(fields: [id, version, name, shopId], references: [id, version, name, shopId])
+  shop				Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
+  codes				Code[]
+  purchasedCodes	CodeH[]
+  rel_cart			CartItem[]
 
   @@id([name, shopName])
   @@map(name: "products")
   @@unique([id, version, name, shopId])
-  @@unique([id, name, shopId])
+  @@unique([id, name, shopId, shopName])
+  @@unique([id, shopId])
 }
 model ProductH {
   id			Int			@default(autoincrement())
@@ -167,8 +168,7 @@ model Code {
   shopName		String		@map(name: "shop_name")
   
   isUsed		CodeH?
-  shop			Shop		@relation(fields: [shopId, shopName], references: [id, name], onDelete: Cascade)
-  product		Product		@relation(fields: [productId, productName, shopId], references: [id, name, shopId])
+  product		Product		@relation(fields: [productId, productName, shopId, shopName], references: [id, name, shopId, shopName])
 
   @@unique([code, shopId])
   @@id([code, shopName])
@@ -183,6 +183,7 @@ model CodeH {
 
 	transactionItem	Transaction	@relation(fields: [transactionId], references: [id])
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
+	rel_purchases	Product?	@relation(fields: [productId, shopId], references: [id, shopId])
 	rel_product		ProductH	@relation(fields: [productId, productVersion, shopId], references: [id, version, shopId])
 	@@id([code, shopId])
 }

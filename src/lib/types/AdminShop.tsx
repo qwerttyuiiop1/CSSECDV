@@ -31,12 +31,13 @@ export type AdminProduct = Product & {
 	codes: AdminCode[]
 }
 export type _DBAdminProduct = {
-	product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
-		_count: { purchasedCodes: number }
-	}
-	_count: { codes: number }
-	codes: AdminCode[],
-	shopName: string
+	product: Omit<Product, 'stock' | 'sales' | 'shopName'>;
+	_count: { 
+		codes: number;
+		purchasedCodes: number;
+	};
+	codes: AdminCode[];
+	shopName: string;
 }
 
 export const adminProductSelection = {
