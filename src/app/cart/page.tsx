@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import coinAnimation from "../../assets/lottie/animation_coin.json";
 import Lottie from "lottie-react";
@@ -12,10 +12,10 @@ type GroupedItem = {
 	})[];
 }
 
-function Page({cart, setCart, onRefresh}: {
+function Page({cart, setCart, refresh}: {
 	cart: Cart, 
-	onRefresh: () => Promise<void>, 
-	setCart: (cart: Cart) => void
+	refresh: () => Promise<void>, 
+	setCart: Dispatch<SetStateAction<Cart|null>>
 }) {
   // Group items by shop
   function groupItems(cart: Cart): GroupedItem[] {
@@ -29,16 +29,6 @@ function Page({cart, setCart, onRefresh}: {
 	  items,
 	}));
   }
-  function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
-    let timeoutId: NodeJS.Timeout | null;
-    return function (...args: Parameters<T>): void {
-        clearTimeout(timeoutId as NodeJS.Timeout);
-        timeoutId = setTimeout(() => {
-            func(...args);
-        }, delay);
-    };
-  }
-
 
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]);
   const [selectedItemDescription, setSelectedItemDescription] = useState<string | null>(null);
@@ -48,7 +38,7 @@ function Page({cart, setCart, onRefresh}: {
 
   useEffect(() => {
 	setGroupedItems(groupItems(cart));
-  }, [cart]);
+  }, [cart, cart.items, cart.items.length]);
   useEffect(() => {
 	setSelectedItems(new Array(cart?.items.length || 0).fill(false));
   }, [isSelecting, cart])
@@ -71,7 +61,7 @@ function Page({cart, setCart, onRefresh}: {
 		method: 'DELETE',
 	  })
 	));
-    await onRefresh();
+    await refresh();
   };
   
   
@@ -91,38 +81,53 @@ function Page({cart, setCart, onRefresh}: {
     setIsSelecting(false);
   };
 
-  const _handleIncrementQuantity = useCallback(async (itemId: number) => {
-	const newQty = cart.items[itemId].quantity + 1;
+  function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
+    let timeoutId: NodeJS.Timeout | null = null;
+    return function (...args: Parameters<T>): void {
+		if (timeoutId !== null)
+        	clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+			timeoutId = null;
+            func(...args);
+        }, delay);
+    };
+  }
+  const _updateQuantity = useCallback(async (productId: number, qty: number) => {
 	const res = await fetch('/api/profile/cart/', {
 	  method: 'POST',
-	  body: JSON.stringify({ quantity: newQty, productId: cart.items[itemId].product.id }),
+	  body: JSON.stringify({ quantity: qty, productId: productId }),
 	});
+	if (!res.ok) return;
 	const data = await res.json();
-	const newCart = { ...cart };
-	newCart.items[itemId] = data.item;
-	setCart(newCart);
-  }, [cart, setCart])
+	setCart((cart) => {
+	  if (!cart) return null;
+	  const newCart = { ...cart };
+	  const itemId = newCart.items.findIndex((item) => item.product.id === productId);
+	  newCart.items[itemId] = data.item;
+	  return newCart;
+	});
+  }, [setCart])
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleIncrementQuantity = useCallback(
-	debounce(_handleIncrementQuantity, 1000), [_handleIncrementQuantity]
-  );
+  const updateQuantity = useCallback(debounce(_updateQuantity, 1000), [_updateQuantity]);
+
+  const handleIncrementQuantity = useCallback((itemId: number) => {
+	const item = cart.items[itemId];
+	const newQty = item.quantity + 1;
+	updateQuantity(item.product.id, newQty);
+	const newCart = { ...cart };
+	newCart.items[itemId].quantity = newQty;
+	setCart(newCart);
+  }, [cart, updateQuantity, setCart]);
   
-  const _handleDecrementQuantity = useCallback(async (itemId: number) => {
-	const newQty = cart.items[itemId].quantity - 1;
+  const handleDecrementQuantity = useCallback((itemId: number) => {
+	const item = cart.items[itemId];
+	const newQty = item.quantity - 1;
 	if (newQty <= 0) return;
-	const res = await fetch('/api/profile/cart/', {
-	  method: 'POST',
-	  body: JSON.stringify({ quantity: newQty, productId: cart.items[itemId].product.id }),
-	});
-	const data = await res.json();
+	updateQuantity(item.product.id, newQty);
 	const newCart = { ...cart };
-	newCart.items[itemId] = data.item;
+	newCart.items[itemId].quantity = newQty;
 	setCart(newCart);
-  }, [cart, setCart]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleDecrementQuantity = useCallback(
-	debounce(_handleDecrementQuantity, 1000), [_handleDecrementQuantity]
-  );
+  }, [cart, updateQuantity, setCart]);
 
   const totalPrice = cart.items.reduce(
     (total, item) => total + item.product.price * item.quantity,
@@ -135,7 +140,8 @@ function Page({cart, setCart, onRefresh}: {
 	  method: 'POST',
 	  body: JSON.stringify({ redeemCode }),
 	});
-	await onRefresh();
+	if (!res.ok) return;
+	await refresh();
   };
 
   
@@ -259,5 +265,5 @@ export default function PageWrapper() {
 	setCart(data.cart);
   }
 
-  return cart ? <Page cart={cart} setCart={setCart} onRefresh={handleRefresh}/> : null;
+  return cart ? <Page cart={cart} setCart={setCart} refresh={handleRefresh}/> : null;
 }
