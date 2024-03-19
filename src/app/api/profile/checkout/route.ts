@@ -22,6 +22,11 @@ export const POST = withUser(async (req) => {
 			}
 		  },
 		  quantity: true
+		},
+		where: {
+		  quantity: {
+			gt: 0
+		  }
 		}
 	  }
 	}
@@ -32,12 +37,7 @@ export const POST = withUser(async (req) => {
 			where: { id: req.user.cartId },
 			...cartSelection
 		});
-		if (!cart) {
-			error = "Cart not found";
-			throw new Error(error);
-		}
-		cart.items = cart.items.filter(item => item.quantity > 0);
-		if (cart.items.length === 0) {
+		if (!cart || cart.items.length === 0) {
 			error = "Cart is empty";
 			throw new Error(error);
 		}

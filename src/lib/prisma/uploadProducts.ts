@@ -6,7 +6,9 @@ const getDummy = (numShops = 4, productsPerShop = 4, codesPerProduct = 4): Admin
 	for (let i = 0; i < numShops; i++) {
 		const shop: AdminShop = {
 			name: `Brand ${i + 1}`,
-			products: []
+			products: [],
+			// ignored
+			id: -1
 		}
 		for (let j = 0; j < productsPerShop; j++) {
 			const product: AdminProduct = {
@@ -20,6 +22,7 @@ const getDummy = (numShops = 4, productsPerShop = 4, codesPerProduct = 4): Admin
 				category: null,
 				stock: -1,
 				sales: -1,
+				id: -1
 			}
 			for (let k = 0; k < codesPerProduct; k++) {
 				const code: AdminCode = {

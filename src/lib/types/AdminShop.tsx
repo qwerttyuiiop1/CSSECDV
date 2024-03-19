@@ -1,12 +1,27 @@
 import { Code, Product, Shop, mapProduct, mapShop } from "./Shop"
+import prisma from "@prisma"
 
+async function errors() {
+  const res1 = await prisma.shop.findFirstOrThrow({
+	...adminShopSelection
+  });
+  const shop: AdminShop = mapShop(res1);
+  const res2 = await prisma.product.findFirstOrThrow({
+	...adminProductSelection
+  });
+  const product: AdminProduct = mapProduct(res2);
+  const res3 = await prisma.code.findFirstOrThrow({
+	...adminCodeSelection
+  });
+  const code: AdminCode = res3;
+}
 
 export const adminCodeSelection = {
   select: {
 	productName: true,
 	shopName: true,
 	code: true,
-	isUsed: { select: {} },
+	isUsed: { select: { transactionId: true } },
   }
 }
 export type AdminCode = Code & {
@@ -16,23 +31,25 @@ export type AdminProduct = Product & {
 	codes: AdminCode[]
 }
 export type _DBAdminProduct = {
-	product: Omit<Product, 'stock' | 'sales'> & {
+	product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
 		_count: { purchasedCodes: number }
 	}
 	_count: { codes: number }
-	codes: AdminCode[]
+	codes: AdminCode[],
+	shopName: string
 }
 
 export const adminProductSelection = {
   select: {
+	shopName: true,
 	product: {
 	  select: {
 		name: true,
-		shopName: true,
 		price: true,
 		tos: true,
 		details: true,
 		category: true,
+		id: true,
 		_count: {
 		  select: {
 			purchasedCodes: true
@@ -55,7 +72,8 @@ export const adminProductSelection = {
 export const adminShopSelection = {
   select: {
 	name: true,
-	products: adminProductSelection
+	products: adminProductSelection,
+	id: true
   }
 }
 

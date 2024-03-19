@@ -26,9 +26,9 @@ export const POST = withAdmin(async (req: NextRequest) => {
 		name,
 		isActive: { create: {} }
 	  },
-	  select: { name: true }
+	  select: { name: true, id: true }
 	});
-	const shop: Shop = { name: res.name, products: [] };
+	const shop: Shop = { name: res.name, id: res.id, products: [] };
 	return NextResponse.json({ shop });
   } catch (error) {
 	console.error(error);

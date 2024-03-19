@@ -5,6 +5,7 @@ import {
 	ProductCategory 
 } from '@prisma/client';
 import { AdminProduct, AdminShop, _DBAdminProduct, _DBAdminShop } from './AdminShop';
+import prisma from '@prisma';
 
 export const codeSelection = {
   select: {
@@ -17,23 +18,32 @@ export type CodeId = [shopName: string, codeName: string];
 export type Code = Pick<_Code, "productName" | "shopName" | "code">
 
 export type ProductId = [shopName: string, productName: string];
-export type Product = Pick<_Product, "name" | "price" | "tos" | "details" | "category"> & {
+export type Product = Pick<_Product, "name" | "price" | "tos" | "details" | "category" | "id"> & {
 	stock: number,
 	sales: number,
 	shopName: string
 }
 export type _DBProduct = {
-  product: Omit<Product, 'stock' | 'sales'> & {
+  product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
 	_count: { purchasedCodes: number }
   }
-  _count: { codes: number }
+  _count: { codes: number },
+  shopName: string
 }
+async function foo() {
+	const res = await prisma.product.findFirstOrThrow({
+		...productSelection
+	});
+	const product: Product = mapProduct(res);
+}
+
 export const productSelection = {
   select: {
+	shopName: true,
 	product: {
 	  select: {
+		id: true,
 		name: true,
-		shopName: true,
 		price: true,
 		tos: true,
 		details: true,
@@ -59,10 +69,11 @@ export const productSelection = {
 export const shopSelection = {
   select: {
 	name: true,
+	id: true,
 	products: productSelection
   }
 }
-export type Shop = Pick<_Shop, "name"> & {
+export type Shop = Pick<_Shop, "name" | "id"> & {
 	products: Product[]
 }
 type DBShop = {
@@ -79,11 +90,13 @@ export const mapProduct = <T extends mapProductInput>(product: T): mapProductOut
 			codes: product.codes,
 			stock: product._count.codes,
 			sales: product.product._count.purchasedCodes,
+			shopName: product.shopName
 		} as AdminProduct
 	return {
 		...product.product,
 		stock: product._count.codes,
 		sales: product.product._count.purchasedCodes,
+		shopName: product.shopName
 	} as Product as mapProductOutput<T>
 }
 
