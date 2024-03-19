@@ -180,6 +180,7 @@ model CodeH {
 	productVersion	Int
 	transactionId	String
 	code			String
+	isRedeemed		Boolean		@default(false)
 
 	transactionItem	Transaction	@relation(fields: [transactionId], references: [id])
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
