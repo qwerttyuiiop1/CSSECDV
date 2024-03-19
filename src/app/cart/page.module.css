@@ -70,7 +70,9 @@
   width: 100%; /* Expand the input to fill the width of its container */
   padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 0.5rem;
+  background-color: #ccc;
+  color: black;
+  border-radius: 0.2rem;
   font-size: 1rem;
   margin-top: 0.5rem; /* Add some spacing between the input and buttons */
 }
