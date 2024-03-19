@@ -4,7 +4,6 @@ import styles from "./page.module.css";
 import coinAnimation from "../../assets/lottie/animation_coin.json";
 import Lottie from "lottie-react";
 import { CartItem, Cart } from "@type/Cart";
-import { it } from "node:test";
 
 type GroupedItem = {
 	shopName: string;

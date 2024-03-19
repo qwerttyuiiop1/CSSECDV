@@ -1,4 +1,16 @@
 import { User as _DBUser } from '@prisma/client'
+import prisma from '@prisma'
+
+async function errors() {
+	const res1: UserSelect = await prisma.user.findFirstOrThrow({
+		select: userSelection,
+	})
+	const user: User = mapUser(res1)
+	const res2: UserDetailSelect = await prisma.user.findFirstOrThrow({
+		select: userDetailSelection,
+	})
+	const userDetail: UserDetail = mapUser(res2)
+}
 
 export type DBUser = _DBUser
 const a: DBUser = {} as any

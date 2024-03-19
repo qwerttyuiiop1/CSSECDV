@@ -6,6 +6,20 @@ import {
 } from '@prisma/client';
 import { AdminProduct, AdminShop, _DBAdminProduct, _DBAdminShop } from './AdminShop';
 import prisma from '@prisma';
+async function errors() {
+	const res1: DBShop = await prisma.shop.findFirstOrThrow({
+		...shopSelection,
+	})
+	const shop: Shop = mapShop(res1)
+	const res2: _DBProduct = await prisma.product.findFirstOrThrow({
+		...productSelection,
+	})
+	const product: Product = mapProduct(res2)
+	const res3: Code = await prisma.code.findFirstOrThrow({
+		...codeSelection,
+	})
+	const code: Code = res3
+}
 
 export const codeSelection = {
   select: {
@@ -29,12 +43,6 @@ export type _DBProduct = {
   }
   _count: { codes: number },
   shopName: string
-}
-async function foo() {
-	const res = await prisma.product.findFirstOrThrow({
-		...productSelection
-	});
-	const product: Product = mapProduct(res);
 }
 
 export const productSelection = {
