@@ -21,16 +21,15 @@ import {
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import User404, { UserLoading } from "../404";
+import { toast } from "react-toastify";
 
 // TODO: lottie animation for loading
 
 function Page({ id }: { id: string }) {
   const form = useForm();
-  const router = useRouter();
-  const toast = useFormError(form);
   const onSubmit = form.handleSubmit(async (data) => {
     const { old_password, new_password } = data;
-    const res = await fetch(`/api/profile/${id}`, {
+    const res = await fetch(`/api/profile`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +43,7 @@ function Page({ id }: { id: string }) {
     if (res.ok) {
       toast.success("Password updated");
     } else {
-      toast.error(json.message);
+      toast.error(json.error);
     }
   });
   return (
