@@ -4,7 +4,6 @@ import styles from "./page.module.css";
 import ShopCard, { Category } from "@/components/ShopCard/ShopCard";
 import Dropdown, { DropdownItem } from "@/components/Dropdown/Dropdown";
 import { Shop } from "@/lib/types/Shop";
-import { CategoryMap } from "@/lib/types/Shop";
 
 const dropdownOptions: DropdownItem[] = [
   { id: 0, label: "Recommended" },
@@ -70,6 +69,7 @@ export default function Shops() {
       try {
         const response = await fetch("/api/shop?names=false");
         const data = await response.json();
+        console.log(data);
         setShops(data.shops);
         setFilteredShops(data.shops);
       } catch (error) {
@@ -169,7 +169,7 @@ export default function Shops() {
                 src={shop.img_src}
                 shopName={shop.name}
                 availableVouchers={getPrices(shop)}
-                category={getCategories(shop)[0]}
+                category={getCategories(shop)[0] as Category}
               />
             ))}
           </div>

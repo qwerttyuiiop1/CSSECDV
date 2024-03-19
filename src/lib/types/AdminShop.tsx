@@ -63,6 +63,7 @@ export type AdminShop = Omit<Shop, 'products'> & {
 	products: AdminProduct[]
 }
 export type _DBAdminShop = {
+	id: number,
 	name: string,
 	products: _DBAdminProduct[],
 	shop: {
