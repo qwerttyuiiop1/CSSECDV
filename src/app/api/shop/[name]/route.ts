@@ -12,6 +12,19 @@ type Params = {
 }
 export const GET = withOptionalUser(async (req, {params: { name }}: Params) => {
 	try {
+		const all = req.nextUrl.searchParams.get('all') !== 'false';
+		if (!all) {
+			const res = await prisma.shop.findUniqueOrThrow({
+				where: { name },
+				select: {
+					...shopSelection.select,
+					products: undefined
+				}
+			});
+			(res as any).products = [];
+			const shop: Shop = mapShop(res as typeof res & { products: [] });
+			return NextResponse.json({ shop });
+		}
 		const select = req.isAdmin ? adminShopSelection : shopSelection;
 		const res = await prisma.shop.findUniqueOrThrow({
 			where: { name },

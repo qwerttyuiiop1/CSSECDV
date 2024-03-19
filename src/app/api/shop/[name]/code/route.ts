@@ -25,9 +25,6 @@ export const POST = withAdmin(async (req: NextRequest, {params: { name: shopName
 						shopName
 					}
 				}
-			},
-			shop: {
-				connect: { name: shopName }
 			}
 		},
 		select: adminCodeSelection.select

@@ -1,14 +1,15 @@
 import prisma from "@prisma";
 import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
-import { transactionSelection } from "@type/Transaction";
+import { Transaction, mapTransaction, transactionSelection } from "@type/Transaction";
 
 export const GET = withUser(async (req) => {
   try {
-    const transactions = await prisma.transaction.findMany({
+    const res = await prisma.transaction.findMany({
       where: { userEmail: req.user.email},
 	  ...transactionSelection
     });
+	const transactions: Transaction[] = res.map(mapTransaction);
     return NextResponse.json(transactions);
   } catch (error) {
     console.error(error);

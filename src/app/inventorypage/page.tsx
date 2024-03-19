@@ -12,7 +12,7 @@ export interface InventoryItem {
   imageSrc: string; // Add imageSrc property
 }
 
-export default function InventoryPage() {
+function InventoryPage() {
   // Sample data for user inventory
   const initialInventory: InventoryItem[] = [
     { id: 1, name: 'App Store P500 Voucher ', redeemed: false, code: 'ABC-DEF-GHI', imageSrc: "https://images.macrumors.com/t/idlrs_bvpmrXXsR7jhkKiPFbr7A=/400x400/smart/article-new/2022/01/iOS-App-Store-General-Feature-JoeBlue.jpg" },
@@ -180,4 +180,8 @@ export default function InventoryPage() {
       </div>
     </div>
   );
+}
+
+export default function Wrapper() {
+	return <></>
 }

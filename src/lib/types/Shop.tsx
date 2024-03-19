@@ -38,10 +38,8 @@ export type Product = Pick<_Product, "name" | "price" | "tos" | "details" | "cat
 	shopName: string
 }
 export type _DBProduct = {
-  product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
-	_count: { purchasedCodes: number }
-  }
-  _count: { codes: number },
+  product: Omit<Product, 'stock' | 'sales' | 'shopName'>
+  _count: { codes: number, purchasedCodes: number },
   shopName: string
 }
 
@@ -55,12 +53,7 @@ export const productSelection = {
 		price: true,
 		tos: true,
 		details: true,
-		category: true,
-		_count: {
-		  select: {
-			purchasedCodes: true
-		  }
-		}
+		category: true
 	  },
 	},
 	_count: {
@@ -69,7 +62,8 @@ export const productSelection = {
 		  where: {
 			isUsed: null
 		  }
-		}
+		},
+		purchasedCodes: true
 	  }
 	}
   }
@@ -106,13 +100,13 @@ export const mapProduct = <T extends mapProductInput>(product: T): mapProductOut
 			...product.product,
 			codes: product.codes,
 			stock: product._count.codes,
-			sales: product.product._count.purchasedCodes,
+			sales: product._count.purchasedCodes,
 			shopName: product.shopName
 		} as AdminProduct
 	return {
 		...product.product,
 		stock: product._count.codes,
-		sales: product.product._count.purchasedCodes,
+		sales: product._count.purchasedCodes,
 		shopName: product.shopName
 	} as Product as mapProductOutput<T>
 }
