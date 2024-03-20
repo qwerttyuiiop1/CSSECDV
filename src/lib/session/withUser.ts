@@ -21,7 +21,6 @@ const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 			ureq.token = token;
 			ureq.isAdmin = ureq.user.role === UserRole.ADMIN;
 		}
-		console.log('token', token)
 		return handler(ureq, t);
 	}
 const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
