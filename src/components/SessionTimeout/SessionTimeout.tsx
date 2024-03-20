@@ -26,8 +26,8 @@ const YourComponent: React.FC = () => {
   const resetTime = useCallback(async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
-      console.log("Session timeout");
       if (user != null) {
+		console.log("Session timeout");
         console.log("Logging out user");
         await signOut({ redirect: false });
         router.push("/profile/login");
