@@ -22,9 +22,9 @@ export default function Navbar() {
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
             <ProfileComponent user={user} />
-            <NavLink href="/cart"><img src="/cart.svg" alt=""/></NavLink> {/* fix alt */}
+            <UserComponent user={user} className="cart" /> {/* fix alt */}
             <NavLink href="/shops"><h3>Shop</h3></NavLink>
-            <NavLink href="/wallet"><h3>Wallet</h3></NavLink>
+            <UserComponent user={user} className="wallet" />
             <NavLink href="/"><h3>Home</h3></NavLink>
             <AdminComponent user={user} />
         </nav>
@@ -149,5 +149,31 @@ function AdminComponent({ user }: { user: User | undefined }) {
         </NavDropdown>
     ) : (
         <></> 
+    );
+}
+
+function UserComponent({ user, className }: { user: User | undefined, className?: string }) {
+    const pathname = usePathname();
+    const userOptions = [
+        {href: "/cart", label: "Cart", imgSrc: "/cart.svg"},
+        {href: "/wallet", label: "Wallet"}
+    ];
+
+    return (
+        <div className={className}>
+            {user && userOptions.map((option, index) => {
+                if ((className === 'cart' && option.label === 'Cart') || (className === 'wallet' && option.label === 'Wallet')) {
+                    return (
+                        <Link key={index} href={option.href}>
+                            {option.imgSrc ? 
+                                <img className={`${styles.navlink} ${styles.cartImage} ${pathname === option.href && styles.active}`} src={option.imgSrc} alt={option.label} /> :
+                                <h3 className={`${styles.navlink} ${pathname === option.href && styles.active}`}>{option.label}</h3>
+                            }
+                        </Link>
+                    )
+                }
+                return null;
+            })}
+        </div>
     );
 }
