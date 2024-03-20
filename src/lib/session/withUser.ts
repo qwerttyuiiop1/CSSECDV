@@ -3,38 +3,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { User } from "../types/User";
 import { UserRole } from "@prisma/client";
 
-type UserRequest = NextRequest & {
+type Extra = {
 	user: User
 	token: JWT
+	isAdmin: boolean
 }
-type OptionalRequest = NextRequest & {
-	user?: User
-	token?: JWT
-	isAdmin?: boolean
-}
+type UserRequest = NextRequest & Extra
+type OptionalRequest = NextRequest & (Extra | { [K in keyof Extra]: null | undefined })
 export type UserHandler<T> = (req: UserRequest, params: T) => NextResponse | Promise<NextResponse>;
 export type OptionalHandler<T> = (req: OptionalRequest, params: T) => NextResponse | Promise<NextResponse>;
 const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 	async (req: NextRequest, t: T) => {
 		const token = await getToken({ req, secret: process.env.SECRET });
 		const ureq = req as OptionalRequest;
-		if (token) {
-			ureq.user = token.user as User;
+		if (token && token.expires >= Date.now()) {
+			ureq.user = token.user;
 			ureq.token = token;
 			ureq.isAdmin = ureq.user.role === UserRole.ADMIN;
 		}
 		return handler(ureq, t);
 	}
-const withAnyUser = <T=undefined>(handler: UserHandler<T>) => 
-	async (req: NextRequest, t: T) => {
-		const token = await getToken({ req, secret: process.env.SECRET });
-		if (!token)
+const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
+	withOptionalUser((req, t: T) => {
+		if (!req.user)
 			return NextResponse.json({ error: "Not logged in" }, { status: 401 });
-		const ureq = req as UserRequest;
-		ureq.token = token;
-		ureq.user = token.user as User;
-		return handler(ureq, t);
-	}
+		return handler(req as UserRequest, t);
+	})
 const withUser = <T=undefined>(handler: UserHandler<T>) =>
 	withAnyUser((req, t: T) => {
 		if (req.user.role === UserRole.UNVERIFIED)

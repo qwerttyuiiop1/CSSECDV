@@ -18,6 +18,7 @@ export const PATCH = withAdmin(async (req: NextRequest, {params: { name, code }}
 				code,
 				shopName: name
 			},
+			isUsed: null
 		},
 		data: {
 			code: newCode
@@ -39,6 +40,7 @@ export const DELETE = withAdmin(async (_: NextRequest, {params: { name, code }}:
 				code: code,
 				shopName: name
 			},
+			isUsed: null
 		},
 		select: adminCodeSelection.select
 	});
