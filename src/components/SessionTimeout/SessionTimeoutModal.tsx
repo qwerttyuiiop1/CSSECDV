@@ -5,7 +5,7 @@ const SessionTimeoutModal: React.FC = () => {
     return (
         <div className="session-timeout-modal">
             <h2>Session Timeout</h2>
-            <p>You've been logged out due to inactivity.</p>
+            <p>You&apos;ve been logged out due to inactivity.</p>
         </div>
     );
 };
