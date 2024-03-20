@@ -49,28 +49,45 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 
 	const buffer = Buffer.from(await pfp.arrayBuffer());
 
-	const fileSignature = buffer.toString('hex', 0, 8).toUpperCase();
+	const FileSigHeader = buffer.toString('hex', 0, 8).toUpperCase();
+	const FileSigTrailer = buffer.toString('hex', buffer.length - 8, buffer.length).toUpperCase();
+	const WEBPSIG = buffer.toString('hex', 8, 12).toUpperCase();
+	
+	// Signatures
+	const jpegStartingSignature = 'FFD8';
+	const jpegEndingSignature = 'FFD9';
 
-	// signatures
-	const jpegSignature = 'FFD8FF';
-	const pngSignature = '89504E470D0A1A0A';
-	const webpSignature = '52494646';
-		
+	const pngStartingSignature = '89504E470D0A1A0A';
+	const pngEndingSignature = '49454E44AE426082';
+
+	const webpStartingRIFFSignature = '52494646';
+	const webpStartingWEBPSignature = '57454250';
+	//webp has no end sig
+	
+	console.log(FileSigHeader)
+	console.log(FileSigTrailer)
+	console.log(WEBPSIG)
 	if (
 		!(
-			fileSignature.startsWith(jpegSignature) ||
-			fileSignature.startsWith(pngSignature) ||
-			fileSignature.startsWith(webpSignature)
+			(FileSigHeader.startsWith(jpegStartingSignature) && FileSigTrailer.endsWith(jpegEndingSignature)) ||
+			(FileSigHeader.startsWith(pngStartingSignature) &&  FileSigTrailer.endsWith(pngEndingSignature)) ||
+			(FileSigHeader.startsWith(webpStartingRIFFSignature) && WEBPSIG.endsWith(webpStartingWEBPSignature))
 		)
-	) {
-		return 'Please upload a valid .jpeg, .png or .webp file';
+	) 
+	{
+		console.log("bruh")
+		return 'Please upload a valid .jpeg, .png, or .webp file';
 	}
-
+	else{
+		console.log("yay")
+	}
+	
 	const res = await validateBufferMIMEType(buffer, {
 		allowMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
 	});
 	if (!res.ok)
-		return 'Please upload a .jpeg, .png or .webp file.';
+		return 'Please upload a .jpeg, .png, or .webp file.';
+		
 		
 
 	// TODO: validate phone
