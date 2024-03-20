@@ -18,6 +18,7 @@ const YourComponent: React.FC = () => {
   }, [update]);
   useEffect(() => {
 	if (session?.valid !== true) {
+		console.log("Invalid session");
         signOut({ redirect: false })
 		.then(() => router.push("/profile/timeout"));
 	}
