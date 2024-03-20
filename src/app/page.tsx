@@ -10,7 +10,6 @@ import { shops } from "@/assets/data/shops";
 import ShopCard from "@/components/ShopCard/ShopCard";
 import ViewMoreCard from "@/components/ShopCard/ViewMoreCard";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -109,25 +108,6 @@ export default function Home() {
               />
             ))}
             <ViewMoreCard />
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.section5}>
-        <div className={styles.section5_about_us}>ABOUT US</div>
-        <div className={styles.section5_inner}>
-          <img className={styles.section5_img}/>
-          <div className={styles.company_info}>
-            <h1 className={styles.company_name}>ADAMANT INTELLIGENT SOLUTIONS INC.</h1>
-            <h2 className={styles.company_quote1}>CRAFTING YOUR VISION THROUGH</h2>
-            <h2 className={styles.company_quote2}>TECHNOLOGY</h2>
-            <h3 className={styles.company_subtext}>
-              <br/>
-              <p className={styles.company_subtext_title}>Who We Are</p>
-              We are a software development company that specializes in Web 2 and Web 3 development.<br/><br/>
-              <p className={styles.company_subtext_title}>What We Do</p>
-              We create solutions to meet and exceed our client&apos;s goals.
-            </h3>
           </div>
         </div>
       </div>

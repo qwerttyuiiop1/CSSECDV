@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import prisma from '@prisma'
 import bcrypt from 'bcrypt';
 import { User, mapUser, userSelection } from '@type/User';
+import { JWT } from 'next-auth/jwt';
 
 export const authOptions: NextAuthOptions = {
  providers: [
@@ -63,29 +64,45 @@ export const authOptions: NextAuthOptions = {
 	}
 	return true;
   },
-  async jwt({ token, user }) {
-	if (user?.email && token.user?.email !== user.email) 
-		(token.user as any) = user;
-	// role is defined if the user is logged in with credentials
-	if (token.user.role === undefined) {
-		const user = await prisma.user.findUnique({
-			where: { email: token.user.email },
+  async jwt({ token, user, trigger }) {
+	const error = {
+		...token,
+		user: null,
+		expires: -1,
+	} as unknown as JWT
+	if (trigger === 'signIn') {
+		if (!user.email || typeof user.email !== 'string')
+			return error;
+		const newUser = await prisma.user.findUnique({
+			where: { email: user.email },
 			select: userSelection,
 		});
-		if (user) token.user = mapUser(user);
+		if (!newUser) return error;
+		token.user = mapUser(newUser);
+		token.expires = Date.now() + 30 * 60 * 1000; // 30 minutes
+		token.maxage = Date.now() + 3 * 24 * 60 * 60 * 1000; // 7 days
+		return token;
 	}
+	if (!token?.user) return error;
+	if (!(token.expires >= Date.now())) return error;
+	token.expires = Math.min(Math.max(
+		token.expires, Date.now() + 30 * 60 * 1000 // 30 minutes
+	), token.maxage);
 	return token;
   },
   async session({ session, token }) {
 	if (token?.user)
 		session.user = token.user;
+	if (token?.expires)
+		session.expires = token.expires;
+	session.valid = token.expires >= Date.now()
 	return session;
   },
  },
  secret: process.env.SECRET!,
  session: {
-  maxAge: 30 * 24 * 60 * 60,
-  updateAge: 24 * 60 * 60,
+  maxAge: 30 * 24 * 60 * 60, // 30 days
+  updateAge: 24 * 60 * 60, // 24 hours
  }
 };
 const handler = NextAuth(authOptions);

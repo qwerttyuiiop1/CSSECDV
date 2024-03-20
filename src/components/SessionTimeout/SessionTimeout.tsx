@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import SessionTimeoutModal from "./SessionTimeoutModal";
+import React, { useState, useEffect, useCallback } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -8,10 +7,23 @@ let timeoutId: NodeJS.Timeout;
 
 const YourComponent: React.FC = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const user = session?.user;
 
-  const resetTime = async () => {
+  useEffect(() => {
+	const interval = setInterval(() => {
+		update();
+	}, 1000 * 60 * 20); // 20 minutes
+	return () => clearInterval(interval);
+  }, [update]);
+  useEffect(() => {
+	if (session?.valid !== true) {
+        signOut({ redirect: false })
+		.then(() => router.push("/profile/login"));
+	}
+  }, [session?.valid, router]);
+
+  const resetTime = useCallback(async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
       console.log("Session timeout");
@@ -20,13 +32,13 @@ const YourComponent: React.FC = () => {
         await signOut({ redirect: false });
         router.push("/profile/login");
       }
-    }, 1 * 60 * 1000); // 1 minute || time in milliseconds
-  };
-  
+    }, 10 * 60 * 1000); // 5 minutes
+  }, [router, user]);
 
-  const handleUserActivity = () => {
+
+  const handleUserActivity = useCallback(() => {
     resetTime();
-  };
+  }, [resetTime]);
 
   useEffect(() => {
     resetTime();
@@ -43,9 +55,9 @@ const YourComponent: React.FC = () => {
       window.removeEventListener("keydown", handleUserActivity);
       window.removeEventListener("click", handleUserActivity);
     };
-  }, []);
+  }, [handleUserActivity, resetTime]);
 
-  return <div>Session Timeout Component</div>;
+  return <></>;
 };
 
 export default YourComponent;
