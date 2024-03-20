@@ -17,11 +17,11 @@ const YourComponent: React.FC = () => {
 	return () => clearInterval(interval);
   }, [update]);
   useEffect(() => {
-	if (session?.valid !== true) {
+	if (session && session.valid !== true) {
         signOut({ redirect: false })
 		.then(() => router.push("/profile/timeout?session=invalid"));
 	}
-  }, [session?.valid, router]);
+  }, [session, session?.valid, router]);
 
   const resetTime = useCallback(async () => {
     clearTimeout(timeoutId);
