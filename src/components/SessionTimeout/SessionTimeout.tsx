@@ -19,7 +19,7 @@ const YourComponent: React.FC = () => {
   useEffect(() => {
 	if (session?.valid !== true) {
         signOut({ redirect: false })
-		.then(() => router.push("/profile/login"));
+		.then(() => router.push("/profile/timeout"));
 	}
   }, [session?.valid, router]);
 
@@ -30,7 +30,7 @@ const YourComponent: React.FC = () => {
 		console.log("Session timeout");
         console.log("Logging out user");
         await signOut({ redirect: false });
-        router.push("/profile/login");
+        router.push("/profile/timeout");
       }
     }, 10 * 60 * 1000); // 5 minutes
   }, [router, user]);
