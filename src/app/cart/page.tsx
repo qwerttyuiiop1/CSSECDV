@@ -123,7 +123,7 @@ function Page({cart, setCart, refresh}: {
   }, [cart, updateQuantity, setCart]);
 
   const totalPrice = cart.items.reduce(
-    (total, item) => total + item.product.price * item.quantity,
+    (total, item) => total + item.product.price * Math.min(item.quantity, item.product.stock),
     0
   );
 
@@ -168,6 +168,9 @@ function Page({cart, setCart, refresh}: {
                     <span className={styles.item_name}>{product.name}</span>
                     <p className={styles.item_price}>
                       Unit Price: {product.price} RP
+                    </p>
+					<p className={styles.item_price}>
+                      Stock: {product.stock} {product.stock === 1 ? 'pc' : 'pcs'}
                     </p>
                   </div>
                   <div className={styles.cointotalprice}>

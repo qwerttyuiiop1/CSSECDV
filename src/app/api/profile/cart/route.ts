@@ -23,11 +23,11 @@ export const DELETE = withUser(async (req) => {
 
 export const POST = withUser(async (req) => {
 	const { cartId } = req.user;
-	const { productId, quantity } = await req.json();
+	const { productId, quantity, method } = await req.json();
 	if (quantity < 0)
 		return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
 	const res =  await prisma.cartItem.upsert({
-		update: { quantity },
+		update: method === "add" ? { quantity: { increment: quantity } } : { quantity },
 		create: { cartId, productId, quantity },
 		where: { cartId_productId: { cartId, productId } },
 		...cartItemSelection

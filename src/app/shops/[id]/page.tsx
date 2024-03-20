@@ -24,16 +24,11 @@ export default function Page({
     const fetchShop = async () => {
       const response = await fetch(`/api/shop/${params.id}`);
       if (!response.ok) {
-        console.error(`Failed to fetch shop: ${response.statusText}`);
         return;
       }
       const data = await response.json();
-      console.log(data);
       setShop(data.shop);
-      setSelectedVoucherAmount(data.shop.products[0]?.price || null);
       setSelectedProduct(data.shop.products[0] || null);
-      setProductDescription(data.shop.products[0]?.details || "");
-      setTos(data.shop.products[0].tos);
     };
 
     fetchShop();
@@ -41,16 +36,10 @@ export default function Page({
 
   const rewardPoints = 250;
   const [showAddToCart, setShowAddToCart] = useState(false);
-  const [isAddToCartButtonDisabled, setAddToCartButtonDisabled] =
-    useState(false);
+  const [isAddToCartButtonDisabled, setAddToCartButtonDisabled] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [selectedVoucherAmount, setSelectedVoucherAmount] = useState<
-    number | null
-  >(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [productDescription, setProductDescription] = useState("");
-  const [tos, setTos] = useState("");
 
   const handleIncrement = () => {
     setQuantity(quantity + 1);
@@ -62,59 +51,40 @@ export default function Page({
     }
   };
 
-  const handleAddToCart = () => {
-    if (selectedVoucherAmount === null || quantity < 1) {
-      console.log("error");
-
-      setShowError(true);
+  const handleAddToCart = async () => {
+    if (quantity >= 0 && selectedProduct !== null) {
       setAddToCartButtonDisabled(true);
-
-      setTimeout(() => {
-        setShowError(false);
-        setAddToCartButtonDisabled(false);
-      }, 2300);
-    } else {
-      console.log("Added to Cart:", selectedVoucherAmount, quantity);
-
-      setShowAddToCart(true);
-      setAddToCartButtonDisabled(true);
-
-      setTimeout(() => {
-        setShowAddToCart(false);
-        setAddToCartButtonDisabled(false);
-      }, 2300);
+	  const res = await fetch("/api/profile/cart", {
+		method: "POST",
+		body: JSON.stringify({
+		  productId: selectedProduct.id,
+		  quantity: quantity,
+		  method: "add",
+		}),
+	  });
+	  if (res.ok) {
+		setShowAddToCart(true);
+		setTimeout(() => {
+			setShowAddToCart(false);
+			setAddToCartButtonDisabled(false);
+		}, 2300);
+		return;
+	  }
     }
+	console.log("error")
+	setShowError(true);
+	setAddToCartButtonDisabled(true);
+
+	setTimeout(() => {
+	  setShowError(false);
+	  setAddToCartButtonDisabled(false);
+	}, 2300);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(event.target.value) || 0;
     setQuantity(newValue);
   };
-
-  const getPrices = (shop: Shop) => {
-    const prices: number[] = [];
-    shop.products.forEach((product) => {
-      if (product.price) {
-        prices.push(product.price);
-      }
-    });
-    return prices;
-  };
-
-  useEffect(() => {
-    const product =
-      shop?.products.find(
-        (product) => product.price === selectedVoucherAmount
-      ) || null;
-    setSelectedProduct(product);
-    setProductDescription(product?.details || "");
-    setTos(product?.tos || "");
-    if (!product || !product.stock || product.stock <= 0) {
-      setAddToCartButtonDisabled(true);
-    } else {
-      setAddToCartButtonDisabled(false);
-    }
-  }, [selectedVoucherAmount]);
 
   const cardStyle = {
     height: "50rem",
@@ -187,21 +157,21 @@ export default function Page({
           <h1>Voucher amount</h1>
           <ul className={styles.amount_options}>
             {shop &&
-              getPrices(shop).map((amount, index) => (
+              shop.products.map((product, index) => (
                 <li className={styles.option_li} key={index}>
                   <input
                     className={styles.option_label}
                     type="radio"
-                    id={amount.toString()}
+                    id={product.id.toString()}
                     name="amount"
-                    checked={amount === selectedVoucherAmount}
-                    onChange={() => setSelectedVoucherAmount(amount)}
+                    checked={selectedProduct?.id === product.id}
+                    onChange={() => setSelectedProduct(product)}
                   />
                   <label
                     className={styles.option_input}
-                    htmlFor={amount.toString()}
+                    htmlFor={product.id.toString()}
                   >
-                    ₱{amount}
+                    ₱{product.price}
                   </label>
                 </li>
               ))}
@@ -256,7 +226,7 @@ export default function Page({
       <div className={styles.info_container}>
         <div className={styles.product_desc_container}>
           <h1>Product Description</h1>
-          <p className={styles.product_desc}>{productDescription}</p>
+          <p className={styles.product_desc}>{selectedProduct?.details}</p>
           <ul className={styles.tc}>
             {/* <li className={styles.tc_item}>Lorem</li>
             <li className={styles.tc_item}>ipsum</li>
@@ -268,7 +238,7 @@ export default function Page({
         <div className={styles.tc_container}>
           <h1>Terms & Conditions</h1>
           <ul className={styles.tc}>
-            {tos}
+            {selectedProduct?.tos}
             {/* <li className={styles.tc_item}>
               The voucher is not valid for use on the shipping fee
             </li>
