@@ -51,6 +51,7 @@ model User {
   transactions		Transaction[]
   rel_image			Image?		@relation("PfpImage", fields: [imageid], references: [id])
   images			Image[]		@relation("UserImages")
+  reports			ProductReport[]
   
   cartId			String		@unique @map(name: "cart_id")
   cart				Cart		@relation(fields: [cartId], references: [id])
@@ -73,6 +74,23 @@ model CartItem {
   cart			Cart		@relation(fields: [cartId], references: [id])
   @@map(name: "cart_items")
   @@id([cartId, productId])
+}
+model ProductReport {
+  id			Int			@default(autoincrement())
+  createdAt		DateTime	@default(now())
+  updatedAt		DateTime	@updatedAt
+
+  userEmail		String
+  productId		Int
+  productVersion	Int
+  comment		String
+
+  user			User		@relation(fields: [userEmail], references: [email])
+  product		Product?	@relation(fields: [productId], references: [id])
+  productH		ProductH	@relation(fields: [productId, productVersion], references: [id, version])
+  
+  @@map(name: "product_reports")
+  @@id([userEmail, id])
 }
 
 // shop having a version doesn't make sense
@@ -126,6 +144,7 @@ model Product {
   codes				Code[]
   purchasedCodes	CodeH[]
   rel_cart			CartItem[]
+  rel_reports		ProductReport[]
 
   @@id([name, shopName])
   @@map(name: "products")
@@ -147,6 +166,7 @@ model ProductH {
   isActive		Product?
   shop			ShopH		@relation(fields: [shopId], references: [id])
   purchasedCodes	CodeH[]
+  rel_reports	ProductReport[]
 
   @@id([id, version])
   @@map(name: "products_h")
