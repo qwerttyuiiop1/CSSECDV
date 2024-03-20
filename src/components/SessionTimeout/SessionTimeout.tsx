@@ -3,12 +3,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-let timeoutId: NodeJS.Timeout;
-
 const YourComponent: React.FC = () => {
   const router = useRouter();
   const { data: session, update } = useSession();
   const user = session?.user;
+  const timeoutRef = React.useRef<NodeJS.Timeout>();
 
   useEffect(() => {
 	const interval = setInterval(() => {
@@ -24,8 +23,8 @@ const YourComponent: React.FC = () => {
   }, [session, session?.valid, router]);
 
   const resetTime = useCallback(async () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(async () => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(async () => {
       if (user != null) {
         await signOut({ redirect: false });
         router.push("/profile/timeout?session=expired");
@@ -33,27 +32,22 @@ const YourComponent: React.FC = () => {
     }, 10 * 60 * 1000); // 5 minutes
   }, [router, user]);
 
-
-  const handleUserActivity = useCallback(() => {
-    resetTime();
-  }, [resetTime]);
-
   useEffect(() => {
     resetTime();
 
-    window.addEventListener("mousemove", handleUserActivity);
-    window.addEventListener("scroll", handleUserActivity);
-    window.addEventListener("keydown", handleUserActivity);
-    window.addEventListener("click", handleUserActivity);
+    window.addEventListener("mousemove", resetTime);
+    window.addEventListener("scroll", resetTime);
+    window.addEventListener("keydown", resetTime);
+    window.addEventListener("click", resetTime);
 
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("mousemove", handleUserActivity);
-      window.removeEventListener("scroll", handleUserActivity);
-      window.removeEventListener("keydown", handleUserActivity);
-      window.removeEventListener("click", handleUserActivity);
+      clearTimeout(timeoutRef.current);
+      window.removeEventListener("mousemove", resetTime);
+      window.removeEventListener("scroll", resetTime);
+      window.removeEventListener("keydown", resetTime);
+      window.removeEventListener("click", resetTime);
     };
-  }, [handleUserActivity, resetTime]);
+  }, [resetTime]);
 
   return <></>;
 };
