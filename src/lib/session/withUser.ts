@@ -9,7 +9,7 @@ type Extra = {
 	isAdmin: boolean
 }
 type UserRequest = NextRequest & Extra
-type OptionalRequest = NextRequest & (Partial<Extra> | Extra)
+type OptionalRequest = NextRequest & (Extra | { [K in keyof Extra]: null | undefined })
 export type UserHandler<T> = (req: UserRequest, params: T) => NextResponse | Promise<NextResponse>;
 export type OptionalHandler<T> = (req: OptionalRequest, params: T) => NextResponse | Promise<NextResponse>;
 const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
