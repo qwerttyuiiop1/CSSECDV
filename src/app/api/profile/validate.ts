@@ -64,9 +64,6 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 	const webpStartingWEBPSignature = '57454250';
 	//webp has no end sig
 	
-	console.log(FileSigHeader)
-	console.log(FileSigTrailer)
-	console.log(WEBPSIG)
 	if (
 		!(
 			(FileSigHeader.startsWith(jpegStartingSignature) && FileSigTrailer.endsWith(jpegEndingSignature)) ||
@@ -75,11 +72,7 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 		)
 	) 
 	{
-		console.log("bruh")
 		return 'Please upload a valid .jpeg, .png, or .webp file';
-	}
-	else{
-		console.log("yay")
 	}
 	
 	const res = await validateBufferMIMEType(buffer, {
