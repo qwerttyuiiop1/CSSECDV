@@ -18,9 +18,8 @@ const YourComponent: React.FC = () => {
   }, [update]);
   useEffect(() => {
 	if (session?.valid !== true) {
-		console.log("Invalid session");
         signOut({ redirect: false })
-		.then(() => router.push("/profile/timeout"));
+		.then(() => router.push("/profile/timeout?session=invalid"));
 	}
   }, [session?.valid, router]);
 
@@ -28,10 +27,8 @@ const YourComponent: React.FC = () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
       if (user != null) {
-		console.log("Session timeout");
-        console.log("Logging out user");
         await signOut({ redirect: false });
-        router.push("/profile/timeout");
+        router.push("/profile/timeout?session=expired");
       }
     }, 10 * 60 * 1000); // 5 minutes
   }, [router, user]);
