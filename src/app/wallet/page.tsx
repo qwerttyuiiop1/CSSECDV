@@ -1,344 +1,54 @@
 "use client"
-import Image from "next/image";
 import styles from "./page.module.css";
 import { ReactNode, useState } from 'react'; 
 import { useSession } from 'next-auth/react';
 import { useEffect } from "react";
-
-const defaultBalance = {
-    points: 10000,
-    token: 25.1234 
-}
-
-type Profile = {
-	username: string;
-	password: string;
-	phoneNumber: string;
-	country: string;
-	city: string;
-	address: string;
-}
-const defaultProfile: Profile = {
-    username: "BrOdin",
-    password: "hunter2",
-    phoneNumber: "(+63) 986 255 9923",
-    country: "Philippines",
-    city: "Quezon City",
-    address: "123 Rizal St."
-}
+import { UserDetail } from "@type/User";
+import { Transaction as DBTransaction } from "@type/Transaction";
 
 type Transaction = {
-	date: string;
-	type: string;
+	date: string | null;
+	type: string | null;
 	items: string;
-	total: string | number;
-	pointsBalance: number;
+	total: number;
+	pointsBalance: number | null;
 }
-let defaultTransactions: Transaction[] = [
-    {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-    "date": "09-30-2023",
-    "type": "Deposit",
-    "items": "-",
-    "total": "+3000",
-    "pointsBalance": 5500
-    },
-    {
-    "date": "09-30-2023",
-    "type": "Purchase",
-    "items": "2x Grab Voucher",
-    "total": -2000,
-    "pointsBalance": 2500
-    },
-    {
-    "date": "09-30-2023",
-    "type": "Purchase",
-    "items": "1x SM Gift Card",
-    "total": -1000,
-    "pointsBalance": 1500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Deposit",
-      "items": "-",
-      "total": "+3000",
-      "pointsBalance": 5500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "2x Grab Voucher",
-      "total": -2000,
-      "pointsBalance": 2500
-    },
-    {
-      "date": "09-30-2023",
-      "type": "Purchase",
-      "items": "1x SM Gift Card",
-      "total": -1000,
-      "pointsBalance": 1500
-    }, 
-    {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Deposit",
-        "items": "-",
-        "total": "+3000",
-        "pointsBalance": 5500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "2x Grab Voucher",
-        "total": -2000,
-        "pointsBalance": 2500
-      },
-      {
-        "date": "09-30-2023",
-        "type": "Purchase",
-        "items": "1x SM Gift Card",
-        "total": -1000,
-        "pointsBalance": 1500
-      }
-  ];
 
-function Wallet({ 
-    balance=defaultBalance, 
-    profile=defaultProfile, 
-    transactions=defaultTransactions 
-}) {
+export default function Wallet() {
+	const [profile, setProfile] = useState<UserDetail | null>(null);
+	const [transactions, setTransactions] = useState<Transaction[] | null>(null);
+	const { data: session } = useSession();
+	useEffect(() => {
+		fetch(`/api/profile/?detail=true`)
+		.then(res => res.json())
+		.then(data => setProfile(data.user));
+
+		fetch('/api/profile/transaction')
+		.then(res => res.json())
+		.then(json => setTransactions(
+			json.transactions.flatMap((t: DBTransaction) => {
+				const ret = t.items.map((i): Transaction => ({
+					date: null,
+					type: null,
+					pointsBalance: null,
+					items: i.product.name,
+					total: i.product.price,
+				}))
+				ret[0].date = new Date(t.date).toLocaleString();
+				ret[0].type = t.type;
+				ret[0].pointsBalance = t.pointsBalance;
+				return ret;
+			}
+		)));
+	}, []);
+
+	if (!session)
+		return <p>Unauthorized</p>;
+	if (profile === null || transactions === null)
+		return <p>Loading...</p>;
     return (
         <>
-            <BalanceSection balance={balance} />
+            <BalanceSection balance={profile.points} />
             <ProfileSection profile={profile} />
             <TransactionsSection transactions={transactions} />
         </>
@@ -385,7 +95,7 @@ function IconTextButton({ className="", src, alt, text, onClick }: IconProps & {
     );
 }
 
-function BalanceSection({ balance }: { balance: typeof defaultBalance }) {
+function BalanceSection({ balance }: { balance: number }) {
     const [isVisible, setVisible] = useState(false);
     const censor = "********";
 
@@ -395,14 +105,14 @@ function BalanceSection({ balance }: { balance: typeof defaultBalance }) {
         >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
                 <IconTextWrapper className={styles.rp_title} src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
-                <div className={styles.rp_points}>{isVisible ? balance.points : censor}</div>
+                <div className={styles.rp_points}>{isVisible ? balance : censor}</div>
                 <IconTextButton onClick={() => console.log("Clicked")} className={styles.points_add} src="/icons/plus.svg" alt="Add Points Icon" text="Add Points" />
             </div>
         </HeaderSection>
     );
 }
 
-function ProfileSection({ profile }: { profile: Profile }) {
+function ProfileSection({ profile }: { profile: UserDetail }) {
     const [isEditable, setEditable] = useState(false);
 
     return (
@@ -412,15 +122,11 @@ function ProfileSection({ profile }: { profile: Profile }) {
                     <table>
                         <tr>
                             <td>Username</td>
-                            <td>{profile.username}</td>
-                        </tr>
-                        <tr>
-                            <td>Password</td>
-                            <td>********</td>
+                            <td>{profile.name}</td>
                         </tr>
                         <tr>
                             <td>Phone Number</td>
-                            <td>{profile.phoneNumber}</td>
+                            <td>{profile.mobileno}</td>
                         </tr>
                         <tr>
                             <td>Country</td>
@@ -432,7 +138,7 @@ function ProfileSection({ profile }: { profile: Profile }) {
                         </tr>
                         <tr>
                             <td>Address</td>
-                            <td>{profile.address}</td>
+                            <td>{profile.address1}</td>
                         </tr>
                     </table>
                 </div>
@@ -515,26 +221,4 @@ function TransactionsSection({ transactions }: { transactions: Transaction[] }) 
             </div>
         </HeaderSection>
     );
-}
-
-
-export default function Wrapper() {
-  const [rewardPoints, setRewardPoints] = useState(0)
-
-  const { data: session } = useSession();
-  const user = session?.user;
-
-  const balance = {
-    points: 0,
-    token: 0   
-  }
-
-  useEffect(() => {
-    setRewardPoints(user?.points ?? 0)
-    balance.points = user?.points ?? 0
-    //token not fetched from db yet, only points
-
-  }, [user])
-
-	return <Wallet balance={balance}/>
 }
