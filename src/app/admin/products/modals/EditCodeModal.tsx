@@ -37,7 +37,7 @@ const EditCodeModal: React.FC<EditCodeProps> = ({
 			<Label>
 				Code
 				<Input placeholder="Code" id="code" 
-					options={{required: "code is required"}}/>
+					options={{required: "Code is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">

@@ -21,7 +21,7 @@ const CreateCodeModal: React.FC<BaseModalProps> = ({
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
 		if (!productId) {
-			toast.error("No product selected");
+			toast.error("No product selected.");
 			return;
 		}
 		await createCode(data.code, productId);
@@ -37,7 +37,7 @@ const CreateCodeModal: React.FC<BaseModalProps> = ({
 			<Label>
 				Code
 				<Input placeholder="Code" id="code" 
-					options={{required: "code is required"}}/>
+					options={{required: "Code is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">

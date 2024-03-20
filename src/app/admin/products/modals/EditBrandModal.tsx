@@ -38,7 +38,7 @@ const EditBrandModal: React.FC<EditShopProps> = ({
 			<Label>
 				Brand Name
 				<Input placeholder="Brand Name" id="name" 
-					options={{required: "name is required"}}/>
+					options={{required: "Brand Name is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">

@@ -53,7 +53,7 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
               id="file"
               accept=".csv"
               options={{
-                required: "CSV File is required",
+                required: "CSV File is required.",
                 validate: {
                   isCSV: (file) =>
                     file[0]?.type === "text/csv" || "Please upload a .csv file",

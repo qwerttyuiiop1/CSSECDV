@@ -45,12 +45,12 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 				<Label style={{flex: '1'}}>
 					Product Name
 					<Input placeholder="Product Name" id="name" 
-						options={{required: "name is required"}}/>
+						options={{required: "Product Name is required."}}/>
 				</Label>
 				<Label style={{flex: '1'}}>
 					Price (in RP)
 					<Input placeholder="Product Price" id="price" type="number"
-						options={{required: "price is required"}}/>
+						options={{required: "Product Price is required."}}/>
 				</Label>
 			</CardRow>
 			<Label>
@@ -63,10 +63,10 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 						"Never gonna say goodbye",
 						"Never gonna tell a lie and hurt you"
 					].join('\n')} id="details" 
-					options={{required: "details is required"}}/>
+					options={{required: "Product Details is required."}}/>
 			</Label>
 			<Label>
-				Terms of terms and conditions
+				Terms of Service and Conditions
 				<TextArea placeholder={[
 						"Never gonna give you up",
 						"Never gonna let you down",
@@ -75,7 +75,7 @@ const CreateProductModal: React.FC<BaseModalProps> = ({
 						"Never gonna say goodbye",
 						"Never gonna tell a lie and hurt you"
 					].join('\n')} id="tos" 
-					options={{required: "tos is required"}}/>
+					options={{required: "Terms of Service and Conditions is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
