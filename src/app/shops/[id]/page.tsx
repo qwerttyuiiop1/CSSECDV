@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import { shops } from "@/assets/data/shops";
 import coinAnimation from "../../../assets/lottie/animation_coin.json";
 import checkAnimation from "../../../assets/lottie/animation_check.json";
 import errorAnimation from "../../../assets/lottie/animation_error.json";
@@ -10,7 +9,7 @@ import errorAnimation from "../../../assets/lottie/animation_error.json";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Lottie from "lottie-react";
-import { Shop } from "@/components/ShopCard/ShopCard";
+import { Product, Shop } from "@/lib/types/Shop";
 
 export default function Page({
   params,
@@ -19,19 +18,27 @@ export default function Page({
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const getShopById = (id: number): Shop | undefined => {
-    return shops.find((shop) => shop.id === id);
-  };
-
   const [shop, setShop] = useState<Shop | undefined>(undefined);
 
   useEffect(() => {
-    const shopId = parseInt(params.id);
-    const foundShop = getShopById(shopId);
-    setShop(foundShop);
+    const fetchShop = async () => {
+      const response = await fetch(`/api/shop/${params.id}`);
+      if (!response.ok) {
+        console.error(`Failed to fetch shop: ${response.statusText}`);
+        return;
+      }
+      const data = await response.json();
+      console.log(data);
+      setShop(data.shop);
+      setSelectedVoucherAmount(data.shop.products[0]?.price || null);
+      setSelectedProduct(data.shop.products[0] || null);
+      setProductDescription(data.shop.products[0]?.details || "");
+      setTos(data.shop.products[0].tos);
+    };
+
+    fetchShop();
   }, [params.id]);
 
-  const vouchersLeft = 59;
   const rewardPoints = 250;
   const [showAddToCart, setShowAddToCart] = useState(false);
   const [isAddToCartButtonDisabled, setAddToCartButtonDisabled] =
@@ -41,6 +48,9 @@ export default function Page({
     number | null
   >(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productDescription, setProductDescription] = useState("");
+  const [tos, setTos] = useState("");
 
   const handleIncrement = () => {
     setQuantity(quantity + 1);
@@ -81,6 +91,31 @@ export default function Page({
     setQuantity(newValue);
   };
 
+  const getPrices = (shop: Shop) => {
+    const prices: number[] = [];
+    shop.products.forEach((product) => {
+      if (product.price) {
+        prices.push(product.price);
+      }
+    });
+    return prices;
+  };
+
+  useEffect(() => {
+    const product =
+      shop?.products.find(
+        (product) => product.price === selectedVoucherAmount
+      ) || null;
+    setSelectedProduct(product);
+    setProductDescription(product?.details || "");
+    setTos(product?.tos || "");
+    if (!product || !product.stock || product.stock <= 0) {
+      setAddToCartButtonDisabled(true);
+    } else {
+      setAddToCartButtonDisabled(false);
+    }
+  }, [selectedVoucherAmount]);
+
   const cardStyle = {
     height: "50rem",
     width: "50rem",
@@ -89,7 +124,7 @@ export default function Page({
     marginRight: "2rem",
     borderRadius: "1.5rem",
     overflow: "hidden",
-    backgroundImage: `url(${shop?.src})`,
+    backgroundImage: `url(${shop?.img_src})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
@@ -137,13 +172,12 @@ export default function Page({
       <div className={styles.shop_voucher_container}>
         <div style={cardStyle}></div>
         <div className={styles.voucher_order_container}>
-          <h1 className={styles.shop_name}>{shop?.shopName} E-VOUCHER</h1>
+          <h1 className={styles.shop_name}>{shop?.name} E-VOUCHER</h1>
           <div className={styles.reward_points_container}>
             <Lottie
               animationData={coinAnimation}
               className={styles.coin_animation}
               loop={true}
-              
             />
             <h1 className={styles.reward_points}>
               {rewardPoints} Reward Points
@@ -152,24 +186,25 @@ export default function Page({
 
           <h1>Voucher amount</h1>
           <ul className={styles.amount_options}>
-            {shop?.availableVouchers?.map((amount, index) => (
-              <li className={styles.option_li} key={index}>
-                <input
-                  className={styles.option_label}
-                  type="radio"
-                  id={amount.toString()}
-                  name="amount"
-                  checked={amount === selectedVoucherAmount}
-                  onChange={() => setSelectedVoucherAmount(amount)}
-                />
-                <label
-                  className={styles.option_input}
-                  htmlFor={amount.toString()}
-                >
-                  ₱{amount}
-                </label>
-              </li>
-            ))}
+            {shop &&
+              getPrices(shop).map((amount, index) => (
+                <li className={styles.option_li} key={index}>
+                  <input
+                    className={styles.option_label}
+                    type="radio"
+                    id={amount.toString()}
+                    name="amount"
+                    checked={amount === selectedVoucherAmount}
+                    onChange={() => setSelectedVoucherAmount(amount)}
+                  />
+                  <label
+                    className={styles.option_input}
+                    htmlFor={amount.toString()}
+                  >
+                    ₱{amount}
+                  </label>
+                </li>
+              ))}
           </ul>
 
           <h1>Quantity</h1>
@@ -202,7 +237,7 @@ export default function Page({
               />
             </form>
             <h4 className={styles.vouchers_left}>
-              {vouchersLeft} vouchers left
+              {selectedProduct ? selectedProduct.stock : 0} vouchers left
             </h4>
           </div>
 
@@ -221,27 +256,20 @@ export default function Page({
       <div className={styles.info_container}>
         <div className={styles.product_desc_container}>
           <h1>Product Description</h1>
-          <p className={styles.product_desc}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-            ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, consectetur adipiscing
-            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit,{" "}
-          </p>
+          <p className={styles.product_desc}>{productDescription}</p>
           <ul className={styles.tc}>
-            <li className={styles.tc_item}>Lorem</li>
+            {/* <li className={styles.tc_item}>Lorem</li>
             <li className={styles.tc_item}>ipsum</li>
             <li className={styles.tc_item}>dolor</li>
             <li className={styles.tc_item}>sit</li>
-            <li>amet</li>
+            <li>amet</li> */}
           </ul>
         </div>
         <div className={styles.tc_container}>
           <h1>Terms & Conditions</h1>
           <ul className={styles.tc}>
-            <li className={styles.tc_item}>
+            {tos}
+            {/* <li className={styles.tc_item}>
               The voucher is not valid for use on the shipping fee
             </li>
             <li className={styles.tc_item}>
@@ -260,7 +288,7 @@ export default function Page({
               If the purchase value is less than the voucher used, the excess
               amount will not be credited to the account nor will it be carried
               over in any succeeding purchases
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

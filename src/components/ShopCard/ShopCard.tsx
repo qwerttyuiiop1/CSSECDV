@@ -36,7 +36,7 @@ const ShopCard: React.FC<Shop> = ({ id, src, shopName, availableVouchers }) => {
 
   return (
     <Link
-      href={`shops/${id}`}
+      href={`shops/${shopName}`}
       className={styles.card_container}
       style={cardStyle}
     >
