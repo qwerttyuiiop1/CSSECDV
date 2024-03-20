@@ -133,7 +133,7 @@ function ProfileComponent({ user }: { user: User | undefined }) {
 function AdminComponent({ user }: { user: User | undefined }) {
     const pathname = usePathname();
     const adminOptions = [
-        {href: "/admin/accounts", label: "Accounts"},
+        //{href: "/admin/accounts", label: "Accounts"},
         {href: "/admin/products", label: "Products"}
     ];
 
