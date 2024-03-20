@@ -24,10 +24,8 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
   const handleSubmit = form.handleSubmit(async (data) => {
     const file = data.file[0] as File;
     const isValid = await uploadcsv(file);
-    if (isValid !== undefined && isValid) {
-      close();
-      form.reset();
-    }
+    form.reset();
+    close();
   });
 
   useEffect(() => {
