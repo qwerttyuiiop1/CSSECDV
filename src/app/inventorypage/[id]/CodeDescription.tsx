@@ -54,19 +54,21 @@ export const DescriptionContainer = ({ selectedItem, onUpdate }: DescriptionCont
           {selectedItem.product.details}
         </p>
         <h3 className={styles.bold_text}>Terms & Conditions:</h3>
-        {/*<ul className={styles.tc}>
-            <li className={styles.product_tc}> </li>
+		{/*<ul className={styles.tc}>
+            <li className={styles.report_body}> </li>
   		</ul>*/}
-		<p className={styles.product_tc}>{selectedItem.product.tos}</p>
+		<p className={styles.report_body}>{selectedItem.product.tos}</p>
+
+		<div className={styles.horizontalLine}></div>
         <h3 className={styles.bold_text}>Reports:</h3>
 		{selectedItem.reports.map(report => (
-			<div key={report.id} onClick={
+			<div className={styles.report_container} key={report.id} onClick={
 				session?.user.email === report.user.email ? () => handleSetReport(report) : undefined}>
-				<p className={styles.product_report}>
+				<p className={styles.report_header}>
 					{report.user.name} - {new Date(report.date).toLocaleDateString()}
 				{ session?.user.email === report.user.email &&  " - Edit"}
 				</p>
-				<p className={styles.product_tc}>
+				<p className={styles.report_body}>
 					{report.comment} 
 				</p>
 			</div>

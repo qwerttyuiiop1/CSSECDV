@@ -25,11 +25,15 @@
 .header_button {
 	min-height: 2.125rem;
 	border-radius: 0.625rem;
-	border: 2px solid #C9C9C9;
+	border: 3px solid #C9C9C9;
 	background: rgba(97, 221, 65, 0.00);
-
 	cursor: pointer;
 }
+
+.header_button:hover {
+	opacity: 0.5;
+}
+
 .header_text {
 	color: #FFF;
 	text-align: center;

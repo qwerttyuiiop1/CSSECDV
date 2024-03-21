@@ -33,7 +33,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({
 			toast.error(json.error);
 			return;
 		}
-		toast.success("Report created");
+		toast.success("Report created.");
 		onCreate(json.report)
 		close();
 		form.reset();
@@ -46,7 +46,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({
 			<Label>
 				Comment
 				<Input placeholder="Comment" id="comment" 
-					options={{required: "name is required"}}/>
+					options={{required: "Comment is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
@@ -86,7 +86,7 @@ export const EditReportModal: React.FC<EditReportModalProps> = ({
 			toast.error(json.error);
 			return;
 		}
-		toast.success("Report updated");
+		toast.success("Report updated.");
 		onUpdate(json.report)
 		close();
 		form.reset();
@@ -99,14 +99,14 @@ export const EditReportModal: React.FC<EditReportModalProps> = ({
 			<Label>
 				Comment
 				<Input placeholder="Comment" id="comment" 
-					options={{required: "name is required"}}/>
+					options={{required: "Comment is required."}}/>
 			</Label>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
 					Cancel
 				</SideButton>
-				<SideButton onClick={handleSubmit} color="blue">
-					Create
+				<SideButton onClick={handleSubmit} color="green">
+					Save
 				</SideButton>
 			</CardRow>
 		</Card>

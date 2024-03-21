@@ -92,7 +92,7 @@ function InventoryPage({
                   setCurrentPage(1);
                 }}
               >
-                Unredeemed
+                All
               </button>
               <button
                 className={`${showRedeemed ? styles.unredeemedButton : styles.redeemedButton + ' ' + styles.inactive}`}
@@ -129,7 +129,7 @@ function InventoryPage({
           <div className={styles.inventoryList}>
             <div className={styles.inventoryLabel}>
               <p className={styles.inventoryLabelText}>
-                {showRedeemed ? 'Redeemed' : 'Unredeemed'}
+                {showRedeemed ? 'Redeemed' : 'All'}
               </p>
             </div>
             <div className={styles.itemPanels}>

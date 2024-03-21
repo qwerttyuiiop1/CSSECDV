@@ -26,6 +26,16 @@
 
 	z-index: 1;
 }
+
+.options_container span {
+	padding: 5px 10px;
+}
+
+.options_container span:hover {
+	opacity: 0.5;
+	cursor: pointer;
+}
+
 .arrow {
 	position: absolute;
 	bottom: -15px;

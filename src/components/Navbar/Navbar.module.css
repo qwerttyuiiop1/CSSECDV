@@ -118,6 +118,7 @@
     min-width: 100%;    
     left: 0;
     text-align: center;
+    box-shadow: 0px 0px 10px #141414;
 }
 
 .open {
@@ -126,7 +127,7 @@
 
 .dropdown_link {
     display: block;
-    padding: 0.4rem;
+    padding: 0.6rem;
     border-top: 2px solid #C6C6C6; 
 }
 
@@ -177,6 +178,7 @@
     align-items: start;
     font-style: italic;
     font-size: 10px;
+    font-weight: 450;
 }
 
 .profile_dropdown {
