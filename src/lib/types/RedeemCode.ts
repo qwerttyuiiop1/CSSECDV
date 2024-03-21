@@ -2,14 +2,12 @@ import prisma from '@prisma'
 
 async function errors() {
   const res1: _DBRedeemCode = await prisma.redeemCode.findFirstOrThrow(redeemCodeSelection)
-
+  const redeemCode: RedeemCode = mapRedeemCode(res1)
 }
 export const redeemCodeSelection = {
   select: {
 	code: true,
-	transaction: {
-	  select: { id: true }
-	},
+	productId: true,
 	amount: true,
 	creator: {
 	  select: {
@@ -31,9 +29,7 @@ export type RedeemCode = {
 
 export type _DBRedeemCode = {
   code: string
-  transaction: {
-	id: string
-  } | null
+  productId: number | null
   amount: number
   creator: {
 	name: string
@@ -44,7 +40,7 @@ export type _DBRedeemCode = {
 export const mapRedeemCode = (dbRedeemCode: _DBRedeemCode): RedeemCode => {
   return {
 	code: dbRedeemCode.code,
-	isRedeemed: !!dbRedeemCode.transaction,
+	isRedeemed: dbRedeemCode.productId !== null,
 	amount: dbRedeemCode.amount,
 	creator: {
 	  name: dbRedeemCode.creator.name,
