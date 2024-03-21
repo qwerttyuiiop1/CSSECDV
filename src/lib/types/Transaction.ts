@@ -5,6 +5,7 @@ import {
 } from '@prisma/client';
 import prisma from '@prisma';
 import { productSelection, Product } from './Shop';
+import { RedeemCode, _DBRedeemCode, mapRedeemCode, redeemCodeSelection } from './RedeemCode';
 async function errors() {
 	const res1: DBTransaction = await prisma.transaction.findFirstOrThrow(transactionSelection)
 	const transaction: Transaction = mapTransaction(res1)
@@ -22,6 +23,7 @@ type DBTransaction = _Transaction & {
 		},
 		reports: DBReport[]
 	}[]
+	redeemCodes: _DBRedeemCode[]
 }
 export const mapTransaction = (transaction: DBTransaction): Transaction => {
 	return {
@@ -37,7 +39,8 @@ export const mapTransaction = (transaction: DBTransaction): Transaction => {
 				sales: -1,
 				shopName: item.rel_product.shop.name
 			}
-		}))
+		})),
+		redeemCodes: transaction.redeemCodes.map(mapRedeemCode)
 	}
 }
 type DBReport = Pick<ProductReport, 'comment' | 'id' | 'updatedAt'> & {
@@ -83,9 +86,11 @@ export type Report = Pick<ProductReport, 'comment' | 'id'> & {
 }
 export type Transaction = _Transaction & {
 	items: TransactionItem[];
+	redeemCodes: RedeemCode[];
 };
 export const transactionSelection = {
   include: {
+	redeemCodes: redeemCodeSelection,
 	items: {
 	  select: {
 		code: true,
