@@ -14,25 +14,36 @@ function InventoryPage({
   items: Item[];
   setItems: React.Dispatch<React.SetStateAction<Item[]|null>>;
 }) {
+  const itemsPerPage = 12;
   const [showRedeemed, setShowRedeemed] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedItems, setPaginatedItems] = useState<Item[]>([]);
 
   const totalPages = Math.ceil(
     (showRedeemed ? items.filter(item => item.isRedeemed) : items).length / itemsPerPage
   );
-
-  const paginatedItems = items
-    .filter(item => (!showRedeemed || item.isRedeemed))
-    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  paginatedItems.sort((a, b) => a.id - b.id);
+  useEffect(() => {
+	const paginatedItems = items
+		.filter(item => (!showRedeemed || item.isRedeemed))
+		.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+	paginatedItems.sort((a, b) => a.id - b.id);
+	setPaginatedItems(paginatedItems);
+	const newSelectedItem = paginatedItems.find(item => item.id === selectedItem?.id);
+	setSelectedItem(newSelectedItem || null);
+  }, [items, showRedeemed, currentPage, selectedItem?.id]);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+  const handleItemUpdate = (item: Item) => {
+	setItems(prevItems => {
+	  if (prevItems === null) return null;
+	  return prevItems.map(i => i.id === item.id ? item : i);
+	});
+  }
 
   const handleItemClick = (item: Item) => {
     setSelectedItem(item);
@@ -155,7 +166,7 @@ function InventoryPage({
           </div>
         </div>
         <div className={styles.descriptionContainer}>
-          <DescriptionContainer selectedItem={selectedItem} />
+          <DescriptionContainer selectedItem={selectedItem} onUpdate={handleItemUpdate}/>
         </div>
       </div>
     </div>

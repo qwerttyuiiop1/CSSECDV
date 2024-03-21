@@ -46,7 +46,6 @@
   margin-top: 1rem;
 }
 .bold_text{
-
   font-weight: bold;
   font-size: 1rem;
   margin: 1rem;
@@ -62,4 +61,16 @@
   font-size: 1rem;
   font-weight: lighter;
 }
-
+.product_report {
+  margin-left: 2rem;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+.create_report_button {
+  margin-left: 2rem;
+  width: 10rem;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}

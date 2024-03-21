@@ -76,21 +76,19 @@ model CartItem {
   @@id([cartId, productId])
 }
 model ProductReport {
-  id			Int			@default(autoincrement())
+  id			Int			@id @default(autoincrement())
   createdAt		DateTime	@default(now())
   updatedAt		DateTime	@updatedAt
 
   userEmail		String
+  code			String
   productId		Int
-  productVersion	Int
   comment		String
 
   user			User		@relation(fields: [userEmail], references: [email])
-  product		Product?	@relation(fields: [productId], references: [id])
-  productH		ProductH	@relation(fields: [productId, productVersion], references: [id, version])
+  rel_code		CodeH		@relation(fields: [productId, code], references: [productId, code])
   
   @@map(name: "product_reports")
-  @@id([userEmail, id])
 }
 
 // shop having a version doesn't make sense
@@ -144,7 +142,6 @@ model Product {
   codes				Code[]
   purchasedCodes	CodeH[]
   rel_cart			CartItem[]
-  rel_reports		ProductReport[]
 
   @@id([name, shopName])
   @@map(name: "products")
@@ -166,7 +163,6 @@ model ProductH {
   isActive		Product?
   shop			ShopH		@relation(fields: [shopId], references: [id])
   purchasedCodes	CodeH[]
-  rel_reports	ProductReport[]
 
   @@id([id, version])
   @@map(name: "products_h")
@@ -205,6 +201,7 @@ model CodeH {
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])
 	rel_purchases	Product?	@relation(fields: [productId], references: [id])
 	rel_product		ProductH	@relation(fields: [productId, productVersion, shopId], references: [id, version, shopId])
+	reports			ProductReport[]
 	@@id([code, shopId])
 	@@unique([code, productId])
 }
