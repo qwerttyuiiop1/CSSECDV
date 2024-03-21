@@ -53,7 +53,7 @@ export const adminShopSelection = {
 	id: true,
 	shop: {
 	  select: {
-		img_src: true
+		imageid: true
 	  }
 	}
   }
@@ -67,7 +67,7 @@ export type _DBAdminShop = {
 	name: string,
 	products: _DBAdminProduct[],
 	shop: {
-		img_src: string
+		imageid: string
 	}
 }
 export {

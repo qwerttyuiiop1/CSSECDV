@@ -1,3 +1,4 @@
+import { validateImage } from "@/lib/types/Image";
 import { DBUser, UserDetail } from "@type/User";
 import { validateBufferMIMEType } from 'validate-image-type';
 type Data = Pick<DBUser, 'name' | 'password' | 'address1' | 'address2' | 'city' | 'country' | 'mobileno'>
@@ -41,47 +42,9 @@ export const validateSignup = async (body: FormData): Promise<string | SignupBod
 	if (address2 && (typeof address2 !== 'string' || address2.length < 5 || address2.length > 100))
 		return 'Address must be between 5 and 100 characters.';
 
-	//image file validation
-	if (!pfp)
-		return 'Profile picture is required.';
-	if (pfp.size > 10 * 1024 * 1024)
-		return 'File size exceeds the maximum allowed limit (10MB).';
-
-	const buffer = Buffer.from(await pfp.arrayBuffer());
-
-	const FileSigHeader = buffer.toString('hex', 0, 8).toUpperCase();
-	const FileSigTrailer = buffer.toString('hex', buffer.length - 8, buffer.length).toUpperCase();
-	const WEBPSIG = buffer.toString('hex', 8, 12).toUpperCase();
-	
-	// Signatures
-	const jpegStartingSignature = 'FFD8';
-	const jpegEndingSignature = 'FFD9';
-
-	const pngStartingSignature = '89504E470D0A1A0A';
-	const pngEndingSignature = '49454E44AE426082';
-
-	const webpStartingRIFFSignature = '52494646';
-	const webpStartingWEBPSignature = '57454250';
-	//webp has no end sig
-	
-	if (
-		!(
-			(FileSigHeader.startsWith(jpegStartingSignature) && FileSigTrailer.endsWith(jpegEndingSignature)) ||
-			(FileSigHeader.startsWith(pngStartingSignature) &&  FileSigTrailer.endsWith(pngEndingSignature)) ||
-			(FileSigHeader.startsWith(webpStartingRIFFSignature) && WEBPSIG.endsWith(webpStartingWEBPSignature))
-		)
-	) 
-	{
-		return 'Please upload a valid .jpeg, .png, or .webp file';
-	}
-	
-	const res = await validateBufferMIMEType(buffer, {
-		allowMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
-	});
-	if (!res.ok)
-		return 'Please upload a .jpeg, .png, or .webp file.';
-		
-		
+	const buffer = await validateImage(pfp);
+	if (typeof buffer === 'string')
+		return buffer;
 
 	// TODO: validate phone
 	if (typeof phone_code !== 'string' || !/^\+?\d{1,3}$/.test(phone_code))

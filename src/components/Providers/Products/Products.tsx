@@ -14,10 +14,10 @@ const productsContext = createContext<ProductsContext | undefined>(undefined);
 
 export interface useShopsReturn {
   data: AdminShop[];
-  createShop: (name: string) => Promise<void>;
+  createShop: (name: string, img: File) => Promise<void>;
   findShop: (name: string) => AdminShop | undefined;
   findShopi: (name: string) => number;
-  updateShop: (name: string, newName: string) => Promise<void>;
+  updateShop: (name: string, newName: string, image: File | null) => Promise<void>;
   deleteShop: (name: string) => Promise<void>;
   refresh: () => Promise<void>;
   uploadcsv: (file: File) => Promise<void>;
@@ -56,44 +56,44 @@ export function useShops(): useShopsReturn {
 	return data.find(b => b.name === name);
   }, [data]);
 
-  const createShop = useCallback(async (name: string) => {
+  const createShop = useCallback(async (name: string, img: File) => {
+	const form = new FormData();
+	form.append('img', img);
+	form.append('name', name);
 	const res = await fetch('/api/shop', {
 	  method: 'POST',
-	  headers: {
-		'Content-Type': 'application/json',
-	  },
-	  body: JSON.stringify({ name }),
+	  body: form,
 	});
 	const json = await res.json()
 	if (!res.ok) {
 	  toast.error(json.error);
 	  return 
 	} else {
-	  json.shop.products = [];
 	  toast.success("Created brand: " + json.shop.name);
 	  updateData([...data, json.shop]);
 	}
   }, [data, updateData]);
 
-  const updateShop = useCallback(async (name: string, newName: string) => {
+  const updateShop = useCallback(async (name: string, newName: string, image: File | null) => {
+	const form = new FormData();
+	if (image) form.append('img', image);
+	form.append('name', newName);
 	const res = await fetch('/api/shop/' + name, {
 	  method: 'PATCH',
-	  headers: {
-		'Content-Type': 'application/json',
-	  },
-	  body: JSON.stringify({ name: newName }),
+	  body: form,
 	});
 	const json = await res.json()
 	if (!res.ok) {
 	  toast.error(json.error);
 	  return 
 	} else {
-	  const shop = findShop(name)!;
-	  shop.name = json.shop.name;
-	  toast.success("Edited brand: " + shop.name);
-	  updateData([...data]);
+	  const shopi = findShopi(name)!;
+	  const newData = [...data];
+	  newData[shopi] = json.shop;
+	  toast.success("Edited brand: " + json.shop.name);
+	  updateData(newData);
 	}
-  }, [data, findShop, updateData]);
+  }, [data, findShopi, updateData]);
 
   const deleteShop = useCallback(async (name: string) => {
 	const res = await fetch('/api/shop/' + name, {

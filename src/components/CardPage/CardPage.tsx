@@ -50,8 +50,9 @@ const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	id: string;
 	accept: string;
 	image?: boolean;
+	imgsrc?: string;
 	options?: RegisterOptions<FieldValues, string>;
-}> = ({options, image, ...props}) => {
+}> = ({options, image, imgsrc, ...props}) => {
 	const { register, watch } = useFormContext();
 	const file = watch(props.id) as FileList | undefined;
 	const [fileUrl, setFile] = React.useState<string | null>(null);
@@ -83,9 +84,9 @@ const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	);
 	return (
 	  <label className={`${styles.input} ${styles.input_image_container}`} htmlFor={props.id}>
-		{ fileUrl ? (
+		{ fileUrl || imgsrc ? (
 		  // eslint-disable-next-line @next/next/no-img-element
-		  <img src={fileUrl} alt="profile picture"/>
+		  <img src={fileUrl || imgsrc} alt="profile picture"/>
 		) : (
 		  <span> No Image Selected </span>
 		)}

@@ -5,7 +5,8 @@ import {
 	Label,
 	CardRow,
 	SideButton,
-	Card
+	Card,
+	FileInput
 } from "@/components/CardPage/CardPage";
 import BaseModal, { BaseModalProps } from "@/components/Modal/BaseModal";
 import { useForm } from "react-hook-form";
@@ -21,11 +22,12 @@ const EditBrandModal: React.FC<EditShopProps> = ({
 	state, shop: brand
 }) => {
 	const { updateShop: updateBrand } = useShops();
-	const form = useForm({ values: { name: brand.name } });
+	const form = useForm({ values: { name: brand.name, image: null as FileList | null } });
 	const toast = useFormError(form);
 	const close = () => state[1](false);
 	const handleSubmit = form.handleSubmit(async (data) => {
-		await updateBrand(brand.name, data.name);
+		const file = data.image?.[0] || null;
+		await updateBrand(brand.name, data.name, file);
 		close();
 		form.reset();
 	});
@@ -40,6 +42,24 @@ const EditBrandModal: React.FC<EditShopProps> = ({
 				<Input placeholder="Brand Name" id="name" 
 					options={{required: "Brand Name is required."}}/>
 			</Label>
+			<Label> Image </Label>
+			<FileInput id="image" 
+				accept="image/jpeg, image/png, image/webp"
+				image imgsrc={brand.img_src}
+				options={{
+				validate: {
+					isImage: (file) =>
+					  !file?.[0] ||
+					  file[0]?.type === "image/jpeg" ||
+					  file[0]?.type === "image/png" ||
+					  file[0]?.type === "image/webp" ||
+					  "Please upload a .jpeg, .png or .webp file.",
+					maxSize: (file) =>
+					  !file?.[0] ||
+					  file[0]?.size <= 10 * 1024 * 1024 ||
+					  "File size exceeds the maximum allowed limit (10MB).",
+				  },
+				}}/>
 			<CardRow>
 				<SideButton onClick={close} color="gray">
 					Cancel

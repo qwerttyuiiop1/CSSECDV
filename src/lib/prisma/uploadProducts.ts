@@ -48,7 +48,8 @@ export const uploadDummyProducts = async () => {
 	await prisma.shopH.createMany({
 		data: data.map(shop => ({
 			name: shop.name,
-			isActive: { create: {} }
+			isActive: { create: {} },
+			imageid: "default"
 		}))
 	})
 	console.log('shops created')

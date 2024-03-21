@@ -4,6 +4,7 @@ import { withAdmin, withOptionalUser } from '@/lib/session/withUser';
 import { AdminShop, adminShopSelection } from '@type/AdminShop';
 import { Shop, mapShop, shopSelection } from '@type/Shop';
 import { NextRequest, NextResponse } from 'next/server';
+import { validateImage } from '@/lib/types/Image';
 
 type Params = {
 	params: {
@@ -40,13 +41,30 @@ export const GET = withOptionalUser(async (req, {params: { name }}: Params) => {
 
 export const PATCH = withAdmin(async (req: NextRequest, {params: { name }}: Params) => {
   try {
-	const { name: newName } = await req.json();
-	if (!newName || newName.length < 3) {
+	const form = await req.formData();
+	const newName = form.get('name');
+	const img = form.get('img') as File | null;
+	if (typeof newName !== 'string' || newName.length < 3 || newName.length > 100) {
 		return NextResponse.json({ error: 'Name must be at least 3 characters long' }, { status: 400 });
 	}
-	const res = await prisma.shop.update({
+	const buffer = img && await validateImage(img);
+	if (img && typeof buffer === 'string')
+		return NextResponse.json({ error: buffer }, { status: 400 });
+
+	await prisma.shop.update({
 		where: { name },
-		data: { name: newName },
+		data: { 
+			shop: {
+				update: {
+					name: newName,
+					image: img ? { update: { file: buffer as Buffer, isPublic: true } } : undefined
+				}
+			},
+		},
+		select: { id: true }
+	});
+	const res = await prisma.shop.findUniqueOrThrow({
+		where: { name: newName },
 		...adminShopSelection
 	});
 	const shop: AdminShop = mapShop(res);

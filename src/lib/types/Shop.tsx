@@ -83,7 +83,7 @@ export const shopSelection = {
     products: productSelection,
     shop: {
       select: {
-        img_src: true,
+        imageid: true,
       },
     },
   },
@@ -97,7 +97,7 @@ type DBShop = {
   id: number;
   products: _DBProduct[];
   shop: {
-    img_src: string;
+    imageid: string;
   };
 };
 
@@ -133,7 +133,7 @@ export const mapShop = <T extends mapShopInput>(shop: T): mapShopOutput<T> => {
 	id: shop.id,
     name: shop.name,
     products: shop.products.map(mapProduct),
-    img_src: shop.shop.img_src,
+    img_src: `/api/img/${shop.shop.imageid}`,
   } as mapShopOutput<T>;
 };
 

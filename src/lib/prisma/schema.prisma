@@ -16,6 +16,7 @@ model Image {
   ownerEmail	String?
   owner			User?		@relation("UserImages", fields: [ownerEmail], references: [email])
   isPfp			User?		@relation("PfpImage")
+  rel_shop		ShopH[]		@relation("ShopImages")
   isPublic		Boolean		@default(false) @map(name: "is_public")
   file			Bytes
   @@map(name: "images")
@@ -109,8 +110,9 @@ model ShopH {
   updatedAt		DateTime	@updatedAt
 
   name			String
-  img_src		String		@default("")
+  imageid		String
 
+  image			Image		@relation("ShopImages", fields: [imageid], references: [id])
   isActive  	Shop?
   products		ProductH[]
   @@map(name: "shops_h")
