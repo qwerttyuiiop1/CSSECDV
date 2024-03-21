@@ -18,7 +18,7 @@ type DBTransaction = _Transaction & {
 		rel_product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
 			shop: {
 				name: string;
-				img_src: string;
+				imageid: string;
 			}
 		},
 		reports: DBReport[]
@@ -31,7 +31,7 @@ export const mapTransaction = (transaction: DBTransaction): Transaction => {
 			code: item.code,
 			isRedeemed: item.isRedeemed,
 			reports: item.reports.map(mapReport),
-			img: item.rel_product.shop.img_src,
+			img: `/api/img/${item.rel_product.shop.imageid}`,
 			product: {
 				...item.rel_product,
 				stock: -1,
@@ -100,7 +100,7 @@ export const transactionSelection = {
 			shop: {
 			  select: {
 				name: true,
-				img_src: true
+				imageid: true
 			  }
 			}
 		  }
