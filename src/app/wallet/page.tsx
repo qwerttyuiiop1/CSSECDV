@@ -8,7 +8,7 @@ import { Transaction as DBTransaction } from "@type/Transaction";
 
 type Transaction = {
 	date: string | null;
-	type: string | null;
+	type: string;
 	items: string;
 	total: number;
 	pointsBalance: number | null;
@@ -29,11 +29,18 @@ export default function Wallet() {
 			json.transactions.flatMap((t: DBTransaction) => {
 				const ret = t.items.map((i): Transaction => ({
 					date: null,
-					type: null,
+					type: 'Purchase',
 					pointsBalance: null,
 					items: i.product.name,
-					total: i.product.price,
+					total: -i.product.price,
 				}))
+				ret.concat(t.redeemCodes.map((r): Transaction => ({
+					date: null,
+					type: "Redeem",
+					pointsBalance: null,
+					items: r.code,
+					total: -r.amount,
+				})));
 				ret[0].date = new Date(t.date).toLocaleString();
 				ret[0].pointsBalance = t.pointsBalance;
 				return ret;

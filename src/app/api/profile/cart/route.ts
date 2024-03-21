@@ -14,11 +14,36 @@ export const GET = withUser(async (req) => {
 });
 
 export const DELETE = withUser(async (req) => {
+  try {
 	const { cartId } = req.user;
-	await prisma.cartItem.deleteMany({
-		where: { cartId }
-	});
+	let { productId, code, list } = await req.json();
+	
+	if (productId) list = [{productId}]
+	if (code) list = [{code}]
+	if (!list || !list.length)
+		return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+
+	await prisma.$transaction(list.map(({ productId, code }: any) => {
+		if (productId && typeof productId === "number") {
+			return prisma.cartItem.delete({
+				where: {
+					cartId_productId: { cartId, productId }
+				}
+			});
+		}
+		if (code && typeof code === "string") {
+			return prisma.cartItem.delete({
+				where: {
+					cartId_code: { cartId, code }
+				}
+			});
+		}
+	}))
 	return NextResponse.json({ success: true });
+  } catch (error) {
+	console.error(error);
+	return NextResponse.json({ error: 'Something went wrong.' }, { status: 400 });
+  }
 });
 
 export const POST = withUser(async (req) => {

@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
 import { Prisma } from "@prisma/client";
 
+const REDEEM_CODE_SHOP_ID = 1;
+const REDEEM_CODE_PRODUCT_ID = 1;
+const REDEEM_CODE_PRODUCT_VERSION = 0;
 export const POST = withUser(async (req) => {
   let error = '';
   // what is happening
@@ -31,7 +34,7 @@ export const POST = withUser(async (req) => {
 			select: { 
 			  code: true,
 			  amount: true,
-			  transactionId: true
+			  productId: true,
 			}
 		  }
 		}
@@ -51,7 +54,7 @@ export const POST = withUser(async (req) => {
 			item => item.quantity && item.quantity > 0
 		) as Pick<Req, 'product' | 'quantity'>[];
 		const cartCodes = cart.items.filter(
-			item => item.redeemCode && item.redeemCode.transactionId === null
+			item => item.redeemCode && item.redeemCode.productId === null
 		) as Pick<Req, 'redeemCode'>[];
 		
 		const res_codes = (await Promise.all(
@@ -86,11 +89,19 @@ export const POST = withUser(async (req) => {
 		}).flat();
 		cartCodes.forEach(item => {
 			total += item.redeemCode.amount;
+			codes.push({
+				shopId: REDEEM_CODE_SHOP_ID,
+				productId: REDEEM_CODE_PRODUCT_ID,
+				productVersion: REDEEM_CODE_PRODUCT_VERSION,
+				code: item.redeemCode.code
+			})
 		})
-		if (codes.length === 0 && cartCodes.length === 0) {
+		if (codes.length === 0) {
 			error = "No codes found";
 			throw new Error(error);
 		}
+
+		// update points
 		const user = await prisma.user.update({
 			where: { email: req.user.email },
 			data: {
@@ -106,6 +117,8 @@ export const POST = withUser(async (req) => {
 			error = "Insufficient points";
 			throw new Error(error);
 		}
+
+		// create transaction
 		const transaction = await prisma.transaction.create({
 			data: {
 			  total: total,
@@ -115,36 +128,54 @@ export const POST = withUser(async (req) => {
 				}
 			  },
 			  pointsBalance: user.points,
-			  items: codes.length ? {
+			  items: {
 				createMany: {
 				  data: codes
 				}
-			  } : undefined,
-			  redeemCodes: cartCodes.length ? {
-				connect: cartCodes.map(item => {
-				  return { code: item.redeemCode.code }
-				})
-			  } : undefined
+			  }
 			},
 			include: {
 				items: true
 			}
 		});
+		await prisma.redeemCode.updateMany({
+			where: {
+			  code: {
+				in: transaction.items.map(item => item.code)
+			  }
+			},
+			data: { 
+				productId: REDEEM_CODE_PRODUCT_ID
+			}
+		});
+
+		// update cart
 		await prisma.cartItem.deleteMany({
 			where: {
+			  code: {
+				in: cartCodes.map(item => item.redeemCode.code)
+			  },
 			  cartId: req.user.cartId
 			}
 		});
-		const remainingProducts = cartProducts.map(item => {
+		if (cartProducts.length === 0)
+			return;
+		const newItems = cartProducts.map(item => {
 			const count = transaction.items.filter(code => 
 			  code.productId === item.product.product.id).length;
 			return {
 				quantity: item.quantity - count,
 				productId: item.product.product.id,
 			}
-		}).filter(item => item.quantity > 0)
-		if (remainingProducts.length === 0)
-			return;
+		})
+		await prisma.cartItem.deleteMany({
+			where: {
+			  productId: {
+				in: newItems.map(item => item.productId)
+			  },
+			  cartId: req.user.cartId
+			}
+		});
 		await prisma.cart.update({
 			where: {
 			  id: req.user.cartId
@@ -152,7 +183,7 @@ export const POST = withUser(async (req) => {
 			data: {
 			  items: {
 				createMany: {
-				  data: remainingProducts
+				  data: newItems
 				}
 			  }
 			}

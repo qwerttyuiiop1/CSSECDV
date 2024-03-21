@@ -6,10 +6,17 @@ import Lottie from "lottie-react";
 import { CartItem, Cart } from "@type/Cart";
 import { DefaultToastContainer } from "@/components/Providers/Forms";
 import { toast } from "react-toastify";
+import { RedeemCode } from "@/lib/types/RedeemCode";
 
 type GroupedItem = {
+	type: 'product';
 	shopName: string;
 	items: (CartItem & {
+	  id: number;
+	})[];
+} | {
+	type: 'redeemCode';
+	redeemCodes: (RedeemCode & {
 	  id: number;
 	})[];
 }
@@ -25,11 +32,20 @@ function Page({cart, setCart, refresh}: {
 	  const shop = item.product.shopName;
 	  (acc[shop] = acc[shop] || []).push({...item, id: i});
 	  return acc;
-	}, {} as { [key: string]: GroupedItem['items'] });
-	return Object.entries(group).map(([shopName, items]) => ({
+	}, {} as { [key: string]: any[] });
+	const len = cart.items.length;
+	const ret = Object.entries(group).map(([shopName, items]) => ({
+	  type: 'product',
 	  shopName,
 	  items,
-	}));
+	})) as GroupedItem[];
+	if (cart.redeemCodes.length) {
+	  ret.push({
+		type: 'redeemCode',
+		redeemCodes: cart.redeemCodes.map((redeemCode, i) => ({...redeemCode, id: len + i}))
+	  });
+	}
+	return ret;
   }
 
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]);
@@ -39,10 +55,13 @@ function Page({cart, setCart, refresh}: {
 
   useEffect(() => {
 	setGroupedItems(groupItems(cart));
-  }, [cart, cart.items, cart.items.length]);
+  }, [cart, 
+	cart.items, cart.items.length, 
+	cart.redeemCodes, cart.redeemCodes.length
+  ]);
   useEffect(() => {
-	setSelectedItems(new Array(cart.items.length || 0).fill(false));
-  }, [isSelecting, cart.items.length]);
+	setSelectedItems(new Array(cart.items.length + cart.redeemCodes.length || 0).fill(false));
+  }, [isSelecting, cart.items.length, cart.redeemCodes.length]);
 
   const handleItemSelect = (i: number) => {
     setSelectedItems((prevSelected) => {
@@ -53,18 +72,24 @@ function Page({cart, setCart, refresh}: {
   };
 
   const handleRemoveSelectedItems = async () => {
-	const toDelete = cart.items.filter((_, i) => selectedItems[i]);
-	if (toDelete.length === 0)
-	  return;
-	const res = await Promise.all(toDelete.map(item => 
-	  fetch('/api/profile/cart/' + item.product.id, {
-		method: 'DELETE',
-	  })
-	));
-	if (res.some(r => !r.ok))
-	  toast.error('Failed to remove items');
+	const deleteItems = cart.items.filter((_, i) => selectedItems[i]);
+	const len = cart.items.length;
+	const deleteRedeemCodes = cart.redeemCodes.filter((_, i) => selectedItems[len + i]);
+
+	const list = [] as any[];
+	list.push(...deleteItems.map(item => ({productId: item.product.id})));
+	list.push(...deleteRedeemCodes.map(item => ({code: item.code})));
+	if (!list.length) return;
+	const res = await fetch('/api/profile/cart/', {
+	  method: 'DELETE',
+	  headers: { 'Content-Type': 'application/json' },
+	  body: JSON.stringify({ list }),
+	});
+
+	if (!res.ok)
+		toast.error('Failed to remove items');
 	else
-	  toast.success('Items removed');
+		toast.success('Items removed');
     await refresh();
   };
 
@@ -150,6 +175,7 @@ function Page({cart, setCart, refresh}: {
         </div>
         {groupedItems.map((group, i) => (
           <div key={i}>
+		  {group.type === 'product' ? (<>
             <h2 className={styles['shop-name']}>{group.shopName}</h2>
             {group.items.map(({ quantity, product, id }) => (
               <div
@@ -208,9 +234,42 @@ function Page({cart, setCart, refresh}: {
                 )}
               </div>
             ))}
-          </div>
+		  </>) : group.redeemCodes.length && (<>
+            <h2 className={styles['shop-name']}>RedeemCode</h2>
+            {group.redeemCodes.map(({ code, amount, id }) => (
+              <div key={id}
+                className={`${styles.cart_item} ${selectedItems[id] ? styles.selected : ''}`}>
+                {isSelecting && (
+                  <input
+                    type="checkbox"
+                    checked={selectedItems[id] || false}
+                    onChange={() => handleItemSelect(id)}
+                  />
+                )}
+                <div className={styles.item_info}>
+                  <div className={styles.item_details}>
+                    <span className={styles.item_name}>{code}</span>
+                    <p className={styles.item_price}>
+                      Unit Price: {amount} RP
+                    </p>
+                  </div>
+                  <div className={styles.cointotalprice}>
+                    <Lottie
+                      animationData={coinAnimation}
+                      className={styles.coin_animation}
+                      loop={true}
+                    />
+                    <p className={styles.item_total_price}>
+                      Total: {amount} RP
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+		  </>)}
+		  </div>
         ))}
-      </div>
+		</div>
       <div className={styles.checkout_box}>
         <h1 className={styles.checkout_title}>Order Summary</h1>
         <div className={styles.checkout_inside}>
