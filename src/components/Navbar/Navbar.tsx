@@ -7,6 +7,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { User } from "@type/User";
 import { UserRole } from "@prisma/client";
+import { UserDetail } from "@type/User";
 
 
 export default function Navbar() {
@@ -97,6 +98,14 @@ const NavDropdown: React.FC<{
 }
 
 function ProfileComponent({ user }: { user: User | undefined }) {
+    const [profile, setProfile] = useState<UserDetail | null>(null);
+    useEffect(() => {
+		fetch(`/api/profile/?detail=true`)
+		.then(res => res.json())
+		.then(data => setProfile(data.user));
+
+	}, []);
+    
     return (
         <div className={`${styles.navlink} ${styles.profile_container_outer}`}> 
             {user ? (
@@ -115,7 +124,7 @@ function ProfileComponent({ user }: { user: User | undefined }) {
                             <h4>{user.name}</h4>
                         </div>
                         <div className={styles.profile_info_points}>
-                            <p>{1000} RP</p> {/* TODO: fix points */}
+                            <p>{profile ? profile.points : "Loading"} RP</p>
                         </div>
                     </div>
                 </NavDropdown>
