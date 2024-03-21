@@ -1,8 +1,7 @@
 import { 
 	ProductReport,
 	Transaction as _Transaction, 
-	CodeH as _TransactionItem, 
-	TransactionType as _TransactionType 
+	CodeH as _TransactionItem
 } from '@prisma/client';
 import prisma from '@prisma';
 import { productSelection, Product } from './Shop';
@@ -116,4 +115,3 @@ export type TransactionItem = {
 	isRedeemed: boolean;
 	reports: Report[];
 };
-export type TransactionType = _TransactionType;

@@ -4,6 +4,7 @@ import {
 } from "@prisma/client";
 import { Product, _DBProduct, mapProduct, productSelection } from "./Shop";
 import prisma from '@prisma';
+import { RedeemCode, _DBRedeemCode, mapRedeemCode, redeemCodeSelection } from "./RedeemCode";
 async function errors() {
 	const res1: DBCart = await prisma.cart.findFirstOrThrow({
 		...cartSelection,
@@ -21,6 +22,9 @@ export const cartItemSelection = {
 	quantity: true,
 	product: {
 	  ...productSelection
+	},
+	redeemCode: {
+	  ...redeemCodeSelection
 	}
   }
 }
@@ -31,25 +35,30 @@ export const cartSelection = {
   }
 }
 type DBCartItem = {
-  quantity: number
-  product: _DBProduct
+  quantity: number | null
+  product: _DBProduct | null
+  redeemCode: _DBRedeemCode | null
 }
 type DBCart = _Cart & {
 	items: DBCartItem[]
 }
-export type CartItem = Pick<_CartItem, 'quantity'> & {
+export type CartItem = {
 	product: Product
-};
-
+	quantity: number
+}
 export type Cart = _Cart & {
 	items: CartItem[]
+	redeemCodes: RedeemCode[]
 };
 
-export const mapCartItem = (item: DBCartItem): CartItem => ({
-  quantity: item.quantity,
-  product: mapProduct(item.product)
-})
+export const mapCartItem = (item: DBCartItem): CartItem => {
+  return {
+	  product: mapProduct(item.product!),
+	  quantity: item.quantity!
+  }
+}
 export const mapCart = (cart: DBCart): Cart => ({
   id: cart.id,
-  items: cart.items.map(mapCartItem)
+  items: cart.items.filter(item => !!item.product).map(mapCartItem),
+  redeemCodes: cart.items.filter(item => !!item.redeemCode).map(e => mapRedeemCode(e.redeemCode!))
 })

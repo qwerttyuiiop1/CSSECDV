@@ -1,6 +1,5 @@
 import { withUser } from "@/lib/session/withUser";
 import prisma from "@prisma";
-import { TransactionType } from "@prisma/client";
 import { NextResponse } from 'next/server';
 
 export const POST = withUser(async (req) => {
@@ -14,9 +13,6 @@ export const POST = withUser(async (req) => {
 				code_productId: {
 					productId,
 					code
-				},
-				transaction: {
-					type: TransactionType.PURCHASE
 				}
 			},
 			data: { isRedeemed },

@@ -1,11 +1,16 @@
 import prisma from "@/lib/prisma/prisma";
 import { NextResponse } from 'next/server';
 import { withUser } from '@/lib/session/withUser';
-import { Prisma, TransactionType } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export const POST = withUser(async (req) => {
   let error = '';
-  const cartSelection = {
+  // what is happening
+  try {
+	await prisma.$transaction(async (prisma) => {
+		const cart = await prisma.cart.findFirst({
+			where: { id: req.user.cartId },
+  ...{
 	select: {
 	  items: {
 		select: {
@@ -21,29 +26,36 @@ export const POST = withUser(async (req) => {
 			  }
 			}
 		  },
-		  quantity: true
-		},
-		where: {
-		  quantity: {
-			gt: 0
+		  quantity: true,
+		  redeemCode: {
+			select: { 
+			  code: true,
+			  amount: true,
+			  transactionId: true
+			}
 		  }
 		}
 	  }
 	}
   }
-  try {
-	await prisma.$transaction(async (prisma) => {
-		const cart = await prisma.cart.findFirst({
-			where: { id: req.user.cartId },
-			...cartSelection
 		});
+		// console.log(cart)
+		// throw new Error('test')
 		if (!cart || cart.items.length === 0) {
 			error = "Cart is empty";
 			throw new Error(error);
 		}
+
+		type Req<T = typeof cart.items[0]> = { [K in keyof T]-?: NonNullable<T[K]> }
+		const cartProducts = cart.items.filter(
+			item => item.quantity && item.quantity > 0
+		) as Pick<Req, 'product' | 'quantity'>[];
+		const cartCodes = cart.items.filter(
+			item => item.redeemCode && item.redeemCode.transactionId === null
+		) as Pick<Req, 'redeemCode'>[];
 		
 		const res_codes = (await Promise.all(
-			cart.items.map(item => {
+			cartProducts.map(item => {
 			  return prisma.code.findMany({
 				where: {
 				  productId: item.product.product.id,
@@ -61,13 +73,9 @@ export const POST = withUser(async (req) => {
 		const codes = res_codes.map(codes => {
 			if (codes.length === 0)
 				return [];
-			const product = cart.items.find(item => 
-				item.product.product.id === codes[0].productId)
-				?.product.product;
-			if (!product) {
-				error = "Product not found";
-				throw new Error(error);
-			}
+			const product = cartProducts.find(item => 
+				item.product.product.id === codes[0].productId)!
+				.product.product;
 			total += product.price * codes.length;
 			return codes.map(code => ({
 				shopId: product.shopId,
@@ -76,7 +84,10 @@ export const POST = withUser(async (req) => {
 				code: code.code
 			}))
 		}).flat();
-		if (codes.length === 0) {
+		cartCodes.forEach(item => {
+			total += item.redeemCode.amount;
+		})
+		if (codes.length === 0 && cartCodes.length === 0) {
 			error = "No codes found";
 			throw new Error(error);
 		}
@@ -97,7 +108,6 @@ export const POST = withUser(async (req) => {
 		}
 		const transaction = await prisma.transaction.create({
 			data: {
-			  type: TransactionType.PURCHASE,
 			  total: total,
 			  user: {
 				connect: {
@@ -105,11 +115,16 @@ export const POST = withUser(async (req) => {
 				}
 			  },
 			  pointsBalance: user.points,
-			  items: {
+			  items: codes.length ? {
 				createMany: {
 				  data: codes
 				}
-			  }
+			  } : undefined,
+			  redeemCodes: cartCodes.length ? {
+				connect: cartCodes.map(item => {
+				  return { code: item.redeemCode.code }
+				})
+			  } : undefined
 			},
 			include: {
 				items: true
@@ -120,7 +135,7 @@ export const POST = withUser(async (req) => {
 			  cartId: req.user.cartId
 			}
 		});
-		const items = cart.items.map(item => {
+		const remainingProducts = cartProducts.map(item => {
 			const count = transaction.items.filter(code => 
 			  code.productId === item.product.product.id).length;
 			return {
@@ -128,7 +143,7 @@ export const POST = withUser(async (req) => {
 				productId: item.product.product.id,
 			}
 		}).filter(item => item.quantity > 0)
-		if (items.length === 0)
+		if (remainingProducts.length === 0)
 			return;
 		await prisma.cart.update({
 			where: {
@@ -137,7 +152,7 @@ export const POST = withUser(async (req) => {
 			data: {
 			  items: {
 				createMany: {
-				  data: items
+				  data: remainingProducts
 				}
 			  }
 			}

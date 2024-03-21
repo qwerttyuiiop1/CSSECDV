@@ -35,7 +35,6 @@ export default function Wallet() {
 					total: i.product.price,
 				}))
 				ret[0].date = new Date(t.date).toLocaleString();
-				ret[0].type = t.type;
 				ret[0].pointsBalance = t.pointsBalance;
 				return ret;
 			}

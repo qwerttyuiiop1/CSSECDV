@@ -56,6 +56,7 @@ model User {
   
   cartId			String		@unique @map(name: "cart_id")
   cart				Cart		@relation(fields: [cartId], references: [id])
+  createdCodes		RedeemCode[]
   
   @@map(name: "users")
 }
@@ -66,15 +67,19 @@ model Cart {
   @@map(name: "carts")
 }
 model CartItem {
+  id			Int			@default(autoincrement()) @id
   cartId		String
-  productId		Int
-  quantity		Int
+  productId		Int?
+  quantity		Int?
+  code			String?
   updatedAt		DateTime	@updatedAt
 
-  product		Product		@relation(fields: [productId], references: [id])
+  product		Product?	@relation(fields: [productId], references: [id])
+  redeemCode	RedeemCode?	@relation(fields: [code], references: [code])
   cart			Cart		@relation(fields: [cartId], references: [id])
   @@map(name: "cart_items")
-  @@id([cartId, productId])
+  @@unique([cartId, productId])
+  @@unique([cartId, code])
 }
 model ProductReport {
   id			Int			@id @default(autoincrement())
@@ -213,16 +218,22 @@ model Transaction {
   date          DateTime	@default(now())
   userEmail     String
   user          User		@relation(fields: [userEmail], references: [email])
-
-  type          TransactionType
   total         Float
   pointsBalance Int
 
   items      	CodeH[]
+  redeemCodes	RedeemCode[]
   @@map(name: "transactions")
 }
 
-enum TransactionType {
-  DEPOSIT
-  PURCHASE
+model RedeemCode {
+  code			String			@id
+  transactionId	String?
+  createdBy		String
+  amount		Float
+  createdAt		DateTime		@default(now())
+
+  transaction	Transaction?	@relation(fields: [transactionId], references: [id])
+  rel_cart		CartItem[]
+  creator		User			@relation(fields: [createdBy], references: [email])
 }
