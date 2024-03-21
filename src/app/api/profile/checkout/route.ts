@@ -135,14 +135,19 @@ export const POST = withUser(async (req) => {
 				}
 			  }
 			},
-			include: {
-				items: true
+			select: {
+				items: {
+					select: {
+						code: true,
+						productId: true
+					}
+				}
 			}
 		});
 		await prisma.redeemCode.updateMany({
 			where: {
 			  code: {
-				in: transaction.items.map(item => item.code)
+				in: cartCodes.map(item => item.redeemCode.code)
 			  }
 			},
 			data: { 
