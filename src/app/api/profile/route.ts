@@ -24,7 +24,7 @@ export const POST = async (req: NextRequest) => {
 	if (!response.ok || success !== true) 
 		return NextResponse.json({ error: 'Failed to verify captcha' }, { status: 400 });
     
-	res.password = bcrypt.hashSync(res.password!, 10);
+	res.password = bcrypt.hashSync(res.password!, 14);
 
 	const data = { 
 		...res, 
