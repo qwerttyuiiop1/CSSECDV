@@ -11,6 +11,7 @@ export const POST = withUser(async (req) => {
   // what is happening
   try {
 	await prisma.$transaction(async (prisma) => {
+		// get cart
 		const cart = await prisma.cart.findFirst({
 			where: { id: req.user.cartId },
   ...{
@@ -88,7 +89,7 @@ export const POST = withUser(async (req) => {
 			}))
 		}).flat();
 		cartCodes.forEach(item => {
-			total += item.redeemCode.amount;
+			total -= item.redeemCode.amount;
 			codes.push({
 				shopId: REDEEM_CODE_SHOP_ID,
 				productId: REDEEM_CODE_PRODUCT_ID,
