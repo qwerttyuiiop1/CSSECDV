@@ -1,17 +1,24 @@
-"use client";
-
+"use server";
 import styles from "./page.module.css";
 import { AiOutlineArrowRight, AiOutlineShop } from "react-icons/ai";
 import { BsGift } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
 import { TfiWallet } from "react-icons/tfi";
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
-import { shops } from "@/assets/data/shops";
-import ShopCard from "@/components/ShopCard/ShopCard";
+import ShopCard, { Category } from "@/components/ShopCard/ShopCard";
 import ViewMoreCard from "@/components/ShopCard/ViewMoreCard";
 import Link from "next/link";
+import { Shop, mapShop, shopSelection } from "@/lib/types/Shop";
+import prisma from '@prisma'
+ 
+async function getData(): Promise<Shop[]>{
+  const res = await prisma.shop.findMany(shopSelection)
+  const shops: Shop[] = res.map(mapShop)
+  return shops
+}
 
-export default function Home() {
+export default async function Home() {
+  const shops = await getData();
   return (
     <div>
       <div className={styles.section1}>
@@ -101,10 +108,10 @@ export default function Home() {
               <ShopCard
                 key={index}
                 id={shop.id}
-                src={shop.src}
-                shopName={shop.shopName}
-                availableVouchers={shop.availableVouchers}
-                category={shop.category}
+                src={shop.img_src}
+                shopName={shop.name}
+                availableVouchers={shop.products.map((product) => product.price)}
+                category={shop.products[0]?.category as Category}
               />
             ))}
             <ViewMoreCard />
