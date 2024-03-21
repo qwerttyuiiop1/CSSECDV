@@ -34,13 +34,6 @@ export default function Wallet() {
 					items: i.product.name,
 					total: -i.product.price,
 				}))
-				ret.concat(t.redeemCodes.map((r): Transaction => ({
-					date: null,
-					type: "Redeem",
-					pointsBalance: null,
-					items: r.code,
-					total: -r.amount,
-				})));
 				ret[0].date = new Date(t.date).toLocaleString();
 				ret[0].pointsBalance = t.pointsBalance;
 				return ret;
