@@ -10,11 +10,10 @@ type Extra = {
 }
 type UserRequest = NextRequest & Extra
 type OptionalRequest = NextRequest & (Extra | { [K in keyof Extra]: null | undefined })
-export type UserHandler<T> = (req: UserRequest, params: T) => NextResponse | Promise<NextResponse>;
-export type OptionalHandler<T> = (req: OptionalRequest, params: T) => NextResponse | Promise<NextResponse>;
+export type UserHandler<T> = (req: UserRequest, params: T) => Promise<NextResponse>;
+export type OptionalHandler<T> = (req: OptionalRequest, params: T) => Promise<NextResponse>;
 const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 	async (req: NextRequest, t: T) => {
-	  try {
 		const token = await getToken({ req, secret: process.env.SECRET });
 		const ureq = req as OptionalRequest;
 		if (token && token.expires >= Date.now()) {
@@ -22,26 +21,25 @@ const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 			ureq.token = token;
 			ureq.isAdmin = ureq.user.role === UserRole.ADMIN;
 		}
-		return handler(ureq, t);
-	  } catch (e) {
-		console.error(e);
-		return NextResponse.json({ error: "Something went wrong" }, { status: 400 });
-	  }
+		return await handler(ureq, t).catch((error) => {
+			console.error(error);
+			return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+		})
 	}
 const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
-	withOptionalUser((req, t: T) => {
+	withOptionalUser(async (req, t: T) => {
 		if (!req.user)
 			return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 		return handler(req as UserRequest, t);
 	})
 const withUser = <T=undefined>(handler: UserHandler<T>) =>
-	withAnyUser((req, t: T) => {
+	withAnyUser(async (req, t: T) => {
 		if (req.user.role === UserRole.UNVERIFIED)
 			return NextResponse.json({ error: "User not verified" }, { status: 401 });
 		return handler(req, t);
 	});
 const withAdmin = <T=undefined>(handler: UserHandler<T>) =>
-	withAnyUser((req, t: T) => {
+	withAnyUser(async (req, t: T) => {
 		if (req.user.role !== UserRole.ADMIN)
 			return NextResponse.json({ error: "User not admin" }, { status: 401 });
 		return handler(req, t);
