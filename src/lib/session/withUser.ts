@@ -14,6 +14,7 @@ export type UserHandler<T> = (req: UserRequest, params: T) => NextResponse | Pro
 export type OptionalHandler<T> = (req: OptionalRequest, params: T) => NextResponse | Promise<NextResponse>;
 const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 	async (req: NextRequest, t: T) => {
+	  try {
 		const token = await getToken({ req, secret: process.env.SECRET });
 		const ureq = req as OptionalRequest;
 		if (token && token.expires >= Date.now()) {
@@ -22,6 +23,10 @@ const withOptionalUser = <T=undefined>(handler: OptionalHandler<T>) =>
 			ureq.isAdmin = ureq.user.role === UserRole.ADMIN;
 		}
 		return handler(ureq, t);
+	  } catch (e) {
+		console.error(e);
+		return NextResponse.json({ error: "Something went wrong" }, { status: 400 });
+	  }
 	}
 const withAnyUser = <T=undefined>(handler: UserHandler<T>) =>
 	withOptionalUser((req, t: T) => {
