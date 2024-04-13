@@ -100,7 +100,7 @@ export default function Shops() {
     } else {
       setFilteredShops(newFilteredShops);
     }
-  }, [categoryCheckedItems, selectedSortFilter, shopCheckedItems]);
+  }, [categoryCheckedItems, selectedSortFilter, shopCheckedItems, shops]);
 
   return (
     <div className={styles.main_container}>

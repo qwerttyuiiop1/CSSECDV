@@ -28,20 +28,6 @@ const UploadCSVModal: React.FC<BaseModalProps> = ({ state }) => {
     close();
   });
 
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      const modal = document.querySelector(".modal-container");
-      if (modal && !modal.contains(event.target as Node)) {
-        form.reset();
-        close();
-      }
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   if (!state[0]) return null;
   return (
     <BaseModal state={state}>

@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import { Report, TransactionItem } from '@type/Transaction';
 import { EditReportModal, CreateReportModal } from './ReportModal';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 type Item = TransactionItem & { id: number };
 interface DescriptionContainerProps {
   selectedItem: Item | null;
@@ -40,7 +41,7 @@ export const DescriptionContainer = ({ selectedItem, onUpdate }: DescriptionCont
   return (
     <div className={styles.descriptionContainer}>
       <div className={styles.itemImage}>
-        <img src={selectedItem.img} alt={selectedItem.product.name} />
+        <Image fill src={selectedItem.img} alt={selectedItem.product.name} />
         <div className={styles.itemId}>#{selectedItem.id}</div>
     
       <div>

@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import { DescriptionContainer } from './[id]/CodeDescription';
 import { Transaction, TransactionItem } from '@type/Transaction';
 import { DefaultToastContainer } from '@/components/Providers/Forms';
+import Image from 'next/image';
 
 type Item = TransactionItem & { id: number };
 function InventoryPage({
@@ -150,7 +151,7 @@ function InventoryPage({
                   <div className={styles.itemInfo}>
                     <div className={styles.itemId}>#{item.id + 1}</div>
                     <div className={styles.imgContainer}>
-                      <img
+                      <Image fill
                         src={item.img}
                         alt={item.product.name}
                         className={item.isRedeemed ? styles.redeemedImage : ''}

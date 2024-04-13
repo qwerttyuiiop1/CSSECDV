@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from "react";
 import { UserDetail } from "@type/User";
 import { Transaction as DBTransaction } from "@type/Transaction";
+import Image from "next/image";
 
 type Transaction = {
 	date: string | null;
@@ -80,7 +81,7 @@ interface IconProps {
 function IconTextWrapper({ className="", src, alt, text="" }: IconProps) {
     return (
         <div className={`${text && styles.icon_text_wrapper} ${className}`}>
-            <img src={src} alt={alt} /> 
+            <Image fill src={src} alt={alt} /> 
             {text && (<span>{text}</span>)}
         </div>
     );
@@ -100,7 +101,7 @@ function BalanceSection({ balance }: { balance: number }) {
 
     return (
         <HeaderSection className={styles.balance_subsection} header="My Balance" 
-            afterHeader={(<img onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
+            afterHeader={(<Image fill onClick={() => setVisible(!isVisible)} className={`${styles.button} ${styles.balance_toggle}`} src="/icons/eyes.svg" alt="Eye Toggle" />)}
         >
             <div className={`${styles.points_container} ${styles.content_block} ${styles.block_dark}`}>
                 <IconTextWrapper className={styles.rp_title} src="/icons/gift.svg" alt="Reward Points Icon" text="Reward Points" />
@@ -141,7 +142,7 @@ function ProfileSection({ profile }: { profile: UserDetail }) {
                         </tr>
                     </table>
                 </div>
-                {/* <HeaderSection>div className={`${styles.profile_cog_container} ${styles.button} ${styles.profile_edit}`}><img src="/icons/gear.svg" alt="Edit Profile"/></div> */}
+                {/* <HeaderSection>div className={`${styles.profile_cog_container} ${styles.button} ${styles.profile_edit}`}><Image fill src="/icons/gear.svg" alt="Edit Profile"/></div> */}
                 <IconTextButton onClick={() => console.log("Clicked")} className={`${styles.profile_edit} ${styles.profile_cog_container}`} src="/icons/gear.svg" alt="Edit Profile" text="" />
             </div>
         </HeaderSection>

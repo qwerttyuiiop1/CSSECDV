@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect } from "react";
 import styles from "./card.module.css";
 import { BsFillEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
+import Image from "next/image";
 
 type Div = React.HTMLAttributes<HTMLDivElement>
 interface DivProps extends Div { children: ReactNode }
@@ -86,7 +87,7 @@ const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	  <label className={`${styles.input} ${styles.input_image_container}`} htmlFor={props.id}>
 		{ fileUrl || imgsrc ? (
 		  // eslint-disable-next-line @next/next/no-img-element
-		  <img src={fileUrl || imgsrc} alt="profile picture"/>
+		  <Image fill src={fileUrl || imgsrc!} alt="profile picture"/>
 		) : (
 		  <span> No Image Selected </span>
 		)}
