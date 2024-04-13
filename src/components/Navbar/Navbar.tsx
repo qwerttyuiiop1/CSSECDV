@@ -17,9 +17,7 @@ export default function Navbar() {
 		<>
         <nav className={styles.navbar}>
             <NavLink href="/" className={`${styles.navlink} ${styles.logo}`} enableHighlight={false}>
-				<div className={styles.logo_icon}>
-                <Image fill src="/logo.svg" alt="logo" />
-				</div>
+                <img className={styles.logo_icon} src="/logo.svg" alt="logo" />
                 <h1>Website Name</h1>
             </NavLink>
             {/* Everything below uses float: right, so reversed order */}
@@ -113,7 +111,7 @@ function ProfileComponent({ user }: { user: User | undefined }) {
                     {href: "/profile/edit", label: "Edit Profile"},
                     {href: "/", label: "Logout", onClick: signOut}
                 ]}>
-                    <Image fill className={styles.profile_icon} src={user.image || "/profile.svg"} alt="profile"/>
+                    <img className={styles.profile_icon} src={user.image || "/profile.svg"} alt="profile"/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile_info_username}>
                             <h4>{user.name}</h4>
@@ -170,7 +168,7 @@ function UserComponent({ user, className }: { user: User | undefined, className?
                     return (
                         <Link key={index} href={option.href}>
                             {option.imgSrc ? 
-                                <Image fill className={`${styles.navlink} ${styles.cartImage} ${pathname === option.href && styles.active}`} src={option.imgSrc} alt={option.label}/> :
+                                <img className={`${styles.navlink} ${styles.cartImage} ${pathname === option.href && styles.active}`} src={option.imgSrc} alt={option.label}/> :
                                 <h3 className={`${styles.navlink} ${pathname === option.href && styles.active}`}>{option.label}</h3>
                             }
                         </Link>

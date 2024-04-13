@@ -151,7 +151,7 @@ function InventoryPage({
                   <div className={styles.itemInfo}>
                     <div className={styles.itemId}>#{item.id + 1}</div>
                     <div className={styles.imgContainer}>
-                      <Image fill
+                      <img
                         src={item.img}
                         alt={item.product.name}
                         className={item.isRedeemed ? styles.redeemedImage : ''}

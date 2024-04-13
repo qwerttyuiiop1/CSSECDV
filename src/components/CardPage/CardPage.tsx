@@ -87,7 +87,7 @@ const FileInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
 	  <label className={`${styles.input} ${styles.input_image_container}`} htmlFor={props.id}>
 		{ fileUrl || imgsrc ? (
 		  // eslint-disable-next-line @next/next/no-img-element
-		  <Image fill src={fileUrl || imgsrc!} alt="profile picture"/>
+		  <img src={fileUrl || imgsrc!} alt="profile picture"/>
 		) : (
 		  <span> No Image Selected </span>
 		)}

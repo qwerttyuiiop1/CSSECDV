@@ -41,7 +41,7 @@ export const DescriptionContainer = ({ selectedItem, onUpdate }: DescriptionCont
   return (
     <div className={styles.descriptionContainer}>
       <div className={styles.itemImage}>
-        <Image fill src={selectedItem.img} alt={selectedItem.product.name} />
+        <img src={selectedItem.img} alt={selectedItem.product.name} />
         <div className={styles.itemId}>#{selectedItem.id}</div>
     
       <div>
