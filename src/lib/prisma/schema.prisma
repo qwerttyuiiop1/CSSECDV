@@ -203,6 +203,7 @@ model CodeH {
 	transactionId	String
 	code			String
 	isRedeemed		Boolean		@default(false)
+	isVerified		Boolean		@default(false)
 
 	transaction		Transaction	@relation(fields: [transactionId], references: [id])
 	rel_code		Code?		@relation(fields: [code, shopId], references: [code, shopId])

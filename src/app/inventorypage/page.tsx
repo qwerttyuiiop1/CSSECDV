@@ -61,7 +61,7 @@ function InventoryPage({
 	const item = items.find(item => item.id === id)!
 	const prev = item.isRedeemed;
 	setRedeemed(!prev);
-	fetch('/api/profile/redeem', {
+	fetch('/api/profile/transaction/redeem', {
 	  method: 'POST',
 	  headers: {
 		'Content-Type': 'application/json'

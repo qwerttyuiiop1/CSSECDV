@@ -38,6 +38,7 @@ export const DELETE = withUser(async (req) => {
 				}
 			});
 		}
+		throw new Error('invalid request')
 	}))
 	return NextResponse.json({ success: true });
   } catch (error) {
@@ -48,15 +49,26 @@ export const DELETE = withUser(async (req) => {
 
 export const POST = withUser(async (req) => {
 	const { cartId } = req.user;
-	const { productId, quantity, method } = await req.json();
-	if (quantity < 0)
-		return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
-	const res =  await prisma.cartItem.upsert({
-		update: method === "add" ? { quantity: { increment: quantity } } : { quantity },
-		create: { cartId, productId, quantity },
-		where: { cartId_productId: { cartId, productId } },
-		...cartItemSelection
-	});
+	const { productId, quantity, method, code } = await req.json();
+	let res = null
+	if (method === "redeem") {
+		if (typeof code !== 'string')
+			return NextResponse.json({ error: "Invalid code" }, { status: 400 });
+		res = await prisma.cartItem.create({
+			data: { cartId, code },
+			...cartItemSelection
+		})
+	} else {
+		if (quantity < 0)
+			return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
+		const update = method === "add" ? { quantity: { increment: quantity } } : { quantity }
+		res =  await prisma.cartItem.upsert({
+			update: update,
+			create: { cartId, productId, quantity },
+			where: { cartId_productId: { cartId, productId } },
+			...cartItemSelection
+		});
+	}
 	const item: CartItem = mapCartItem(res);
 	return NextResponse.json({ item });
 });

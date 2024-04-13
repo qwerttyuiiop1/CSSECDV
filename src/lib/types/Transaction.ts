@@ -14,6 +14,7 @@ type DBTransaction = _Transaction & {
 	items: {
 		code: string;
 		isRedeemed: boolean;
+		isVerified: boolean;
 		rel_product: Omit<Product, 'stock' | 'sales' | 'shopName'> & {
 			shop: {
 				name: string;
@@ -29,6 +30,7 @@ export const mapTransaction = (transaction: DBTransaction): Transaction => {
 		items: transaction.items.map(item => ({
 			code: item.code,
 			isRedeemed: item.isRedeemed,
+			isVerified: item.isVerified,
 			reports: item.reports.map(mapReport),
 			img: `/api/img/${item.rel_product.shop.imageid}`,
 			product: {
@@ -90,6 +92,7 @@ export const transactionSelection = {
 	  select: {
 		code: true,
 		isRedeemed: true,
+		isVerified: true,
 		reports: {
 		  ...reportSelection
 		},
@@ -113,5 +116,6 @@ export type TransactionItem = {
 	img: string;
 	product: Product;
 	isRedeemed: boolean;
+	isVerified: boolean;
 	reports: Report[];
 };

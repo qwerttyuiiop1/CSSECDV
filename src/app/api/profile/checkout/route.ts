@@ -85,7 +85,8 @@ export const POST = withUser(async (req) => {
 				shopId: product.shopId,
 				productId: product.id,
 				productVersion: product.version,
-				code: code.code
+				code: code.code,
+				isVerified: false
 			}))
 		}).flat();
 		cartCodes.forEach(item => {
@@ -94,7 +95,8 @@ export const POST = withUser(async (req) => {
 				shopId: REDEEM_CODE_SHOP_ID,
 				productId: REDEEM_CODE_PRODUCT_ID,
 				productVersion: REDEEM_CODE_PRODUCT_VERSION,
-				code: item.redeemCode.code
+				code: item.redeemCode.code,
+				isVerified: true
 			})
 		})
 		if (codes.length === 0) {
